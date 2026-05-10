@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>Student Management</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f4f7fb;
+      padding: 30px;
+      color: #222;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .topbar h1 {
+      font-size: 34px;
+    }
+
+    .btn {
+      background: #4f46e5;
+      color: white;
+      border: none;
+      padding: 14px 18px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    .btn:hover {
+      background: #4338ca;
+    }
+
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 16px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+
+    th {
+      background: #f8f8f8;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 50px 20px;
+    }
+
+    .empty-state h2 {
+      margin-bottom: 12px;
+    }
+
+    .empty-state p {
+      color: #666;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    /* MODAL */
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      width: 100%;
+      max-width: 450px;
+      background: white;
+      border-radius: 20px;
+      padding: 25px;
+    }
+
+    .modal-content h2 {
+      margin-bottom: 20px;
+    }
+
+    .modal-content form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    input {
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+    }
+
+    .close-btn {
+      background: #e5e5e5;
+      color: #222;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .message {
+      margin-top: 15px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- TOPBAR -->
+
+  <div class="topbar">
+
+    <h1>
+      👨‍🎓 Student Management
+    </h1>
+
+    <button
+      class="btn"
+      id="openModalBtn"
+    >
+      + Register Student
+    </button>
+
+  </div>
+
+  <!-- MAIN CARD -->
+
+  <div class="card">
+
+    <!-- EMPTY GUIDE -->
+
+    <div
+      id="emptyState"
+      class="empty-state"
+    >
+
+      <h2>
+        No Students Yet
+      </h2>
+
+      <p>
+        Start by creating your first student
+        account. Students will receive an email
+        allowing them to create their password
+        and access the educational platform.
+      </p>
+
+      <button
+        class="btn"
+        id="emptyCreateBtn"
+      >
+        Register First Student
+      </button>
+
+    </div>
+
+    <!-- STUDENT TABLE -->
+
+    <div
+      id="studentTableContainer"
+      style="display:none;"
+    >
+
+      <table>
+
+        <thead>
+
+          <tr>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Status</th>
+          </tr>
+
+        </thead>
+
+        <tbody id="studentTableBody">
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+  <!-- MODAL -->
+
+  <div
+    class="modal"
+    id="studentModal"
+  >
+
+    <div class="modal-content">
+
+      <h2>
+        Register Student
+      </h2>
+
+      <form id="studentForm">
+
+        <input
+          type="text"
+          id="studentName"
+          placeholder="Full Name"
+          required
+        />
+
+        <input
+          type="email"
+          id="studentEmail"
+          placeholder="School Email"
+          required
+        />
+
+        <div class="button-row">
+
+          <button
+            type="submit"
+            class="btn"
+          >
+            Create Student
+          </button>
+
+          <button
+            type="button"
+            class="btn close-btn"
+            id="closeModalBtn"
+          >
+            Cancel
+          </button>
+
+        </div>
+
+      </form>
+
+      <div
+        class="message"
+        id="message"
+      ></div>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    // ====================================================
+    // 🔑 STUDENT SUPABASE PROJECT
+    // ====================================================
+
+    const SUPABASE_URL =
+      "https://ebzcflngssljyqieizws.supabase.co";
+
+    const SUPABASE_ANON_KEY =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImViemNmbG5nc3NsanlxaWVpendzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MDQ3NDEsImV4cCI6MjA5Mzk4MDc0MX0.ZnPi4jKEtkr0iUN_ymVrhUI7A_OMkhWjRn3shA2D9yk";
+
+    // ====================================================
+
+    const supabaseClient =
+      supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+      );
+
+    // ====================================================
+    // ELEMENTS
+    // ====================================================
+
+    const modal =
+      document.getElementById(
+        "studentModal"
+      );
+
+    const openModalBtn =
+      document.getElementById(
+        "openModalBtn"
+      );
+
+    const emptyCreateBtn =
+      document.getElementById(
+        "emptyCreateBtn"
+      );
+
+    const closeModalBtn =
+      document.getElementById(
+        "closeModalBtn"
+      );
+
+    const studentForm =
+      document.getElementById(
+        "studentForm"
+      );
+
+    const message =
+      document.getElementById(
+        "message"
+      );
+
+    const studentTableBody =
+      document.getElementById(
+        "studentTableBody"
+      );
+
+    const emptyState =
+      document.getElementById(
+        "emptyState"
+      );
+
+    const tableContainer =
+      document.getElementById(
+        "studentTableContainer"
+      );
+
+    // ====================================================
+    // MODAL FUNCTIONS
+    // ====================================================
+
+    function openModal() {
+
+      modal.classList.add("active");
+
+    }
+
+    function closeModal() {
+
+      modal.classList.remove("active");
+
+      studentForm.reset();
+
+      message.textContent = "";
+
+    }
+
+    openModalBtn.addEventListener(
+      "click",
+      openModal
+    );
+
+    emptyCreateBtn.addEventListener(
+      "click",
+      openModal
+    );
+
+    closeModalBtn.addEventListener(
+      "click",
+      closeModal
+    );
+
+    // ====================================================
+    // LOAD STUDENTS
+    // ====================================================
+
+    async function loadStudents() {
+
+      const {
+        data: users,
+        error
+      } = await supabaseClient
+        .from("students")
+        .select("*");
+
+      if (error) {
+
+        console.error(error);
+
+        return;
+
+      }
+
+      // NO STUDENTS
+
+      if (!users || users.length === 0) {
+
+        emptyState.style.display = "block";
+        tableContainer.style.display = "none";
+
+        return;
+
+      }
+
+      // SHOW TABLE
+
+      emptyState.style.display = "none";
+      tableContainer.style.display = "block";
+
+      studentTableBody.innerHTML = "";
+
+      users.forEach((student) => {
+
+        const row =
+          document.createElement("tr");
+
+        row.innerHTML = `
+          <td>${student.full_name}</td>
+          <td>${student.email}</td>
+          <td>
+            ${student.status || "Pending"}
+          </td>
+        `;
+
+        studentTableBody.appendChild(
+          row
+        );
+
+      });
+
+    }
+
+    // ====================================================
+    // CREATE STUDENT
+    // ====================================================
+
+    studentForm.addEventListener(
+      "submit",
+      async (e) => {
+
+        e.preventDefault();
+
+        message.textContent =
+          "Creating student account...";
+
+        message.style.color =
+          "#333";
+
+        const fullName =
+          document.getElementById(
+            "studentName"
+          ).value;
+
+        const email =
+          document.getElementById(
+            "studentEmail"
+          ).value;
+
+        // RANDOM TEMP PASSWORD
+
+        const tempPassword =
+          Math.random()
+          .toString(36)
+          .slice(-10);
+
+        // CREATE AUTH USER
+
+        const {
+          data,
+          error
+        } = await supabaseClient
+          .auth.signUp({
+
+            email,
+            password: tempPassword,
+
+            options: {
+
+              data: {
+
+                full_name:
+                  fullName,
+
+                role:
+                  "student"
+
+              },
+
+              emailRedirectTo:
+                "https://academy.magicplum.co.uk/student/setup-password"
+
+            }
+
+          });
+
+        if (error) {
+
+          message.textContent =
+            error.message;
+
+          message.style.color =
+            "red";
+
+          return;
+
+        }
+
+        // SAVE STUDENT RECORD
+
+        const {
+          error: insertError
+        } = await supabaseClient
+          .from("students")
+          .insert([{
+
+            full_name:
+              fullName,
+
+            email:
+              email,
+
+            status:
+              "Pending Invite"
+
+          }]);
+
+        if (insertError) {
+
+          console.error(insertError);
+
+        }
+
+        message.textContent =
+          "Student invite sent successfully!";
+
+        message.style.color =
+          "green";
+
+        loadStudents();
+
+        setTimeout(() => {
+
+          closeModal();
+
+        }, 1500);
+
+      }
+    );
+
+    // ====================================================
+    // START
+    // ====================================================
+
+    loadStudents();
+
+  </script>
+
+</body>
+</html>
