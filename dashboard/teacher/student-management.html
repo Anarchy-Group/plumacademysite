@@ -107,8 +107,6 @@
       margin-inline: auto;
     }
 
-    /* MODAL */
-
     .modal {
       position: fixed;
       inset: 0;
@@ -481,42 +479,32 @@
 
     async function checkTeacherAuth() {
 
-      // FIRST CHECK
+      // WAIT FOR SESSION RESTORE
 
-      let {
-        data: { session }
+      await new Promise(resolve =>
+        setTimeout(resolve, 1500)
+      );
+
+      const {
+        data: { session },
+        error
       } = await teacherSupabase
         .auth
         .getSession();
 
-      // SESSION NOT READY YET
+      console.log(
+        "Teacher session:",
+        session
+      );
 
-      if (!session) {
+      // NOT LOGGED IN
 
-        await new Promise(resolve =>
-          setTimeout(resolve, 1000)
-        );
-
-        // TRY AGAIN
-
-        const retry =
-          await teacherSupabase
-          .auth
-          .getSession();
-
-        session =
-          retry.data.session;
-
-      }
-
-      // STILL NO SESSION
-
-      if (!session) {
+      if (!session || error) {
 
         window.location.href =
           "login.html";
 
-        return;
+        return false;
 
       }
 
@@ -530,7 +518,7 @@
         window.location.href =
           "login.html";
 
-        return;
+        return false;
 
       }
 
@@ -547,25 +535,9 @@
       teacherInfo.textContent =
         `${fullName} • ${schoolName}`;
 
+      return true;
+
     }
-
-    // ====================================================
-    // LIVE AUTH MONITOR
-    // ====================================================
-
-    teacherSupabase.auth
-      .onAuthStateChange(
-        (event, session) => {
-
-          if (!session) {
-
-            window.location.href =
-              "login.html";
-
-          }
-
-        }
-      );
 
     // ====================================================
     // LOGOUT
@@ -715,14 +687,14 @@
             "studentEmail"
           ).value;
 
-        // RANDOM PASSWORD
+        // RANDOM TEMP PASSWORD
 
         const tempPassword =
           Math.random()
           .toString(36)
           .slice(-10);
 
-        // CREATE ACCOUNT
+        // CREATE STUDENT AUTH USER
 
         const {
           data,
@@ -769,7 +741,7 @@
 
         }
 
-        // INSERT RECORD
+        // SAVE STUDENT RECORD
 
         const {
           error: insertError
@@ -790,7 +762,9 @@
 
         if (insertError) {
 
-          console.error(insertError);
+          console.error(
+            insertError
+          );
 
         }
 
@@ -802,7 +776,7 @@
         message.style.color =
           "green";
 
-        loadStudents();
+        await loadStudents();
 
         setTimeout(() => {
 
@@ -814,18 +788,24 @@
     );
 
     // ====================================================
-    // START
+    // INITIALIZE PAGE
     // ====================================================
 
-    async function init() {
+    window.addEventListener(
+      "load",
+      async () => {
 
-      await checkTeacherAuth();
+        const authenticated =
+          await checkTeacherAuth();
 
-      await loadStudents();
+        if (authenticated) {
 
-    }
+          await loadStudents();
 
-    init();
+        }
+
+      }
+    );
 
   </script>
 
