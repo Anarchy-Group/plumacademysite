@@ -32,6 +32,8 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 30px;
+      gap: 20px;
+      flex-wrap: wrap;
     }
 
     .topbar h1 {
@@ -52,6 +54,14 @@
 
     .btn:hover {
       background: #4338ca;
+    }
+
+    .logout-btn {
+      background: #dc2626;
+    }
+
+    .logout-btn:hover {
+      background: #b91c1c;
     }
 
     .card {
@@ -89,6 +99,8 @@
       color: #666;
       margin-bottom: 20px;
       line-height: 1.6;
+      max-width: 550px;
+      margin-inline: auto;
     }
 
     /* MODAL */
@@ -101,6 +113,7 @@
       justify-content: center;
       align-items: center;
       padding: 20px;
+      z-index: 1000;
     }
 
     .modal.active {
@@ -148,6 +161,11 @@
       font-size: 14px;
     }
 
+    .teacher-info {
+      color: #666;
+      font-size: 15px;
+    }
+
   </style>
 </head>
 <body>
@@ -156,16 +174,44 @@
 
   <div class="topbar">
 
-    <h1>
-      👨‍🎓 Student Management
-    </h1>
+    <div>
 
-    <button
-      class="btn"
-      id="openModalBtn"
+      <h1>
+        👨‍🎓 Student Management
+      </h1>
+
+      <div
+        class="teacher-info"
+        id="teacherInfo"
+      >
+        Loading teacher info...
+      </div>
+
+    </div>
+
+    <div
+      style="
+        display:flex;
+        gap:12px;
+        flex-wrap:wrap;
+      "
     >
-      + Register Student
-    </button>
+
+      <button
+        class="btn"
+        id="openModalBtn"
+      >
+        + Register Student
+      </button>
+
+      <button
+        class="btn logout-btn"
+        id="logoutBtn"
+      >
+        Logout
+      </button>
+
+    </div>
 
   </div>
 
@@ -173,7 +219,7 @@
 
   <div class="card">
 
-    <!-- EMPTY GUIDE -->
+    <!-- EMPTY STATE -->
 
     <div
       id="emptyState"
@@ -181,14 +227,15 @@
     >
 
       <h2>
-        No Students Yet
+        No Students Registered Yet
       </h2>
 
       <p>
-        Start by creating your first student
-        account. Students will receive an email
-        allowing them to create their password
-        and access the educational platform.
+        Start by registering your first
+        student account. Students will receive
+        an email invitation allowing them to
+        securely create a password and access
+        the educational platform.
       </p>
 
       <button
@@ -200,7 +247,7 @@
 
     </div>
 
-    <!-- STUDENT TABLE -->
+    <!-- TABLE -->
 
     <div
       id="studentTableContainer"
@@ -291,21 +338,35 @@
   <script>
 
     // ====================================================
-    // 🔑 STUDENT SUPABASE PROJECT
+    // 🔑 TEACHER SUPABASE
     // ====================================================
 
-    const SUPABASE_URL =
+    const TEACHER_SUPABASE_URL =
+      "https://uzbhtvaorqqmzhivmlpx.supabase.co";
+
+    const TEACHER_SUPABASE_ANON_KEY =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV6Ymh0dmFvcnFxbXpoaXZtbHB4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzOTYzMDEsImV4cCI6MjA5Mzk3MjMwMX0._BWxANGJgvvJZKxvuC_LWMpP4mgTh3Chr3WqIQuLRn0";
+
+    const teacherSupabase =
+      supabase.createClient(
+        TEACHER_SUPABASE_URL,
+        TEACHER_SUPABASE_ANON_KEY
+      );
+
+    // ====================================================
+    // 🔑 STUDENT SUPABASE
+    // ====================================================
+
+    const STUDENT_SUPABASE_URL =
       "https://ebzcflngssljyqieizws.supabase.co";
 
-    const SUPABASE_ANON_KEY =
+    const STUDENT_SUPABASE_ANON_KEY =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImViemNmbG5nc3NsanlxaWVpendzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MDQ3NDEsImV4cCI6MjA5Mzk4MDc0MX0.ZnPi4jKEtkr0iUN_ymVrhUI7A_OMkhWjRn3shA2D9yk";
 
-    // ====================================================
-
-    const supabaseClient =
+    const studentSupabase =
       supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_ANON_KEY
+        STUDENT_SUPABASE_URL,
+        STUDENT_SUPABASE_ANON_KEY
       );
 
     // ====================================================
@@ -357,6 +418,83 @@
         "studentTableContainer"
       );
 
+    const teacherInfo =
+      document.getElementById(
+        "teacherInfo"
+      );
+
+    // ====================================================
+    // CHECK TEACHER AUTH
+    // ====================================================
+
+    async function checkTeacherAuth() {
+
+      const {
+        data: { session }
+      } = await teacherSupabase
+        .auth
+        .getSession();
+
+      // NOT LOGGED IN
+
+      if (!session) {
+
+        window.location.href =
+          "/login.html";
+
+        return;
+
+      }
+
+      // ROLE CHECK
+
+      const role =
+        session.user.user_metadata.role;
+
+      if (role !== "teacher") {
+
+        window.location.href =
+          "/login.html";
+
+        return;
+
+      }
+
+      // SHOW TEACHER INFO
+
+      const fullName =
+        session.user.user_metadata
+        .full_name || "Teacher";
+
+      const schoolName =
+        session.user.user_metadata
+        .school_name || "Unknown School";
+
+      teacherInfo.textContent =
+        `${fullName} • ${schoolName}`;
+
+    }
+
+    // ====================================================
+    // LOGOUT
+    // ====================================================
+
+    document.getElementById(
+      "logoutBtn"
+    ).addEventListener(
+      "click",
+      async () => {
+
+        await teacherSupabase
+          .auth
+          .signOut();
+
+        window.location.href =
+          "/login.html";
+
+      }
+    );
+
     // ====================================================
     // MODAL FUNCTIONS
     // ====================================================
@@ -399,9 +537,9 @@
     async function loadStudents() {
 
       const {
-        data: users,
+        data: students,
         error
-      } = await supabaseClient
+      } = await studentSupabase
         .from("students")
         .select("*");
 
@@ -415,10 +553,16 @@
 
       // NO STUDENTS
 
-      if (!users || users.length === 0) {
+      if (
+        !students ||
+        students.length === 0
+      ) {
 
-        emptyState.style.display = "block";
-        tableContainer.style.display = "none";
+        emptyState.style.display =
+          "block";
+
+        tableContainer.style.display =
+          "none";
 
         return;
 
@@ -426,12 +570,15 @@
 
       // SHOW TABLE
 
-      emptyState.style.display = "none";
-      tableContainer.style.display = "block";
+      emptyState.style.display =
+        "none";
+
+      tableContainer.style.display =
+        "block";
 
       studentTableBody.innerHTML = "";
 
-      users.forEach((student) => {
+      students.forEach((student) => {
 
         const row =
           document.createElement("tr");
@@ -439,9 +586,7 @@
         row.innerHTML = `
           <td>${student.full_name}</td>
           <td>${student.email}</td>
-          <td>
-            ${student.status || "Pending"}
-          </td>
+          <td>${student.status || "Pending"}</td>
         `;
 
         studentTableBody.appendChild(
@@ -490,11 +635,13 @@
         const {
           data,
           error
-        } = await supabaseClient
-          .auth.signUp({
+        } = await studentSupabase
+          .auth
+          .signUp({
 
             email,
-            password: tempPassword,
+            password:
+              tempPassword,
 
             options: {
 
@@ -515,6 +662,8 @@
 
           });
 
+        // ERROR
+
         if (error) {
 
           message.textContent =
@@ -527,11 +676,11 @@
 
         }
 
-        // SAVE STUDENT RECORD
+        // SAVE TO DATABASE
 
         const {
           error: insertError
-        } = await supabaseClient
+        } = await studentSupabase
           .from("students")
           .insert([{
 
@@ -552,6 +701,8 @@
 
         }
 
+        // SUCCESS
+
         message.textContent =
           "Student invite sent successfully!";
 
@@ -570,8 +721,28 @@
     );
 
     // ====================================================
+    // LIVE AUTH MONITOR
+    // ====================================================
+
+    teacherSupabase.auth
+      .onAuthStateChange(
+        (event, session) => {
+
+          if (!session) {
+
+            window.location.href =
+              "/login.html";
+
+          }
+
+        }
+      );
+
+    // ====================================================
     // START
     // ====================================================
+
+    checkTeacherAuth();
 
     loadStudents();
 
