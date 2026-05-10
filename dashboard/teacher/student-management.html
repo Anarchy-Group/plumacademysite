@@ -192,18 +192,18 @@
     </h2>
 
     <p>
-      This page is now fully separated from
-      the student Supabase system.
+      This page is now ONLY connected to the
+      teacher authentication system.
       <br><br>
 
-      It ONLY checks the logged-in teacher
-      session from the teacher authentication
-      system.
+      It checks whether the currently logged in
+      user is a teacher and keeps the session
+      active across pages correctly.
       <br><br>
 
-      Student registration logic can now be
-      added safely without interfering with
-      teacher login sessions.
+      Student systems can now safely be added
+      later without interfering with teacher
+      authentication.
     </p>
 
   </div>
@@ -253,44 +253,53 @@
   <script>
 
     // ==================================================
-    // 🔑 PUT YOUR SUPABASE DETAILS HERE
+    // 🔑 SUPABASE DETAILS
     // ==================================================
 
-    const TEACHER_SUPABASE_URL =
+    const SUPABASE_URL =
       "https://uzbhtvaorqqmzhivmlpx.supabase.co";
 
-    const TEACHER_SUPABASE_ANON_KEY =
+    const SUPABASE_ANON_KEY =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV6Ymh0dmFvcnFxbXpoaXZtbHB4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzOTYzMDEsImV4cCI6MjA5Mzk3MjMwMX0._BWxANGJgvvJZKxvuC_LWMpP4mgTh3Chr3WqIQuLRn0";
 
-    // ====================================================
+    // ==================================================
+    // CREATE CLIENT
+    // ==================================================
 
-    const teacherSupabase =
+    const supabaseClient =
       supabase.createClient(
-        TEACHER_SUPABASE_URL,
-        TEACHER_SUPABASE_ANON_KEY
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY,
+        {
+          auth: {
+
+            persistSession: true,
+            autoRefreshToken: true,
+            detectSessionInUrl: true
+
+          }
+        }
       );
 
-    // ====================================================
-    // AUTH CHECK
-    // ====================================================
+    // ==================================================
+    // CHECK LOGIN
+    // ==================================================
 
     async function initializePage() {
-
-      // GET CURRENT SESSION
 
       const {
         data: { session },
         error
-      } = await teacherSupabase
+      } = await supabaseClient
         .auth
         .getSession();
 
       console.log(
-        "Teacher session:",
+        "Current session:",
         session
       );
 
-      // NO SESSION
+      // NOT LOGGED IN
 
       if (!session || error) {
 
@@ -320,7 +329,7 @@
 
       }
 
-      // DISPLAY TEACHER INFO
+      // DISPLAY INFO
 
       const fullName =
         user.user_metadata.full_name
@@ -337,12 +346,12 @@
 
     }
 
-    // ====================================================
+    // ==================================================
     // ONLY REDIRECT
     // ON REAL SIGN OUT
-    // ====================================================
+    // ==================================================
 
-    teacherSupabase.auth
+    supabaseClient.auth
       .onAuthStateChange(
         (event) => {
 
@@ -350,6 +359,8 @@
             "Auth event:",
             event
           );
+
+          // ONLY REAL SIGN OUT
 
           if (
             event === "SIGNED_OUT"
@@ -363,26 +374,33 @@
         }
       );
 
-    // ====================================================
-    // LOGOUT
-    // ====================================================
+    // ==================================================
+    // LOGOUT BUTTON
+    // ==================================================
 
-    document.getElementById(
-      "logoutBtn"
-    ).addEventListener(
-      "click",
-      async () => {
+    const logoutBtn =
+      document.getElementById(
+        "logoutBtn"
+      );
 
-        await teacherSupabase
-          .auth
-          .signOut();
+    if (logoutBtn) {
 
-      }
-    );
+      logoutBtn.addEventListener(
+        "click",
+        async () => {
 
-    // ====================================================
+          await supabaseClient
+            .auth
+            .signOut();
+
+        }
+      );
+
+    }
+
+    // ==================================================
     // START
-    // ====================================================
+    // ==================================================
 
     initializePage();
 
