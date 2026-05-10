@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact • Plum Academy</title>
+
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #ffffff;
+      color: #111827;
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    /* =========================
+       HEADER
+    ========================== */
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+
+      width: 100%;
+
+      background: rgba(255,255,255,0.75);
+      backdrop-filter: blur(18px);
+
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+
+    .header-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 84px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      color: #111827;
+    }
+
+    .logo-icon {
+      width: 52px;
+      height: 52px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 24px;
+      border-radius: 18px;
+
+      background: linear-gradient(135deg, #7c3aed, #ec4899);
+
+      color: white;
+
+      box-shadow: 0 10px 25px rgba(124, 58, 237, 0.25);
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .logo-title {
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .logo-subtitle {
+      font-size: 13px;
+      color: #6b7280;
+      margin-top: 4px;
+    }
+
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 34px;
+    }
+
+    .nav-menu a {
+      color: #374151;
+      font-weight: 600;
+      transition: 0.25s ease;
+    }
+
+    .nav-menu a:hover {
+      color: #7c3aed;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .login-btn {
+      color: #374151;
+      font-weight: 600;
+      transition: 0.25s;
+    }
+
+    .login-btn:hover {
+      color: #7c3aed;
+    }
+
+    .join-btn {
+      background: linear-gradient(135deg, #7c3aed, #ec4899);
+      color: white;
+
+      padding: 14px 22px;
+      border-radius: 16px;
+
+      font-weight: 700;
+
+      box-shadow: 0 10px 25px rgba(124, 58, 237, 0.25);
+
+      transition: 0.3s ease;
+    }
+
+    .join-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .mobile-menu-btn {
+      display: none;
+
+      border: none;
+      background: transparent;
+
+      font-size: 28px;
+      cursor: pointer;
+
+      color: #111827;
+    }
+	/* =========================
+	MOBILE MENU
+	========================== */
+
+	.mobile-menu {
+		position: fixed;
+
+		top: 84px;
+		left: 0;
+
+	width: 100%;
+
+	background: rgba(255,255,255,0.96);
+
+	backdrop-filter: blur(18px);
+
+	border-bottom: 1px solid rgba(0,0,0,0.06);
+
+	padding: 24px;
+
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+
+	transform: translateY(-120%);
+	opacity: 0;
+	visibility: hidden;
+
+	transition: 0.35s ease;
+	
+	z-index: 999;
+	}
+
+	.mobile-menu.active {
+		transform: translateY(0);
+		opacity: 1;
+		visibility: visible;
+	}
+
+	.mobile-menu a {
+		color: #111827;
+
+		font-size: 18px;
+
+		font-weight: 600;
+
+		transition: 0.25s ease;
+	}
+
+	.mobile-menu a:hover {
+		color: #7c3aed;
+	}
+
+	.mobile-menu-buttons {
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+
+		margin-top: 12px;
+	}
+
+	.mobile-login-btn {
+		text-align: center;
+
+		padding: 14px;
+
+		border-radius: 16px;
+
+		background: #f3f4f6;
+
+		color: #111827;
+
+		font-weight: 700;
+	}
+
+	.mobile-join-btn {
+		text-align: center;
+
+		padding: 14px;
+
+		border-radius: 16px;
+
+		background: linear-gradient(135deg, #7c3aed, #ec4899);
+
+		color: white;
+
+		font-weight: 700;
+
+		box-shadow: 0 10px 25px rgba(124, 58, 237, 0.25);
+	}
+
+	/* DESKTOP HIDE */
+
+	@media (min-width: 981px) {
+
+	.mobile-menu {
+		display: none;
+	}
+
+}
+
+    /* =========================
+       HERO
+    ========================== */
+
+    .hero {
+      background: linear-gradient(135deg, #6d28d9, #c026d3, #ec4899);
+      color: white;
+      padding: 120px 0;
+    }
+
+    .hero-badge {
+      display: inline-block;
+
+      background: rgba(255,255,255,0.15);
+
+      padding: 10px 18px;
+
+      border-radius: 999px;
+
+      margin-bottom: 24px;
+
+      backdrop-filter: blur(10px);
+
+      border: 1px solid rgba(255,255,255,0.2);
+
+      font-size: 14px;
+    }
+
+    .hero h1 {
+      font-size: 72px;
+      font-weight: 900;
+      line-height: 1.1;
+    }
+
+    .hero p {
+      margin-top: 24px;
+
+      max-width: 720px;
+
+      font-size: 22px;
+
+      color: rgba(255,255,255,0.9);
+    }
+
+    /* =========================
+       SECTION
+    ========================== */
+
+    .section {
+      padding: 100px 0;
+    }
+
+    .section-light {
+      background: #f9fafb;
+    }
+
+    .section-title {
+      color: #7c3aed;
+
+      text-transform: uppercase;
+
+      letter-spacing: 4px;
+
+      font-size: 14px;
+
+      font-weight: 700;
+
+      margin-bottom: 18px;
+    }
+
+    .heading {
+      font-size: 52px;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    .description {
+      margin-top: 24px;
+
+      font-size: 18px;
+
+      color: #6b7280;
+    }
+
+    .grid {
+      display: grid;
+      gap: 40px;
+    }
+
+    .grid-2 {
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    }
+
+    /* =========================
+       CONTACT CARDS
+    ========================== */
+
+    .contact-card {
+      background: white;
+
+      padding: 40px;
+
+      border-radius: 32px;
+
+      border: 1px solid #f3f4f6;
+
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    }
+
+    .contact-icon {
+      font-size: 42px;
+      margin-bottom: 18px;
+    }
+
+    .contact-card h3 {
+      font-size: 28px;
+      margin-bottom: 14px;
+    }
+
+    .contact-card p {
+      color: #6b7280;
+      margin-bottom: 20px;
+    }
+
+    .contact-link {
+      color: #7c3aed;
+      font-weight: 700;
+    }
+
+    /* =========================
+       FORM CONTAINER
+    ========================== */
+
+    .contact-form {
+      background: white;
+
+      padding: 20px;
+
+      border-radius: 32px;
+
+      border: 1px solid #f3f4f6;
+
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+
+      overflow: hidden;
+    }
+
+    .contact-form iframe {
+      width: 100%;
+      height: 900px;
+
+      border: none;
+
+      border-radius: 24px;
+
+      background: white;
+    }
+
+    /* =========================
+       FAQ
+    ========================== */
+
+    .faq-grid {
+      margin-top: 60px;
+
+      display: grid;
+
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+
+      gap: 28px;
+    }
+
+    .faq-card {
+      background: white;
+
+      border-radius: 28px;
+
+      padding: 34px;
+
+      border: 1px solid #f3f4f6;
+
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    }
+
+    .faq-card h3 {
+      font-size: 22px;
+      margin-bottom: 14px;
+    }
+
+    .faq-card p {
+      color: #6b7280;
+    }
+
+    /* =========================
+       FOOTER
+    ========================== */
+
+    footer {
+      background: black;
+      color: white;
+      padding: 50px 0;
+    }
+
+    .footer-content {
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+
+      gap: 30px;
+
+      flex-wrap: wrap;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: rgba(255,255,255,0.7);
+      transition: 0.3s;
+    }
+
+    .footer-links a:hover {
+      color: white;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================== */
+
+    @media (max-width: 980px) {
+
+      .nav-menu,
+      .header-actions {
+        display: none;
+      }
+
+      .mobile-menu-btn {
+        display: block;
+      }
+
+    }
+
+    @media (max-width: 768px) {
+
+      .hero h1 {
+        font-size: 48px;
+      }
+
+      .heading {
+        font-size: 38px;
+      }
+
+      .hero p {
+        font-size: 18px;
+      }
+
+      .contact-form iframe {
+        height: 1100px;
+      }
+
+    }
+
+  </style>
+</head>
+
+<script>
+
+  function toggleMobileMenu() {
+
+    const mobileMenu = document.getElementById("mobileMenu");
+
+    mobileMenu.classList.toggle("active");
+
+  }
+
+</script>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+
+    <div class="container header-container">
+
+      <a href="#" class="logo">
+
+        <div class="logo-text">
+          <span class="logo-title">
+            Plum Academy
+          </span>
+
+          <span class="logo-subtitle">
+            Modern Online Education
+          </span>
+        </div>
+
+      </a>
+
+      <nav class="nav-menu">
+        <a href="#">Home</a>
+        <a href="#">Plum School</a>
+        <a href="#">Plum Courses</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+      </nav>
+
+      <div class="header-actions">
+        <a href="#" class="login-btn">
+          Log In
+        </a>
+
+        <a href="#" class="join-btn">
+          Start Learning
+        </a>
+      </div>
+
+	  <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+		  ☰
+	  </button>
+
+    </div>
+
+  </header>
+
+	<div class="mobile-menu" id="mobileMenu">
+
+		<a href="#">Home</a>
+		<a href="#">Plum School</a>
+		<a href="#">Plum Courses</a>
+		<a href="#">About</a>
+		<a href="#">Contact</a>
+
+	<div class="mobile-menu-buttons">
+
+		<a href="#" class="mobile-login-btn">
+			Log In
+		</a>
+
+		<a href="#" class="mobile-join-btn">
+			Start Learning
+		</a>
+
+	</div>
+
+	</div>
+
+  <!-- HERO -->
+  <section class="hero">
+
+    <div class="container">
+
+      <div class="hero-badge">
+        ✨ Contact Plum Academy
+      </div>
+
+      <h1>
+        We'd love to hear from you.
+      </h1>
+
+      <p>
+        Whether you have questions about courses, student support, partnerships, or general enquiries, the Plum Academy team is here to help.
+      </p>
+
+    </div>
+
+  </section>
+
+  <!-- CONTACT OPTIONS -->
+  <section class="section section-light">
+
+    <div class="container">
+
+      <div class="grid grid-2">
+
+        <div class="contact-card">
+
+          <div class="contact-icon">
+            📧
+          </div>
+
+          <h3>
+            Email Support
+          </h3>
+
+          <p>
+            Contact our team for general enquiries, student support, or learning assistance.
+          </p>
+
+          <a href="mailto:support@academy.magicplum.co.uk" class="contact-link">
+            support@academy.magicplum.co.uk
+          </a>
+
+        </div>
+
+        <div class="contact-card">
+
+          <div class="contact-icon">
+            🎓
+          </div>
+
+          <h3>
+            Course Enquiries
+          </h3>
+
+          <p>
+            Questions about Plum School or Plum Courses? Our team can guide you to the right learning pathway.
+          </p>
+
+          <a href="mailto:courses@academy.magicplum.co.uk" class="contact-link">
+            courses@academy.magicplum.co.uk
+          </a>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- MICROSOFT FORM -->
+  <section class="section">
+
+    <div class="container">
+
+      <div style="text-align:center; max-width:800px; margin:auto; margin-bottom:60px;">
+
+        <div class="section-title">
+          Send Us A Message
+        </div>
+
+        <h2 class="heading">
+          Contact the Plum Academy team.
+        </h2>
+
+        <p class="description">
+          Fill out the embedded contact form below and our team will get back to you as soon as possible.
+        </p>
+
+      </div>
+
+      <div class="contact-form">
+
+        <iframe 
+          src="https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAAMAAaftu8NUQ0NENldUMDhWVVA2VjhNRTNNQUZFWVNMVi4u"
+          frameborder="0"
+          marginwidth="0"
+          marginheight="0">
+          Loading…
+        </iframe>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- FAQ -->
+  <section class="section section-light">
+
+    <div class="container">
+
+      <div style="text-align:center; max-width:800px; margin:auto;">
+
+        <div class="section-title">
+          Frequently Asked Questions
+        </div>
+
+        <h2 class="heading">
+          Common questions.
+        </h2>
+
+        <p class="description">
+          Quick answers to some of the most common enquiries we receive.
+        </p>
+
+      </div>
+
+      <div class="faq-grid">
+
+        <div class="faq-card">
+
+          <h3>
+            Who is Plum School for?
+          </h3>
+
+          <p>
+            Plum School is designed for British primary and secondary school students seeking revision support and online learning resources.
+          </p>
+
+        </div>
+
+        <div class="faq-card">
+
+          <h3>
+            What is Plum Courses?
+          </h3>
+
+          <p>
+            Plum Courses provides modern online learning opportunities for older teens and adults, focusing on practical and digital skills.
+          </p>
+
+        </div>
+
+        <div class="faq-card">
+
+          <h3>
+            Is learning fully online?
+          </h3>
+
+          <p>
+            Yes — Plum Academy is designed as a flexible online-first learning platform accessible from anywhere.
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+
+    <div class="container footer-content">
+
+      <div>
+
+        <h3 style="font-size:28px;">
+          Plum Academy
+        </h3>
+
+        <p style="margin-top:10px; color:rgba(255,255,255,0.65);">
+          Modern online education for students and lifelong learners.
+        </p>
+
+      </div>
+
+      <div class="footer-links">
+        <a href="about">About</a>
+        <a href="index#section">Courses</a>
+        <a href="contact">Support</a>
+        <a href="contact">Contact</a>
+      </div>
+
+    </div>
+
+  </footer>
+
+</body>
+</html>
