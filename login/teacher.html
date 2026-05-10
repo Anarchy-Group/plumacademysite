@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Teacher Portal Login</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #6c63ff, #4f46e5);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 450px;
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+      color: #222;
+    }
+
+    p.subtitle {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #666;
+    }
+
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      background: #ececec;
+      cursor: pointer;
+      font-size: 16px;
+      transition: 0.2s;
+    }
+
+    .tab-btn.active {
+      background: #4f46e5;
+      color: white;
+      font-weight: bold;
+    }
+
+    form {
+      display: none;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    form.active {
+      display: flex;
+    }
+
+    input {
+      padding: 14px;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      font-size: 15px;
+    }
+
+    button.submit-btn {
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: #4f46e5;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button.submit-btn:hover {
+      background: #4338ca;
+    }
+
+    .message {
+      margin-top: 15px;
+      text-align: center;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .supabase-box {
+      background: #f5f5f5;
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      border: 2px dashed #999;
+    }
+
+    .supabase-box h3 {
+      margin-bottom: 10px;
+      color: #111;
+    }
+
+    .small {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <h1>Teacher Portal</h1>
+    <p class="subtitle">
+      Educational Resources Access
+    </p>
+
+    <div class="tabs">
+      <button class="tab-btn active" id="loginTab">
+        Login
+      </button>
+
+      <button class="tab-btn" id="signupTab">
+        Create Account
+      </button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <form id="loginForm" class="active">
+
+      <input
+        type="email"
+        id="loginEmail"
+        placeholder="Email Address"
+        required
+      />
+
+      <input
+        type="password"
+        id="loginPassword"
+        placeholder="Password"
+        required
+      />
+
+      <button type="submit" class="submit-btn">
+        Login
+      </button>
+
+    </form>
+
+    <!-- SIGNUP FORM -->
+    <form id="signupForm">
+
+      <input
+        type="text"
+        id="schoolName"
+        placeholder="School Name"
+        required
+      />
+
+      <input
+        type="text"
+        id="fullName"
+        placeholder="Full Name"
+        required
+      />
+
+      <input
+        type="email"
+        id="signupEmail"
+        placeholder="Email Address"
+        required
+      />
+
+      <input
+        type="password"
+        id="signupPassword"
+        placeholder="Password"
+        required
+      />
+
+      <input
+        type="password"
+        id="confirmPassword"
+        placeholder="Confirm Password"
+        required
+      />
+
+      <button type="submit" class="submit-btn">
+        Create Account
+      </button>
+
+    </form>
+
+    <div class="message" id="message"></div>
+
+  </div>
+
+  <script>
+
+    // ====================================================
+    // 🔑 PUT YOUR SUPABASE DETAILS HERE
+    // ====================================================
+
+    const SUPABASE_URL = "https://uzbhtvaorqqmzhivmlpx.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV6Ymh0dmFvcnFxbXpoaXZtbHB4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzOTYzMDEsImV4cCI6MjA5Mzk3MjMwMX0._BWxANGJgvvJZKxvuC_LWMpP4mgTh3Chr3WqIQuLRn0";
+
+    // ====================================================
+
+    const supabaseClient = supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY
+    );
+
+    const loginTab = document.getElementById("loginTab");
+    const signupTab = document.getElementById("signupTab");
+
+    const loginForm = document.getElementById("loginForm");
+    const signupForm = document.getElementById("signupForm");
+
+    const message = document.getElementById("message");
+
+    // TAB SWITCHING
+
+    loginTab.addEventListener("click", () => {
+
+      loginTab.classList.add("active");
+      signupTab.classList.remove("active");
+
+      loginForm.classList.add("active");
+      signupForm.classList.remove("active");
+
+      message.textContent = "";
+
+    });
+
+    signupTab.addEventListener("click", () => {
+
+      signupTab.classList.add("active");
+      loginTab.classList.remove("active");
+
+      signupForm.classList.add("active");
+      loginForm.classList.remove("active");
+
+      message.textContent = "";
+
+    });
+
+    // LOGIN FUNCTION
+
+    loginForm.addEventListener("submit", async (e) => {
+
+      e.preventDefault();
+
+      message.textContent = "Logging in...";
+
+      const email =
+        document.getElementById("loginEmail").value;
+
+      const password =
+        document.getElementById("loginPassword").value;
+
+      const { data, error } =
+        await supabaseClient.auth.signInWithPassword({
+          email,
+          password
+        });
+
+      if (error) {
+
+        message.textContent = error.message;
+        message.style.color = "red";
+
+      } else {
+
+        message.textContent =
+          "Login successful!";
+
+        message.style.color = "green";
+
+        console.log(data);
+
+        // Redirect example:
+        // window.location.href = "/dashboard.html";
+
+      }
+
+    });
+
+    // SIGNUP FUNCTION
+
+    signupForm.addEventListener("submit", async (e) => {
+
+      e.preventDefault();
+
+      message.textContent = "Creating account...";
+
+      const schoolName =
+        document.getElementById("schoolName").value;
+
+      const fullName =
+        document.getElementById("fullName").value;
+
+      const email =
+        document.getElementById("signupEmail").value;
+
+      const password =
+        document.getElementById("signupPassword").value;
+
+      const confirmPassword =
+        document.getElementById("confirmPassword").value;
+
+      // PASSWORD CHECK
+
+      if (password !== confirmPassword) {
+
+        message.textContent =
+          "Passwords do not match.";
+
+        message.style.color = "red";
+
+        return;
+      }
+
+      // CREATE ACCOUNT
+
+      const { data, error } =
+        await supabaseClient.auth.signUp({
+
+          email,
+          password,
+
+          options: {
+
+            data: {
+              school_name: schoolName,
+              full_name: fullName,
+              role: "teacher"
+            }
+
+          }
+
+        });
+
+      if (error) {
+
+        message.textContent = error.message;
+        message.style.color = "red";
+
+      } else {
+
+        message.textContent =
+          "Account created successfully! Check your email.";
+
+        message.style.color = "green";
+
+        console.log(data);
+
+      }
+
+    });
+
+  </script>
+
+</body>
+</html>
