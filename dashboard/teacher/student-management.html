@@ -664,9 +664,9 @@
           document.createElement("tr");
 
         row.innerHTML = `
-          <td>${student.full_name}</td>
-          <td>${student.email}</td>
-          <td>${student.keystage}</td>
+          <td>${student.full_name || "Unknown Student"}</td>
+          <td>${student.email || "No Email"}</td>
+          <td>${student.keystage || "Not Set"}</td>
           <td>${new Date(student.created_at).toLocaleDateString()}</td>
         `;
 
@@ -785,7 +785,9 @@
           .toString(36)
           .slice(-10);
 
+        // ==================================================
         // CREATE AUTH ACCOUNT
+        // ==================================================
 
         const {
           data,
@@ -800,6 +802,11 @@
               tempPassword,
 
             options: {
+
+              // EMAIL SETUP LINK
+
+              emailRedirectTo:
+                "https://academy.magicplum.co.uk/student/setup-password",
 
               data: {
 
@@ -834,10 +841,18 @@
           studentMessage.style.color =
             "red";
 
+          console.error(error);
+
           return;
 
         }
 
+        console.log(
+          "Student auth created:",
+          data
+        );
+
+        // ==================================================
         // SAVE STUDENT RECORD
 
         const {
