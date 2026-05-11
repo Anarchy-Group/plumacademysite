@@ -138,6 +138,71 @@
       flex-wrap: wrap;
     }
 
+    /* MODAL */
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      width: 100%;
+      max-width: 500px;
+      background: white;
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .modal-content h2 {
+      margin-bottom: 20px;
+    }
+
+    .modal-form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    input,
+    select {
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .cancel-btn {
+      background: #e5e7eb;
+      color: #222;
+    }
+
+    .cancel-btn:hover {
+      background: #d1d5db;
+    }
+
+    .message {
+      margin-top: 15px;
+      font-size: 14px;
+      text-align: center;
+    }
+
   </style>
 </head>
 <body>
@@ -207,16 +272,9 @@
     </h2>
 
     <p>
-      This page checks whether a teacher
-      is currently authenticated before
-      allowing access to student tools.
-      <br><br>
-
-      You can now begin adding student
-      management functionality safely.
+      Create and manage student accounts
+      for your school.
     </p>
-
-    <!-- STUDENT ACTIONS -->
 
     <div class="student-actions">
 
@@ -245,10 +303,111 @@
 
   </div>
 
+  <!-- MODAL -->
+
+  <div
+    class="modal"
+    id="studentModal"
+  >
+
+    <div class="modal-content">
+
+      <h2>
+        Create Student
+      </h2>
+
+      <form
+        id="studentForm"
+        class="modal-form"
+      >
+
+        <!-- SCHOOL EMAIL -->
+
+        <input
+          type="email"
+          id="studentEmail"
+          placeholder="School Email"
+          required
+        />
+
+        <!-- FULL NAME -->
+
+        <input
+          type="text"
+          id="studentName"
+          placeholder="Full Name"
+          required
+        />
+
+        <!-- KEYSTAGE -->
+
+        <select
+          id="studentKeystage"
+          required
+        >
+
+          <option value="">
+            Select Keystage
+          </option>
+
+          <option value="KS1">
+            KS1
+          </option>
+
+          <option value="KS2">
+            KS2
+          </option>
+
+          <option value="KS3">
+            KS3
+          </option>
+
+          <option value="KS4">
+            KS4
+          </option>
+
+          <option value="KS5">
+            KS5
+          </option>
+
+        </select>
+
+        <!-- BUTTONS -->
+
+        <div class="modal-buttons">
+
+          <button
+            type="submit"
+            class="btn create-btn"
+          >
+            Create Student
+          </button>
+
+          <button
+            type="button"
+            id="closeModalBtn"
+            class="btn cancel-btn"
+          >
+            Cancel
+          </button>
+
+        </div>
+
+      </form>
+
+      <div
+        id="studentMessage"
+        class="message"
+      ></div>
+
+    </div>
+
+  </div>
+
   <script>
 
     // ==================================================
-    // 🔑 SUPABASE DETAILS
+    // 🔑 TEACHER SUPABASE
     // ==================================================
 
     const SUPABASE_URL =
@@ -258,8 +417,20 @@
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV6Ymh0dmFvcnFxbXpoaXZtbHB4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzOTYzMDEsImV4cCI6MjA5Mzk3MjMwMX0._BWxANGJgvvJZKxvuC_LWMpP4mgTh3Chr3WqIQuLRn0";
 
     // ==================================================
-    // CREATE CLIENT
+    // 🔑 STUDENT SUPABASE
     // ==================================================
+
+    const STUDENT_SUPABASE_URL =
+      "https://ebzcflngssljyqieizws.supabase.co";
+
+    const STUDENT_SUPABASE_ANON_KEY =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImViemNmbG5nc3NsanlxaWVpendzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MDQ3NDEsImV4cCI6MjA5Mzk4MDc0MX0.ZnPi4jKEtkr0iUN_ymVrhUI7A_OMkhWjRn3shA2D9yk";
+
+    // ==================================================
+    // CREATE CLIENTS
+    // ==================================================
+
+    // TEACHER AUTH SYSTEM
 
     const supabaseClient =
       supabase.createClient(
@@ -274,6 +445,14 @@
 
           }
         }
+      );
+
+    // STUDENT DATABASE SYSTEM
+
+    const studentSupabase =
+      supabase.createClient(
+        STUDENT_SUPABASE_URL,
+        STUDENT_SUPABASE_ANON_KEY
       );
 
     // ==================================================
@@ -295,6 +474,26 @@
         "createStudentBtn"
       );
 
+    const studentModal =
+      document.getElementById(
+        "studentModal"
+      );
+
+    const closeModalBtn =
+      document.getElementById(
+        "closeModalBtn"
+      );
+
+    const studentForm =
+      document.getElementById(
+        "studentForm"
+      );
+
+    const studentMessage =
+      document.getElementById(
+        "studentMessage"
+      );
+
     // ==================================================
     // CHECK LOGIN
     // ==================================================
@@ -304,13 +503,9 @@
       statusText.textContent =
         "Checking teacher authentication...";
 
-      // WAIT FOR SESSION RESTORE
-
       await new Promise(resolve =>
         setTimeout(resolve, 1000)
       );
-
-      // GET USER
 
       const {
         data,
@@ -319,28 +514,12 @@
         .auth
         .getUser();
 
-      console.log(
-        "Auth user:",
-        data
-      );
-
-      console.log(
-        localStorage
-      );
-
       const user =
         data?.user;
 
       // NOT LOGGED IN
 
       if (!user || error) {
-
-        console.log(
-          "No logged in teacher found"
-        );
-
-        statusText.textContent =
-          "No active teacher session found.";
 
         window.location.href =
           "/login/teacher";
@@ -350,11 +529,6 @@
       }
 
       // LOGGED IN
-
-      console.log(
-        "Teacher authenticated:",
-        user.email
-      );
 
       const fullName =
         user.user_metadata.full_name
@@ -373,18 +547,12 @@
     }
 
     // ==================================================
-    // ONLY REDIRECT
-    // ON ACTUAL SIGN OUT
+    // AUTH LISTENER
     // ==================================================
 
     supabaseClient.auth
       .onAuthStateChange(
         (event) => {
-
-          console.log(
-            "Auth event:",
-            event
-          );
 
           if (
             event === "SIGNED_OUT"
@@ -399,40 +567,204 @@
       );
 
     // ==================================================
-    // LOGOUT BUTTON
+    // LOGOUT
     // ==================================================
 
-    const logoutBtn =
-      document.getElementById(
-        "logoutBtn"
-      );
+    document.getElementById(
+      "logoutBtn"
+    ).addEventListener(
+      "click",
+      async () => {
 
-    if (logoutBtn) {
+        await supabaseClient
+          .auth
+          .signOut();
 
-      logoutBtn.addEventListener(
-        "click",
-        async () => {
-
-          await supabaseClient
-            .auth
-            .signOut();
-
-        }
-      );
-
-    }
+      }
+    );
 
     // ==================================================
-    // CREATE STUDENT BUTTON
+    // OPEN MODAL
     // ==================================================
 
     createStudentBtn.addEventListener(
       "click",
       () => {
 
-        alert(
-          "Student creation popup coming next 👀"
+        studentModal.classList.add(
+          "active"
         );
+
+      }
+    );
+
+    // ==================================================
+    // CLOSE MODAL
+    // ==================================================
+
+    closeModalBtn.addEventListener(
+      "click",
+      () => {
+
+        studentModal.classList.remove(
+          "active"
+        );
+
+        studentForm.reset();
+
+        studentMessage.textContent = "";
+
+      }
+    );
+
+    // ==================================================
+    // CREATE STUDENT
+    // ==================================================
+
+    studentForm.addEventListener(
+      "submit",
+      async (e) => {
+
+        e.preventDefault();
+
+        const email =
+          document.getElementById(
+            "studentEmail"
+          ).value;
+
+        const fullName =
+          document.getElementById(
+            "studentName"
+          ).value;
+
+        const keystage =
+          document.getElementById(
+            "studentKeystage"
+          ).value;
+
+        studentMessage.textContent =
+          "Creating student...";
+
+        studentMessage.style.color =
+          "#333";
+
+        // RANDOM TEMP PASSWORD
+
+        const tempPassword =
+          Math.random()
+          .toString(36)
+          .slice(-10);
+
+        // ==================================================
+        // CREATE STUDENT ACCOUNT
+        // IN STUDENT SUPABASE
+        // ==================================================
+
+        const {
+          data,
+          error
+        } = await studentSupabase
+          .auth
+          .signUp({
+
+            email,
+
+            password:
+              tempPassword,
+
+            options: {
+
+              data: {
+
+                full_name:
+                  fullName,
+
+                keystage:
+                  keystage,
+
+                role:
+                  "student"
+
+              }
+
+            }
+
+          });
+
+        // ERROR
+
+        if (error) {
+
+          studentMessage.textContent =
+            error.message;
+
+          studentMessage.style.color =
+            "red";
+
+          return;
+
+        }
+
+        // ==================================================
+        // SAVE EXTRA STUDENT DATA
+        // ==================================================
+
+        const {
+          error: insertError
+        } = await studentSupabase
+          .from("students")
+          .insert([{
+
+            email:
+              email,
+
+            full_name:
+              fullName,
+
+            keystage:
+              keystage,
+
+            created_at:
+              new Date()
+
+          }]);
+
+        // INSERT ERROR
+
+        if (insertError) {
+
+          console.error(
+            insertError
+          );
+
+        }
+
+        // SUCCESS
+
+        studentMessage.textContent =
+          "Student account created successfully!";
+
+        studentMessage.style.color =
+          "green";
+
+        console.log(
+          "Student created:",
+          data
+        );
+
+        // RESET
+
+        setTimeout(() => {
+
+          studentForm.reset();
+
+          studentModal.classList.remove(
+            "active"
+          );
+
+          studentMessage.textContent = "";
+
+        }, 1500);
 
       }
     );
