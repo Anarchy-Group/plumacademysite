@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plum Courses — Resources</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #fff7f4;
+      overflow-x: hidden;
+    }
+
+    .main-bg {
+      background:
+        radial-gradient(circle at top left, rgba(255, 71, 126, 0.15), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(255, 132, 64, 0.15), transparent 35%),
+        linear-gradient(135deg, #fff5f2 0%, #fff8f6 60%, #ffffff 100%);
+    }
+
+    .gradient-text {
+      background: linear-gradient(90deg, #ff477e 0%, #ff7a45 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .logo {
+      font-size: 1.6rem;
+      font-weight: 800;
+      background: linear-gradient(90deg,#ff477e,#ff7a45);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .gradient-button {
+      background: linear-gradient(135deg, #ff477e 0%, #ff7a45 100%);
+      box-shadow: 0 0 30px rgba(255, 105, 97, 0.35);
+    }
+
+    .card-bg {
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(255,255,255,0.9);
+      backdrop-filter: blur(12px);
+    }
+
+    .resource-card {
+      background: rgba(255,255,255,0.72);
+      border: 1px solid rgba(255,120,120,0.08);
+      transition: all .3s ease;
+    }
+
+    .resource-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 25px 60px rgba(255,120,120,0.12);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="main-bg min-h-screen">
+
+    <!-- HEADER -->
+    <header class="w-full border-b border-orange-100 bg-white/80 backdrop-blur-xl sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+
+        <div class="logo">🍑 Plum Courses</div>
+
+        <nav class="hidden lg:flex items-center gap-8 text-gray-600 font-semibold text-sm">
+          <a href="#" class="hover:text-gray-900 transition">Home</a>
+          <a href="#" class="hover:text-gray-900 transition">Courses</a>
+          <a href="#" class="hover:text-gray-900 transition">Skills</a>
+          <a href="#" class="text-gray-900">Resources</a>
+          <a href="#" class="hover:text-gray-900 transition">Community</a>
+        </nav>
+
+        <button class="gradient-button text-gray-900 px-6 py-3 rounded-2xl font-bold hover:scale-105 transition duration-300 text-sm sm:text-base">
+          Browse Library
+        </button>
+      </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-20 lg:py-24 text-center">
+
+      <div class="inline-flex items-center gap-2 bg-white px-5 py-2 rounded-full border border-orange-100 shadow-lg text-sm font-bold text-gray-700 mb-8">
+        📚 Free Learning Resources
+      </div>
+
+      <h1 class="text-5xl sm:text-6xl lg:text-7xl font-black text-gray-900 leading-tight mb-8">
+        Explore the
+        <span class="gradient-text">resource library</span>
+      </h1>
+
+      <p class="text-gray-600 text-lg sm:text-xl leading-relaxed max-w-3xl mx-auto mb-12">
+        Access guides, templates, tutorials, downloads, and educational resources designed for creators, developers, and digital learners.
+      </p>
+
+      <!-- SEARCH -->
+      <div class="max-w-2xl mx-auto card-bg rounded-[28px] p-4 shadow-xl flex flex-col sm:flex-row gap-4">
+        <input
+          type="text"
+          placeholder="Search resources..."
+          class="w-full bg-white rounded-2xl px-5 py-4 outline-none text-gray-700 font-medium border border-orange-100"
+        />
+
+        <button class="gradient-button text-gray-900 px-8 py-4 rounded-2xl font-black hover:scale-105 transition duration-300 whitespace-nowrap">
+          Search
+        </button>
+      </div>
+    </section>
+
+    <!-- RESOURCE CATEGORIES -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 pb-10">
+      <div class="flex flex-wrap justify-center gap-4">
+
+        <button class="gradient-button text-gray-900 px-6 py-3 rounded-2xl font-bold">
+          All Resources
+        </button>
+
+        <button class="bg-white border border-orange-100 text-gray-700 px-6 py-3 rounded-2xl font-bold hover:bg-orange-50 transition">
+          Templates
+        </button>
+
+        <button class="bg-white border border-orange-100 text-gray-700 px-6 py-3 rounded-2xl font-bold hover:bg-orange-50 transition">
+          Guides
+        </button>
+
+        <button class="bg-white border border-orange-100 text-gray-700 px-6 py-3 rounded-2xl font-bold hover:bg-orange-50 transition">
+          Downloads
+        </button>
+
+        <button class="bg-white border border-orange-100 text-gray-700 px-6 py-3 rounded-2xl font-bold hover:bg-orange-50 transition">
+          Tutorials
+        </button>
+
+      </div>
+    </section>
+
+    <!-- RESOURCES GRID -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+
+      <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
+
+        <!-- RESOURCE -->
+        <div class="resource-card rounded-[36px] p-8 shadow-xl">
+
+          <div class="w-16 h-16 rounded-3xl bg-gradient-to-br from-pink-400 to-orange-300 flex items-center justify-center text-3xl shadow-lg mb-8">
+            🎨
+          </div>
+
+          <span class="bg-pink-100 text-pink-600 px-4 py-2 rounded-full text-sm font-bold inline-flex mb-6">
+            Free Template
+          </span>
+
+          <h3 class="text-3xl font-black text-gray-900 mb-4">
+            Thumbnail Pack
+          </h3>
+
+          <p class="text-gray-600 leading-relaxed mb-8">
+            Download high quality YouTube and social media thumbnail templates for creators.
+          </p>
+
+          <button class="gradient-button w-full text-gray-900 py-4 rounded-2xl font-black hover:scale-[1.02] transition duration-300">
+            Download
+          </button>
+        </div>
+
+        <!-- RESOURCE -->
+        <div class="resource-card rounded-[36px] p-8 shadow-xl">
+
+          <div class="w-16 h-16 rounded-3xl bg-gradient-to-br from-orange-300 to-pink-300 flex items-center justify-center text-3xl shadow-lg mb-8">
+            📖
+          </div>
+
+          <span class="bg-orange-100 text-orange-600 px-4 py-2 rounded-full text-sm font-bold inline-flex mb-6">
+            Beginner Guide
+          </span>
+
+          <h3 class="text-3xl font-black text-gray-900 mb-4">
+            Creator Starter Guide
+          </h3>
+
+          <p class="text-gray-600 leading-relaxed mb-8">
+            Learn how to start building an online audience and create engaging content.
+          </p>
+
+          <button class="gradient-button w-full text-gray-900 py-4 rounded-2xl font-black hover:scale-[1.02] transition duration-300">
+            Read Guide
+          </button>
+        </div>
+
+        <!-- RESOURCE -->
+        <div class="resource-card rounded-[36px] p-8 shadow-xl">
+
+          <div class="w-16 h-16 rounded-3xl bg-gradient-to-br from-pink-300 to-orange-200 flex items-center justify-center text-3xl shadow-lg mb-8">
+            💻
+          </div>
+
+          <span class="bg-pink-100 text-pink-600 px-4 py-2 rounded-full text-sm font-bold inline-flex mb-6">
+            UI Kit
+          </span>
+
+          <h3 class="text-3xl font-black text-gray-900 mb-4">
+            Modern Web UI Pack
+          </h3>
+
+          <p class="text-gray-600 leading-relaxed mb-8">
+            A collection of modern web components and layouts for frontend designers.
+          </p>
+
+          <button class="gradient-button w-full text-gray-900 py-4 rounded-2xl font-black hover:scale-[1.02] transition duration-300">
+            Download
+          </button>
+        </div>
+
+        <!-- RESOURCE -->
+        <div class="resource-card rounded-[36px] p-8 shadow-xl">
+
+          <div class="w-16 h-16 rounded-3xl bg-gradient-to-br from-orange-200 to-pink-300 flex items-center justify-center text-3xl shadow-lg mb-8">
+            🎥
+          </div>
+
+          <span class="bg-orange-100 text-orange-600 px-4 py-2 rounded-full text-sm font-bold inline-flex mb-6">
+            Tutorial
+          </span>
+
+          <h3 class="text-3xl font-black text-gray-900 mb-4">
+            Editing Workflow Guide
+          </h3>
+
+          <p class="text-gray-600 leading-relaxed mb-8">
+            Learn efficient editing workflows for modern content creation and production.
+          </p>
+
+          <button class="gradient-button w-full text-gray-900 py-4 rounded-2xl font-black hover:scale-[1.02] transition duration-300">
+            Watch Tutorial
+          </button>
+        </div>
+
+        <!-- RESOURCE -->
+        <div class="resource-card rounded-[36px] p-8 shadow-xl">
+
+          <div class="w-16 h-16 rounded-3xl bg-gradient-to-br from-pink-400 to-orange-200 flex items-center justify-center text-3xl shadow-lg mb-8">
+            📸
+          </div>
+
+          <span class="bg-pink-100 text-pink-600 px-4 py-2 rounded-full text-sm font-bold inline-flex mb-6">
+            Photography Pack
+          </span>
+
+          <h3 class="text-3xl font-black text-gray-900 mb-4">
+            Lightroom Presets
+          </h3>
+
+          <p class="text-gray-600 leading-relaxed mb-8">
+            Professional preset collection for cinematic photography and social content.
+          </p>
+
+          <button class="gradient-button w-full text-gray-900 py-4 rounded-2xl font-black hover:scale-[1.02] transition duration-300">
+            Download
+          </button>
+        </div>
+
+        <!-- RESOURCE -->
+        <div class="resource-card rounded-[36px] p-8 shadow-xl">
+
+          <div class="w-16 h-16 rounded-3xl bg-gradient-to-br from-orange-300 to-pink-200 flex items-center justify-center text-3xl shadow-lg mb-8">
+            🚀
+          </div>
+
+          <span class="bg-orange-100 text-orange-600 px-4 py-2 rounded-full text-sm font-bold inline-flex mb-6">
+            Productivity
+          </span>
+
+          <h3 class="text-3xl font-black text-gray-900 mb-4">
+            Creator Workflow Kit
+          </h3>
+
+          <p class="text-gray-600 leading-relaxed mb-8">
+            Organize content planning, scheduling, goals, and production systems.
+          </p>
+
+          <button class="gradient-button w-full text-gray-900 py-4 rounded-2xl font-black hover:scale-[1.02] transition duration-300">
+            Access Resource
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 py-24">
+
+      <div class="card-bg rounded-[40px] p-10 sm:p-14 shadow-2xl">
+
+        <div class="text-center mb-14">
+          <h2 class="text-4xl sm:text-5xl font-black text-gray-900 mb-4">
+            Resource Library Stats
+          </h2>
+
+          <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+            Thousands of downloads and educational materials available for creators and learners.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-10 text-center">
+
+          <div>
+            <h3 class="text-5xl font-black gradient-text mb-3">500+</h3>
+            <p class="text-gray-500 font-medium">Downloads</p>
+          </div>
+
+          <div>
+            <h3 class="text-5xl font-black gradient-text mb-3">120+</h3>
+            <p class="text-gray-500 font-medium">Guides & Tutorials</p>
+          </div>
+
+          <div>
+            <h3 class="text-5xl font-black gradient-text mb-3">40+</h3>
+            <p class="text-gray-500 font-medium">Template Packs</p>
+          </div>
+
+          <div>
+            <h3 class="text-5xl font-black gradient-text mb-3">24/7</h3>
+            <p class="text-gray-500 font-medium">Access Anytime</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-orange-100 bg-white/60 backdrop-blur-xl">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
+
+        <div>
+          <div class="logo mb-2">🍑 Plum Courses</div>
+          <p class="text-gray-500">
+            © 2026 Plum Courses. All rights reserved.
+          </p>
+        </div>
+
+        <div class="flex gap-8 text-gray-600 font-semibold">
+          <a href="#" class="hover:text-gray-900 transition">Privacy</a>
+          <a href="#" class="hover:text-gray-900 transition">Terms</a>
+          <a href="#" class="hover:text-gray-900 transition">Support</a>
+        </div>
+
+      </div>
+    </footer>
+
+  </div>
+
+</body>
+</html>
