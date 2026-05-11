@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Start Learning • Plum School</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family:'Inter',sans-serif;
+      background:#0f1020;
+      color:white;
+      overflow-x:hidden;
+      min-height:100vh;
+    }
+
+    a{
+      text-decoration:none;
+      color:inherit;
+    }
+
+    .background{
+      position:fixed;
+      inset:0;
+      background:
+        radial-gradient(circle at top left,#7b2ff7 0%,transparent 30%),
+        radial-gradient(circle at bottom right,#ff4ecd 0%,transparent 30%),
+        linear-gradient(135deg,#0f1020,#17182f);
+      z-index:-1;
+    }
+
+    nav{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:22px 6%;
+      backdrop-filter:blur(12px);
+      background:rgba(15,16,32,0.7);
+      border-bottom:1px solid rgba(255,255,255,0.08);
+      position:sticky;
+      top:0;
+      z-index:100;
+    }
+
+    .logo{
+      font-size:1.6rem;
+      font-weight:800;
+      background:linear-gradient(90deg,#ff7ad9,#9f67ff);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+
+    .nav-links{
+      display:flex;
+      gap:22px;
+      flex-wrap:wrap;
+      justify-content:center;
+    }
+
+    .nav-links a{
+      opacity:0.8;
+      transition:0.2s;
+      font-weight:500;
+    }
+
+    .nav-links a:hover{
+      opacity:1;
+      color:#ff7ad9;
+    }
+
+    .page{
+      padding:70px 6%;
+    }
+
+    .hero{
+      text-align:center;
+      margin-bottom:70px;
+    }
+
+    .hero h1{
+      font-size:clamp(2.5rem,6vw,4.5rem);
+      margin-bottom:20px;
+      line-height:1.1;
+    }
+
+    .gradient{
+      background:linear-gradient(90deg,#ff7ad9,#9f67ff);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+
+    .hero p{
+      max-width:760px;
+      margin:auto;
+      opacity:0.8;
+      line-height:1.8;
+      font-size:1.05rem;
+    }
+
+    .options{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:28px;
+    }
+
+    .card{
+      background:rgba(255,255,255,0.05);
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:28px;
+      padding:32px;
+      backdrop-filter:blur(14px);
+      transition:0.25s;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card:hover{
+      transform:translateY(-6px);
+      border-color:#9f67ff;
+      box-shadow:0 20px 50px rgba(0,0,0,0.35);
+    }
+
+    .card::before{
+      content:'';
+      position:absolute;
+      width:200px;
+      height:200px;
+      background:rgba(255,255,255,0.04);
+      border-radius:50%;
+      top:-80px;
+      right:-80px;
+    }
+
+    .icon{
+      font-size:3rem;
+      margin-bottom:20px;
+    }
+
+    .card h2{
+      font-size:1.7rem;
+      margin-bottom:16px;
+    }
+
+    .card p{
+      opacity:0.75;
+      line-height:1.7;
+      margin-bottom:28px;
+    }
+
+    .features{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      margin-bottom:30px;
+    }
+
+    .feature{
+      background:rgba(255,255,255,0.05);
+      padding:12px 14px;
+      border-radius:14px;
+      font-size:0.95rem;
+      border:1px solid rgba(255,255,255,0.05);
+    }
+
+    .btn{
+      display:inline-flex;
+      justify-content:center;
+      align-items:center;
+      width:100%;
+      padding:14px;
+      border-radius:16px;
+      font-weight:700;
+      background:linear-gradient(90deg,#ff4ecd,#7b2ff7);
+      transition:0.25s;
+      box-shadow:0 10px 30px rgba(168,85,247,0.3);
+    }
+
+    .btn:hover{
+      transform:translateY(-2px);
+    }
+
+    .quick-access{
+      margin-top:90px;
+    }
+
+    .section-title{
+      text-align:center;
+      margin-bottom:40px;
+    }
+
+    .section-title h2{
+      font-size:2.4rem;
+      margin-bottom:10px;
+    }
+
+    .section-title p{
+      opacity:0.75;
+    }
+
+    .quick-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+      gap:22px;
+    }
+
+    .quick-card{
+      background:rgba(255,255,255,0.05);
+      border:1px solid rgba(255,255,255,0.08);
+      padding:26px;
+      border-radius:22px;
+      text-align:center;
+      transition:0.25s;
+    }
+
+    .quick-card:hover{
+      transform:translateY(-5px);
+      border-color:#ff7ad9;
+    }
+
+    .quick-card h3{
+      margin-top:14px;
+      margin-bottom:10px;
+    }
+
+    .quick-card p{
+      opacity:0.7;
+      font-size:0.95rem;
+    }
+
+    footer{
+      margin-top:90px;
+      padding-top:30px;
+      border-top:1px solid rgba(255,255,255,0.08);
+      text-align:center;
+      opacity:0.6;
+      padding-bottom:30px;
+    }
+
+    @media(max-width:768px){
+
+      nav{
+        flex-direction:column;
+        gap:16px;
+      }
+
+      .page{
+        padding:50px 5%;
+      }
+
+      .card{
+        padding:26px;
+      }
+
+      .section-title h2{
+        font-size:2rem;
+      }
+
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="background"></div>
+
+<nav>
+
+  <div class="logo">🍑 Plum School</div>
+
+  <div class="nav-links">
+    <a href="/school">Home</a>
+    <a href="/school/lessons">Courses</a>
+    <a href="/school/resources">Resources</a>
+    <a href="/school/gcse">GCSE</a>
+    <a href="/school/sats">SATs</a>
+  </div>
+
+</nav>
+
+<div class="page">
+
+  <section class="hero">
+
+    <h1>
+      Start Your
+      <span class="gradient">Learning Journey</span>
+    </h1>
+
+    <p>
+      Choose how you'd like to learn with Plum School.
+      Attend live lessons, revise for exams, practise with quizzes,
+      or explore interactive resources built for modern students.
+    </p>
+
+  </section>
+
+  <section class="options">
+
+    <div class="card">
+
+      <div class="icon">🎥</div>
+
+      <h2>Video Lessons</h2>
+
+      <p>
+        Watch interactive online lessons with experienced teachers
+        covering Maths, English, Science, Computing and more.
+      </p>
+
+      <div class="features">
+        <div class="feature">✔ Real-time classes</div>
+        <div class="feature">✔ Ask questions live</div>
+        <div class="feature">✔ Recorded lesson playback</div>
+      </div>
+
+      <a href="/school/lessons" class="btn">Join Lessons</a>
+
+    </div>
+
+    <div class="card">
+
+      <div class="icon">📝</div>
+
+      <h2>GCSE Revision</h2>
+
+      <p>
+        Access premium GCSE revision resources, exam papers,
+        quizzes and study guides for every major subject.
+      </p>
+
+      <div class="features">
+        <div class="feature">✔ Practice papers</div>
+        <div class="feature">✔ Revision flashcards</div>
+        <div class="feature">✔ Smart quizzes</div>
+      </div>
+
+      <a href="/school/gcse" class="btn">Start Revising</a>
+
+    </div>
+
+    <div class="card">
+
+      <div class="icon">📚</div>
+
+      <h2>SATs Preparation</h2>
+
+      <p>
+        Build confidence for SATs with fun interactive learning,
+        English and Maths activities, and mock assessments.
+      </p>
+
+      <div class="features">
+        <div class="feature">✔ KS2 revision</div>
+        <div class="feature">✔ Interactive worksheets</div>
+        <div class="feature">✔ Parent resources</div>
+      </div>
+
+      <a href="/school/sats" class="btn">Explore SATs</a>
+
+    </div>
+
+  </section>
+
+  <section class="quick-access">
+
+    <div class="section-title">
+
+      <h2>Quick Access ⚡</h2>
+
+      <p>
+        Jump straight into the tools students use every day.
+      </p>
+
+    </div>
+
+    <div class="quick-grid">
+
+      <div class="quick-card">
+        <div class="icon">🧠</div>
+        <h3>Practice Quizzes</h3>
+        <p>Test your knowledge instantly.</p>
+      </div>
+
+      <div class="quick-card">
+        <div class="icon">📄</div>
+        <h3>Past Papers</h3>
+        <p>Revise with real exam questions.</p>
+      </div>
+
+      <div class="quick-card">
+        <div class="icon">💬</div>
+        <h3>Student Support</h3>
+        <p>Get help whenever you need it.</p>
+      </div>
+
+    </div>
+
+  </section>
+
+  <footer>
+    © 2026 Plum School • Learn Anywhere, Anytime 🍑
+  </footer>
+
+</div>
+
+</body>
+</html>
