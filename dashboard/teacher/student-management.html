@@ -1,12 +1,13 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  />
+<meta
+ name="viewport"
+ content="width=device-width, initial-scale=1.0"
+/>
 
   <title>Student Management</title>
 
@@ -138,6 +139,23 @@
       flex-wrap: wrap;
     }
 
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th,
+    td {
+      padding: 14px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+
+    th {
+      background: #f9fafb;
+    }
+
     /* MODAL */
 
     .modal {
@@ -204,6 +222,7 @@
     }
 
   </style>
+
 </head>
 <body>
 
@@ -211,35 +230,37 @@
 
   <div class="topbar">
 
-    <div class="teacher-info">
+```
+<div class="teacher-info">
 
-      <h1>
-        👨‍🎓 Student Management
-      </h1>
+  <h1>
+    👨‍🎓 Student Management
+  </h1>
 
-      <p id="teacherDetails">
-        Checking login session...
-      </p>
+  <p id="teacherDetails">
+    Checking login session...
+  </p>
 
-    </div>
+</div>
 
-    <div class="button-group">
+<div class="button-group">
 
-      <a
-        href="/dashboard/teacher/index.html"
-        class="btn"
-      >
-        Back To Dashboard
-      </a>
+  <a
+    href="/dashboard/teacher/index.html"
+    class="btn"
+  >
+    Back To Dashboard
+  </a>
 
-      <button
-        id="logoutBtn"
-        class="btn logout-btn"
-      >
-        Logout
-      </button>
+  <button
+    id="logoutBtn"
+    class="btn logout-btn"
+  >
+    Logout
+  </button>
 
-    </div>
+</div>
+```
 
   </div>
 
@@ -247,19 +268,21 @@
 
   <div class="nav-links">
 
-    <a
-      href="/dashboard/teacher/index.html"
-      class="nav-link"
-    >
-      Dashboard
-    </a>
+```
+<a
+  href="/dashboard/teacher/index.html"
+  class="nav-link"
+>
+  Dashboard
+</a>
 
-    <a
-      href="/dashboard/teacher/student-management.html"
-      class="nav-link active"
-    >
-      Students
-    </a>
+<a
+  href="/dashboard/teacher/student-management.html"
+  class="nav-link active"
+>
+  Students
+</a>
+```
 
   </div>
 
@@ -267,25 +290,75 @@
 
   <div class="card">
 
-    <h2>
-      Student Accounts
-    </h2>
+```
+<h2>
+  Student Accounts
+</h2>
 
-    <p>
-      Create and manage student accounts
-      for your school.
-    </p>
+<p>
+  Create and manage student accounts
+  for your school.
+</p>
 
-    <div class="student-actions">
+<div class="student-actions">
 
-      <button
-        id="createStudentBtn"
-        class="btn create-btn"
-      >
-        ➕ Create Student
-      </button>
+  <button
+    id="createStudentBtn"
+    class="btn create-btn"
+  >
+    ➕ Create Student
+  </button>
 
-    </div>
+</div>
+```
+
+  </div>
+
+  <!-- STUDENT TABLE -->
+
+  <div class="card">
+
+```
+<h2>
+  Registered Students
+</h2>
+
+<div style="overflow-x:auto;">
+
+  <table>
+
+    <thead>
+
+      <tr>
+        <th>Full Name</th>
+        <th>Email</th>
+        <th>Keystage</th>
+        <th>Created</th>
+      </tr>
+
+    </thead>
+
+    <tbody id="studentsTableBody">
+
+      <tr>
+        <td
+          colspan="4"
+          style="
+            padding:30px;
+            text-align:center;
+            color:#666;
+          "
+        >
+          Loading students...
+        </td>
+      </tr>
+
+    </tbody>
+
+  </table>
+
+</div>
+```
 
   </div>
 
@@ -293,13 +366,15 @@
 
   <div class="card">
 
-    <h2>
-      Current Status
-    </h2>
+```
+<h2>
+  Current Status
+</h2>
 
-    <p id="statusText">
-      Waiting for authentication check...
-    </p>
+<p id="statusText">
+  Waiting for authentication check...
+</p>
+```
 
   </div>
 
@@ -310,97 +385,77 @@
     id="studentModal"
   >
 
-    <div class="modal-content">
+```
+<div class="modal-content">
 
-      <h2>
-        Create Student
-      </h2>
+  <h2>
+    Create Student
+  </h2>
 
-      <form
-        id="studentForm"
-        class="modal-form"
+  <form
+    id="studentForm"
+    class="modal-form"
+  >
+
+    <input
+      type="email"
+      id="studentEmail"
+      placeholder="School Email"
+      required
+    />
+
+    <input
+      type="text"
+      id="studentName"
+      placeholder="Full Name"
+      required
+    />
+
+    <select
+      id="studentKeystage"
+      required
+    >
+
+      <option value="">
+        Select Keystage
+      </option>
+
+      <option value="KS1">KS1</option>
+      <option value="KS2">KS2</option>
+      <option value="KS3">KS3</option>
+      <option value="KS4">KS4</option>
+      <option value="KS5">KS5</option>
+
+    </select>
+
+    <div class="modal-buttons">
+
+      <button
+        type="submit"
+        class="btn create-btn"
       >
+        Create Student
+      </button>
 
-        <!-- SCHOOL EMAIL -->
-
-        <input
-          type="email"
-          id="studentEmail"
-          placeholder="School Email"
-          required
-        />
-
-        <!-- FULL NAME -->
-
-        <input
-          type="text"
-          id="studentName"
-          placeholder="Full Name"
-          required
-        />
-
-        <!-- KEYSTAGE -->
-
-        <select
-          id="studentKeystage"
-          required
-        >
-
-          <option value="">
-            Select Keystage
-          </option>
-
-          <option value="KS1">
-            KS1
-          </option>
-
-          <option value="KS2">
-            KS2
-          </option>
-
-          <option value="KS3">
-            KS3
-          </option>
-
-          <option value="KS4">
-            KS4
-          </option>
-
-          <option value="KS5">
-            KS5
-          </option>
-
-        </select>
-
-        <!-- BUTTONS -->
-
-        <div class="modal-buttons">
-
-          <button
-            type="submit"
-            class="btn create-btn"
-          >
-            Create Student
-          </button>
-
-          <button
-            type="button"
-            id="closeModalBtn"
-            class="btn cancel-btn"
-          >
-            Cancel
-          </button>
-
-        </div>
-
-      </form>
-
-      <div
-        id="studentMessage"
-        class="message"
-      ></div>
+      <button
+        type="button"
+        id="closeModalBtn"
+        class="btn cancel-btn"
+      >
+        Cancel
+      </button>
 
     </div>
+
+  </form>
+
+  <div
+    id="studentMessage"
+    class="message"
+  ></div>
+
+</div>
+```
 
   </div>
 
@@ -430,24 +485,18 @@
     // CREATE CLIENTS
     // ==================================================
 
-    // TEACHER AUTH SYSTEM
-
     const supabaseClient =
       supabase.createClient(
         SUPABASE_URL,
         SUPABASE_ANON_KEY,
         {
           auth: {
-
             persistSession: true,
             autoRefreshToken: true,
             detectSessionInUrl: true
-
           }
         }
       );
-
-    // STUDENT DATABASE SYSTEM
 
     const studentSupabase =
       supabase.createClient(
@@ -494,6 +543,13 @@
         "studentMessage"
       );
 
+    const studentsTableBody =
+      document.getElementById(
+        "studentsTableBody"
+      );
+
+    let currentTeacher = null;
+
     // ==================================================
     // CHECK LOGIN
     // ==================================================
@@ -517,8 +573,6 @@
       const user =
         data?.user;
 
-      // NOT LOGGED IN
-
       if (!user || error) {
 
         window.location.href =
@@ -528,7 +582,7 @@
 
       }
 
-      // LOGGED IN
+      currentTeacher = user;
 
       const fullName =
         user.user_metadata.full_name
@@ -543,6 +597,84 @@
 
       statusText.textContent =
         `Authenticated as ${user.email}`;
+
+      loadStudents();
+
+    }
+
+    // ==================================================
+    // LOAD STUDENTS
+    // ==================================================
+
+    async function loadStudents() {
+
+      if (!currentTeacher) {
+        return;
+      }
+
+      const {
+        data: students,
+        error
+      } = await studentSupabase
+        .from("students")
+        .select("*")
+        .eq(
+          "teacher_id",
+          currentTeacher.id
+        )
+        .order(
+          "created_at",
+          { ascending: false }
+        );
+
+      if (error) {
+
+        console.error(error);
+
+        return;
+
+      }
+
+      studentsTableBody.innerHTML = "";
+
+      if (!students || students.length === 0) {
+
+        studentsTableBody.innerHTML = `
+          <tr>
+            <td
+              colspan="4"
+              style="
+                text-align:center;
+                padding:30px;
+                color:#666;
+              "
+            >
+              No students created yet.
+            </td>
+          </tr>
+        `;
+
+        return;
+
+      }
+
+      students.forEach((student) => {
+
+        const row =
+          document.createElement("tr");
+
+        row.innerHTML = `
+          <td>${student.full_name}</td>
+          <td>${student.email}</td>
+          <td>${student.keystage}</td>
+          <td>${new Date(student.created_at).toLocaleDateString()}</td>
+        `;
+
+        studentsTableBody.appendChild(
+          row
+        );
+
+      });
 
     }
 
@@ -648,17 +780,12 @@
         studentMessage.style.color =
           "#333";
 
-        // RANDOM TEMP PASSWORD
-
         const tempPassword =
           Math.random()
           .toString(36)
           .slice(-10);
 
-        // ==================================================
-        // CREATE STUDENT ACCOUNT
-        // IN STUDENT SUPABASE
-        // ==================================================
+        // CREATE AUTH ACCOUNT
 
         const {
           data,
@@ -683,15 +810,21 @@
                   keystage,
 
                 role:
-                  "student"
+                  "student",
+
+                teacher_id:
+                  currentTeacher.id,
+
+                teacher_name:
+                  currentTeacher
+                  .user_metadata
+                  .full_name
 
               }
 
             }
 
           });
-
-        // ERROR
 
         if (error) {
 
@@ -705,15 +838,19 @@
 
         }
 
-        // ==================================================
-        // SAVE EXTRA STUDENT DATA
-        // ==================================================
+        // SAVE STUDENT RECORD
 
         const {
           error: insertError
         } = await studentSupabase
           .from("students")
           .insert([{
+
+            teacher_id:
+              currentTeacher.id,
+
+            teacher_email:
+              currentTeacher.email,
 
             email:
               email,
@@ -729,8 +866,6 @@
 
           }]);
 
-        // INSERT ERROR
-
         if (insertError) {
 
           console.error(
@@ -739,20 +874,13 @@
 
         }
 
-        // SUCCESS
-
         studentMessage.textContent =
           "Student account created successfully!";
 
         studentMessage.style.color =
           "green";
 
-        console.log(
-          "Student created:",
-          data
-        );
-
-        // RESET
+        loadStudents();
 
         setTimeout(() => {
 
