@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0"
   />
 
-  <title>Teacher Portal Login</title>
+  <title>Student Management</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -21,227 +22,208 @@
     }
 
     body {
-      background:
-        linear-gradient(
-          135deg,
-          #6c63ff,
-          #4f46e5
-        );
-
+      background: #f4f7fb;
       min-height: 100vh;
-
-      display: flex;
-
-      justify-content: center;
-      align-items: center;
-
-      padding: 20px;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 450px;
-
-      background: white;
-
-      border-radius: 20px;
-
-      padding: 30px;
-
-      box-shadow:
-        0 10px 30px
-        rgba(0,0,0,0.2);
-    }
-
-    h1 {
-      text-align: center;
-      margin-bottom: 10px;
       color: #222;
+      padding: 30px;
     }
 
-    .subtitle {
-      text-align: center;
-      margin-bottom: 25px;
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .teacher-info h1 {
+      font-size: 34px;
+      margin-bottom: 8px;
+    }
+
+    .teacher-info p {
       color: #666;
     }
 
-    .tabs {
+    .button-group {
       display: flex;
-      margin-bottom: 20px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 14px 18px;
       border-radius: 12px;
-      overflow: hidden;
-    }
-
-    .tab-btn {
-      flex: 1;
-      padding: 12px;
       border: none;
-      background: #ececec;
-      cursor: pointer;
-      font-size: 16px;
-      transition: 0.2s;
-    }
-
-    .tab-btn.active {
       background: #4f46e5;
       color: white;
       font-weight: bold;
-    }
-
-    form {
-      display: none;
-      flex-direction: column;
-      gap: 15px;
-    }
-
-    form.active {
-      display: flex;
-    }
-
-    input {
-      padding: 14px;
-      border: 1px solid #ccc;
-      border-radius: 12px;
-      font-size: 15px;
-    }
-
-    .submit-btn {
-      padding: 14px;
-      border: none;
-      border-radius: 12px;
-      background: #4f46e5;
-      color: white;
-      font-size: 16px;
       cursor: pointer;
+      text-decoration: none;
       transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .submit-btn:hover {
+    .btn:hover {
       background: #4338ca;
     }
 
-    .message {
-      margin-top: 15px;
-      text-align: center;
-      font-size: 14px;
+    .logout-btn {
+      background: #dc2626;
+    }
+
+    .logout-btn:hover {
+      background: #b91c1c;
+    }
+
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+      margin-bottom: 25px;
+    }
+
+    .card h2 {
+      margin-bottom: 12px;
+    }
+
+    .card p {
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+
+    .nav-link {
+      background: white;
+      padding: 12px 16px;
+      border-radius: 12px;
+      text-decoration: none;
+      color: #222;
+      font-weight: bold;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+      transition: 0.2s;
+    }
+
+    .nav-link:hover {
+      background: #f2f2f2;
+    }
+
+    .nav-link.active {
+      background: #4f46e5;
+      color: white;
     }
 
   </style>
 </head>
 <body>
 
-  <div class="container">
+  <!-- TOPBAR -->
 
-    <h1>
-      Teacher Portal
-    </h1>
+  <div class="topbar">
 
-    <p class="subtitle">
-      Educational Resources Access
-    </p>
+    <div class="teacher-info">
 
-    <!-- TABS -->
+      <h1>
+        👨‍🎓 Student Management
+      </h1>
 
-    <div class="tabs">
+      <p id="teacherDetails">
+        Checking login session...
+      </p>
+
+    </div>
+
+    <div class="button-group">
+
+      <a
+        href="/dashboard/teacher/index.html"
+        class="btn"
+      >
+        Back To Dashboard
+      </a>
 
       <button
-        class="tab-btn active"
-        id="loginTab"
+        id="logoutBtn"
+        class="btn logout-btn"
       >
-        Login
-      </button>
-
-      <button
-        class="tab-btn"
-        id="signupTab"
-      >
-        Create Account
+        Logout
       </button>
 
     </div>
 
-    <!-- LOGIN -->
+  </div>
 
-    <form
-      id="loginForm"
-      class="active"
+  <!-- NAVIGATION -->
+
+  <div class="nav-links">
+
+    <a
+      href="/dashboard/teacher/index.html"
+      class="nav-link"
     >
+      Dashboard
+    </a>
 
-      <input
-        type="email"
-        id="loginEmail"
-        placeholder="Email Address"
-        required
-      />
+    <a
+      href="/dashboard/teacher/student-management.html"
+      class="nav-link active"
+    >
+      Students
+    </a>
 
-      <input
-        type="password"
-        id="loginPassword"
-        placeholder="Password"
-        required
-      />
+  </div>
 
-      <button
-        type="submit"
-        class="submit-btn"
-      >
-        Login
-      </button>
+  <!-- MAIN CONTENT -->
 
-    </form>
+  <div class="card">
 
-    <!-- SIGNUP -->
+    <h2>
+      Student Accounts
+    </h2>
 
-    <form id="signupForm">
+    <p>
+      This page now ONLY checks whether
+      a teacher is currently logged in.
+      <br><br>
 
-      <input
-        type="text"
-        id="schoolName"
-        placeholder="School Name"
-        required
-      />
+      If no authenticated teacher session
+      exists, the page redirects to:
+    </p>
 
-      <input
-        type="text"
-        id="fullName"
-        placeholder="Full Name"
-        required
-      />
+    <br>
 
-      <input
-        type="email"
-        id="signupEmail"
-        placeholder="Email Address"
-        required
-      />
+    <code
+      style="
+        background:#f3f3f3;
+        padding:10px 14px;
+        border-radius:10px;
+        display:inline-block;
+      "
+    >
+      /login/teacher
+    </code>
 
-      <input
-        type="password"
-        id="signupPassword"
-        placeholder="Password"
-        required
-      />
+  </div>
 
-      <input
-        type="password"
-        id="confirmPassword"
-        placeholder="Confirm Password"
-        required
-      />
+  <div class="card">
 
-      <button
-        type="submit"
-        class="submit-btn"
-      >
-        Create Account
-      </button>
+    <h2>
+      Current Status
+    </h2>
 
-    </form>
-
-    <div
-      class="message"
-      id="message"
-    ></div>
+    <p id="statusText">
+      Waiting for authentication check...
+    </p>
 
   </div>
 
@@ -280,315 +262,154 @@
     // ELEMENTS
     // ==================================================
 
-    const loginTab =
+    const teacherDetails =
       document.getElementById(
-        "loginTab"
+        "teacherDetails"
       );
 
-    const signupTab =
+    const statusText =
       document.getElementById(
-        "signupTab"
-      );
-
-    const loginForm =
-      document.getElementById(
-        "loginForm"
-      );
-
-    const signupForm =
-      document.getElementById(
-        "signupForm"
-      );
-
-    const message =
-      document.getElementById(
-        "message"
+        "statusText"
       );
 
     // ==================================================
-    // CHECK EXISTING SESSION
+    // CHECK LOGIN
     // ==================================================
 
-    async function checkSession() {
+    async function checkLogin() {
+
+      statusText.textContent =
+        "Checking teacher authentication...";
+
+      // WAIT FOR SESSION RESTORE
+
+      await new Promise(resolve =>
+        setTimeout(resolve, 1000)
+      );
+
+      // GET USER
 
       const {
-        data: { session }
+        data,
+        error
       } = await supabaseClient
         .auth
-        .getSession();
+        .getUser();
 
       console.log(
-        "Current session:",
-        session
+        "Auth user:",
+        data
       );
 
       console.log(
         localStorage
       );
 
-      // ALREADY LOGGED IN
+      const user =
+        data?.user;
 
-      if (session) {
+      // NOT LOGGED IN
+
+      if (!user || error) {
+
+        console.log(
+          "No logged in teacher found"
+        );
+
+        statusText.textContent =
+          "No active teacher session found.";
 
         window.location.href =
-          "/dashboard/teacher/index.html";
+          "/login/teacher";
+
+        return;
 
       }
+
+      // LOGGED IN
+
+      console.log(
+        "Teacher authenticated:",
+        user.email
+      );
+
+      const fullName =
+        user.user_metadata.full_name
+        || "Teacher";
+
+      const schoolName =
+        user.user_metadata.school_name
+        || "Unknown School";
+
+      teacherDetails.textContent =
+        `${fullName} • ${schoolName}`;
+
+      statusText.textContent =
+        `Authenticated as ${user.email}`;
 
     }
 
-    checkSession();
-
     // ==================================================
-    // TAB SWITCHING
-    // ==================================================
-
-    loginTab.addEventListener(
-      "click",
-      () => {
-
-        loginTab.classList.add(
-          "active"
-        );
-
-        signupTab.classList.remove(
-          "active"
-        );
-
-        loginForm.classList.add(
-          "active"
-        );
-
-        signupForm.classList.remove(
-          "active"
-        );
-
-        message.textContent = "";
-
-      }
-    );
-
-    signupTab.addEventListener(
-      "click",
-      () => {
-
-        signupTab.classList.add(
-          "active"
-        );
-
-        loginTab.classList.remove(
-          "active"
-        );
-
-        signupForm.classList.add(
-          "active"
-        );
-
-        loginForm.classList.remove(
-          "active"
-        );
-
-        message.textContent = "";
-
-      }
-    );
-
-    // ==================================================
-    // LOGIN
+    // ONLY REDIRECT
+    // ON ACTUAL SIGN OUT
     // ==================================================
 
-    loginForm.addEventListener(
-      "submit",
-      async (e) => {
+    supabaseClient.auth
+      .onAuthStateChange(
+        (event) => {
 
-        e.preventDefault();
+          console.log(
+            "Auth event:",
+            event
+          );
 
-        message.textContent =
-          "Logging in...";
+          // ONLY REAL SIGN OUT
 
-        message.style.color =
-          "#333";
+          if (
+            event === "SIGNED_OUT"
+          ) {
 
-        const email =
-          document.getElementById(
-            "loginEmail"
-          ).value;
+            window.location.href =
+              "/login/teacher";
 
-        const password =
-          document.getElementById(
-            "loginPassword"
-          ).value;
-
-        const {
-          data,
-          error
-        } = await supabaseClient
-          .auth
-          .signInWithPassword({
-
-            email,
-            password
-
-          });
-
-        // ERROR
-
-        if (error) {
-
-          message.textContent =
-            error.message;
-
-          message.style.color =
-            "red";
-
-          return;
+          }
 
         }
+      );
 
-        // SUCCESS
+    // ==================================================
+    // LOGOUT BUTTON
+    // ==================================================
 
-        console.log(
+    const logoutBtn =
+      document.getElementById(
+        "logoutBtn"
+      );
+
+    if (logoutBtn) {
+
+      logoutBtn.addEventListener(
+        "click",
+        async () => {
+
           await supabaseClient
-          .auth
-          .getSession()
-        );
-
-        console.log(
-          localStorage
-        );
-
-        message.textContent =
-          "Login successful! Redirecting...";
-
-        message.style.color =
-          "green";
-
-        // REDIRECT
-
-        setTimeout(() => {
-
-          window.location.href =
-            "/dashboard/teacher/index.html";
-
-        }, 1000);
-
-      }
-    );
-
-    // ==================================================
-    // SIGNUP
-    // ==================================================
-
-    signupForm.addEventListener(
-      "submit",
-      async (e) => {
-
-        e.preventDefault();
-
-        message.textContent =
-          "Creating account...";
-
-        message.style.color =
-          "#333";
-
-        const schoolName =
-          document.getElementById(
-            "schoolName"
-          ).value;
-
-        const fullName =
-          document.getElementById(
-            "fullName"
-          ).value;
-
-        const email =
-          document.getElementById(
-            "signupEmail"
-          ).value;
-
-        const password =
-          document.getElementById(
-            "signupPassword"
-          ).value;
-
-        const confirmPassword =
-          document.getElementById(
-            "confirmPassword"
-          ).value;
-
-        // PASSWORD CHECK
-
-        if (
-          password !==
-          confirmPassword
-        ) {
-
-          message.textContent =
-            "Passwords do not match.";
-
-          message.style.color =
-            "red";
-
-          return;
+            .auth
+            .signOut();
 
         }
+      );
 
-        // CREATE ACCOUNT
+    }
 
-        const {
-          data,
-          error
-        } = await supabaseClient
-          .auth
-          .signUp({
+    // ==================================================
+    // START
+    // ==================================================
 
-            email,
-            password,
+    window.addEventListener(
+      "load",
+      () => {
 
-            options: {
-
-              data: {
-
-                school_name:
-                  schoolName,
-
-                full_name:
-                  fullName,
-
-                role:
-                  "teacher"
-
-              }
-
-            }
-
-          });
-
-        // ERROR
-
-        if (error) {
-
-          message.textContent =
-            error.message;
-
-          message.style.color =
-            "red";
-
-          return;
-
-        }
-
-        // SUCCESS
-
-        message.textContent =
-          "Account created successfully! Check your email.";
-
-        message.style.color =
-          "green";
-
-        console.log(
-          data
-        );
+        checkLogin();
 
       }
     );
