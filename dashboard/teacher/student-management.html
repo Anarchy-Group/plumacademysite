@@ -325,26 +325,7 @@
 
       }
 
-      // LOGGED IN
 
-      console.log(
-        "Teacher authenticated:",
-        user.email
-      );
-
-      const fullName =
-        user.user_metadata.full_name
-        || "Teacher";
-
-      const schoolName =
-        user.user_metadata.school_name
-        || "Unknown School";
-
-      teacherDetails.textContent =
-        `${fullName} • ${schoolName}`;
-
-      statusText.textContent =
-        `Authenticated as ${user.email}`;
 
     }
 
