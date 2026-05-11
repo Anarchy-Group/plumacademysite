@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
 
-<meta
- name="viewport"
- content="width=device-width, initial-scale=1.0"
-/>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
 
   <title>Student Management</title>
 
@@ -156,8 +155,6 @@
       background: #f9fafb;
     }
 
-    /* MODAL */
-
     .modal {
       position: fixed;
       inset: 0;
@@ -222,159 +219,140 @@
     }
 
   </style>
-
 </head>
 <body>
 
-  <!-- TOPBAR -->
-
   <div class="topbar">
 
-```
-<div class="teacher-info">
+    <div class="teacher-info">
 
-  <h1>
-    👨‍🎓 Student Management
-  </h1>
+      <h1>
+        👨‍🎓 Student Management
+      </h1>
 
-  <p id="teacherDetails">
-    Checking login session...
-  </p>
+      <p id="teacherDetails">
+        Checking login session...
+      </p>
 
-</div>
+    </div>
 
-<div class="button-group">
+    <div class="button-group">
 
-  <a
-    href="/dashboard/teacher/index.html"
-    class="btn"
-  >
-    Back To Dashboard
-  </a>
+      <a
+        href="/dashboard/teacher/index.html"
+        class="btn"
+      >
+        Back To Dashboard
+      </a>
 
-  <button
-    id="logoutBtn"
-    class="btn logout-btn"
-  >
-    Logout
-  </button>
+      <button
+        id="logoutBtn"
+        class="btn logout-btn"
+      >
+        Logout
+      </button>
 
-</div>
-```
+    </div>
 
   </div>
-
-  <!-- NAVIGATION -->
 
   <div class="nav-links">
 
-```
-<a
-  href="/dashboard/teacher/index.html"
-  class="nav-link"
->
-  Dashboard
-</a>
+    <a
+      href="/dashboard/teacher/index.html"
+      class="nav-link"
+    >
+      Dashboard
+    </a>
 
-<a
-  href="/dashboard/teacher/student-management.html"
-  class="nav-link active"
->
-  Students
-</a>
-```
+    <a
+      href="/dashboard/teacher/student-management.html"
+      class="nav-link active"
+    >
+      Students
+    </a>
 
   </div>
 
-  <!-- MAIN CONTENT -->
-
   <div class="card">
 
-```
-<h2>
-  Student Accounts
-</h2>
+    <h2>
+      Student Accounts
+    </h2>
 
-<p>
-  Create and manage student accounts
-  for your school.
-</p>
+    <p>
+      Create and manage student accounts
+      for your school.
+    </p>
 
-<div class="student-actions">
+    <div class="student-actions">
 
-  <button
-    id="createStudentBtn"
-    class="btn create-btn"
-  >
-    ➕ Create Student
-  </button>
+      <button
+        id="createStudentBtn"
+        class="btn create-btn"
+      >
+        ➕ Create Student
+      </button>
 
-</div>
-```
+    </div>
 
   </div>
 
-  <!-- STUDENT TABLE -->
-
   <div class="card">
 
-```
-<h2>
-  Registered Students
-</h2>
+    <h2>
+      Registered Students
+    </h2>
 
-<div style="overflow-x:auto;">
+    <div style="overflow-x:auto;">
 
-  <table>
+      <table>
 
-    <thead>
+        <thead>
 
-      <tr>
-        <th>Full Name</th>
-        <th>Email</th>
-        <th>Keystage</th>
-        <th>Created</th>
-      </tr>
+          <tr>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Keystage</th>
+            <th>Created</th>
+          </tr>
 
-    </thead>
+        </thead>
 
-    <tbody id="studentsTableBody">
+        <tbody id="studentsTableBody">
 
-      <tr>
-        <td
-          colspan="4"
-          style="
-            padding:30px;
-            text-align:center;
-            color:#666;
-          "
-        >
-          Loading students...
-        </td>
-      </tr>
+          <tr>
 
-    </tbody>
+            <td
+              colspan="4"
+              style="
+                padding:30px;
+                text-align:center;
+                color:#666;
+              "
+            >
+              No students created yet.
+            </td>
 
-  </table>
+          </tr>
 
-</div>
-```
+        </tbody>
+
+      </table>
+
+    </div>
 
   </div>
 
-  <!-- STATUS -->
-
   <div class="card">
 
-```
-<h2>
-  Current Status
-</h2>
+    <h2>
+      Current Status
+    </h2>
 
-<p id="statusText">
-  Waiting for authentication check...
-</p>
-```
+    <p id="statusText">
+      Waiting for authentication check...
+    </p>
 
   </div>
 
@@ -385,77 +363,75 @@
     id="studentModal"
   >
 
-```
-<div class="modal-content">
+    <div class="modal-content">
 
-  <h2>
-    Create Student
-  </h2>
-
-  <form
-    id="studentForm"
-    class="modal-form"
-  >
-
-    <input
-      type="email"
-      id="studentEmail"
-      placeholder="School Email"
-      required
-    />
-
-    <input
-      type="text"
-      id="studentName"
-      placeholder="Full Name"
-      required
-    />
-
-    <select
-      id="studentKeystage"
-      required
-    >
-
-      <option value="">
-        Select Keystage
-      </option>
-
-      <option value="KS1">KS1</option>
-      <option value="KS2">KS2</option>
-      <option value="KS3">KS3</option>
-      <option value="KS4">KS4</option>
-      <option value="KS5">KS5</option>
-
-    </select>
-
-    <div class="modal-buttons">
-
-      <button
-        type="submit"
-        class="btn create-btn"
-      >
+      <h2>
         Create Student
-      </button>
+      </h2>
 
-      <button
-        type="button"
-        id="closeModalBtn"
-        class="btn cancel-btn"
+      <form
+        id="studentForm"
+        class="modal-form"
       >
-        Cancel
-      </button>
+
+        <input
+          type="email"
+          id="studentEmail"
+          placeholder="School Email"
+          required
+        />
+
+        <input
+          type="text"
+          id="studentName"
+          placeholder="Full Name"
+          required
+        />
+
+        <select
+          id="studentKeystage"
+          required
+        >
+
+          <option value="">
+            Select Keystage
+          </option>
+
+          <option value="KS1">KS1</option>
+          <option value="KS2">KS2</option>
+          <option value="KS3">KS3</option>
+          <option value="KS4">KS4</option>
+          <option value="KS5">KS5</option>
+
+        </select>
+
+        <div class="modal-buttons">
+
+          <button
+            type="submit"
+            class="btn create-btn"
+          >
+            Create Student
+          </button>
+
+          <button
+            type="button"
+            id="closeModalBtn"
+            class="btn cancel-btn"
+          >
+            Cancel
+          </button>
+
+        </div>
+
+      </form>
+
+      <div
+        id="studentMessage"
+        class="message"
+      ></div>
 
     </div>
-
-  </form>
-
-  <div
-    id="studentMessage"
-    class="message"
-  ></div>
-
-</div>
-```
 
   </div>
 
@@ -608,10 +584,6 @@
 
     async function loadStudents() {
 
-      if (!currentTeacher) {
-        return;
-      }
-
       const {
         data: students,
         error
@@ -637,7 +609,10 @@
 
       studentsTableBody.innerHTML = "";
 
-      if (!students || students.length === 0) {
+      if (
+        !students ||
+        students.length === 0
+      ) {
 
         studentsTableBody.innerHTML = `
           <tr>
@@ -664,10 +639,14 @@
           document.createElement("tr");
 
         row.innerHTML = `
-          <td>${student.full_name || "Unknown Student"}</td>
-          <td>${student.email || "No Email"}</td>
-          <td>${student.keystage || "Not Set"}</td>
-          <td>${new Date(student.created_at).toLocaleDateString()}</td>
+          <td>${student.full_name}</td>
+          <td>${student.email}</td>
+          <td>${student.keystage}</td>
+          <td>
+            ${new Date(
+              student.created_at
+            ).toLocaleDateString()}
+          </td>
         `;
 
         studentsTableBody.appendChild(
@@ -785,9 +764,7 @@
           .toString(36)
           .slice(-10);
 
-        // ==================================================
         // CREATE AUTH ACCOUNT
-        // ==================================================
 
         const {
           data,
@@ -802,8 +779,6 @@
               tempPassword,
 
             options: {
-
-              // EMAIL SETUP LINK
 
               emailRedirectTo:
                 "https://academy.magicplum.co.uk/student/setup-password",
@@ -847,12 +822,6 @@
 
         }
 
-        console.log(
-          "Student auth created:",
-          data
-        );
-
-        // ==================================================
         // SAVE STUDENT RECORD
 
         const {
