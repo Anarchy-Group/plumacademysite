@@ -10,6 +10,7 @@
 
   <title>Student Management</title>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
 
@@ -78,6 +79,14 @@
       background: #b91c1c;
     }
 
+    .create-btn {
+      background: #059669;
+    }
+
+    .create-btn:hover {
+      background: #047857;
+    }
+
     .card {
       background: white;
       border-radius: 20px;
@@ -120,6 +129,13 @@
     .nav-link.active {
       background: #4f46e5;
       color: white;
+    }
+
+    .student-actions {
+      display: flex;
+      gap: 15px;
+      margin-top: 25px;
+      flex-wrap: wrap;
     }
 
   </style>
@@ -191,28 +207,31 @@
     </h2>
 
     <p>
-      This page now ONLY checks whether
-      a teacher is currently logged in.
+      This page checks whether a teacher
+      is currently authenticated before
+      allowing access to student tools.
       <br><br>
 
-      If no authenticated teacher session
-      exists, the page redirects to:
+      You can now begin adding student
+      management functionality safely.
     </p>
 
-    <br>
+    <!-- STUDENT ACTIONS -->
 
-    <code
-      style="
-        background:#f3f3f3;
-        padding:10px 14px;
-        border-radius:10px;
-        display:inline-block;
-      "
-    >
-      /login/teacher
-    </code>
+    <div class="student-actions">
+
+      <button
+        id="createStudentBtn"
+        class="btn create-btn"
+      >
+        ➕ Create Student
+      </button>
+
+    </div>
 
   </div>
+
+  <!-- STATUS -->
 
   <div class="card">
 
@@ -271,6 +290,11 @@
         "statusText"
       );
 
+    const createStudentBtn =
+      document.getElementById(
+        "createStudentBtn"
+      );
+
     // ==================================================
     // CHECK LOGIN
     // ==================================================
@@ -325,7 +349,26 @@
 
       }
 
+      // LOGGED IN
 
+      console.log(
+        "Teacher authenticated:",
+        user.email
+      );
+
+      const fullName =
+        user.user_metadata.full_name
+        || "Teacher";
+
+      const schoolName =
+        user.user_metadata.school_name
+        || "Unknown School";
+
+      teacherDetails.textContent =
+        `${fullName} • ${schoolName}`;
+
+      statusText.textContent =
+        `Authenticated as ${user.email}`;
 
     }
 
@@ -342,8 +385,6 @@
             "Auth event:",
             event
           );
-
-          // ONLY REAL SIGN OUT
 
           if (
             event === "SIGNED_OUT"
@@ -380,6 +421,21 @@
       );
 
     }
+
+    // ==================================================
+    // CREATE STUDENT BUTTON
+    // ==================================================
+
+    createStudentBtn.addEventListener(
+      "click",
+      () => {
+
+        alert(
+          "Student creation popup coming next 👀"
+        );
+
+      }
+    );
 
     // ==================================================
     // START
