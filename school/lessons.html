@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Plum School • Subjects</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family:'Inter',sans-serif;
+      background:#0f1020;
+      color:white;
+      overflow-x:hidden;
+    }
+
+    a{
+      text-decoration:none;
+      color:inherit;
+    }
+
+    .background{
+      position:fixed;
+      inset:0;
+      background:
+        radial-gradient(circle at top left,#7b2ff7 0%,transparent 30%),
+        radial-gradient(circle at bottom right,#ff4ecd 0%,transparent 30%),
+        linear-gradient(135deg,#0f1020,#17182f);
+      z-index:-1;
+    }
+
+    nav{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:22px 6%;
+      background:rgba(15,16,32,0.7);
+      backdrop-filter:blur(12px);
+      border-bottom:1px solid rgba(255,255,255,0.08);
+      position:sticky;
+      top:0;
+      z-index:100;
+      gap:20px;
+    }
+
+    .logo{
+      font-size:1.6rem;
+      font-weight:800;
+      background:linear-gradient(90deg,#ff7ad9,#9f67ff);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+
+    .nav-links{
+      display:flex;
+      gap:22px;
+      flex-wrap:wrap;
+      justify-content:center;
+    }
+
+    .nav-links a{
+      opacity:0.8;
+      transition:0.2s;
+    }
+
+    .nav-links a:hover{
+      opacity:1;
+      color:#ff7ad9;
+    }
+
+    .container{
+      max-width:1300px;
+      margin:auto;
+      padding:70px 6%;
+    }
+
+    .hero{
+      text-align:center;
+      margin-bottom:60px;
+    }
+
+    .hero h1{
+      font-size:clamp(2.5rem,6vw,4.5rem);
+      line-height:1.1;
+      margin-bottom:18px;
+    }
+
+    .gradient{
+      background:linear-gradient(90deg,#ff7ad9,#9f67ff);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+
+    .hero p{
+      max-width:760px;
+      margin:auto;
+      opacity:0.8;
+      line-height:1.8;
+    }
+
+    .subjects-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:28px;
+    }
+
+    .subject-card{
+      background:rgba(255,255,255,0.05);
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:28px;
+      padding:32px;
+      transition:0.25s;
+      backdrop-filter:blur(12px);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .subject-card:hover{
+      transform:translateY(-6px);
+      border-color:#9f67ff;
+      box-shadow:0 20px 50px rgba(0,0,0,0.35);
+    }
+
+    .subject-card::before{
+      content:'';
+      position:absolute;
+      width:220px;
+      height:220px;
+      border-radius:50%;
+      background:rgba(255,255,255,0.03);
+      top:-100px;
+      right:-100px;
+    }
+
+    .icon{
+      font-size:3rem;
+      margin-bottom:20px;
+    }
+
+    .subject-card h2{
+      font-size:1.6rem;
+      margin-bottom:14px;
+    }
+
+    .subject-card p{
+      opacity:0.75;
+      line-height:1.7;
+      margin-bottom:26px;
+    }
+
+    .lesson-count{
+      display:inline-block;
+      padding:10px 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.08);
+      font-size:0.9rem;
+      margin-bottom:22px;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:100%;
+      padding:14px;
+      border-radius:16px;
+      background:linear-gradient(90deg,#ff4ecd,#7b2ff7);
+      font-weight:700;
+      transition:0.25s;
+      box-shadow:0 10px 30px rgba(168,85,247,0.3);
+    }
+
+    .btn:hover{
+      transform:translateY(-2px);
+    }
+
+    footer{
+      margin-top:80px;
+      padding-top:30px;
+      border-top:1px solid rgba(255,255,255,0.08);
+      text-align:center;
+      opacity:0.6;
+    }
+
+    @media(max-width:768px){
+
+      nav{
+        flex-direction:column;
+        gap:16px;
+      }
+
+      .container{
+        padding:50px 5%;
+      }
+
+      .subject-card{
+        padding:26px;
+      }
+
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="background"></div>
+
+<nav>
+
+  <div class="logo">🍑 Plum School</div>
+
+  <div class="nav-links">
+    <a href="/school">Home</a>
+    <a href="/school/lessons">Courses</a>
+    <a href="/school/resources">Resources</a>
+    <a href="/school/gcse">GCSE</a>
+    <a href="/school/sats">SATs</a>
+  </div>
+
+</nav>
+
+<div class="container">
+
+  <section class="hero">
+
+    <h1>
+      Choose Your
+      <span class="gradient">Subject</span>
+    </h1>
+
+    <p>
+      Access lessons, revision resources, quizzes and practice papers
+      for all your favourite subjects in one place.
+    </p>
+
+  </section>
+
+<section class="subjects-grid">
+
+  <div class="subject-card">
+    <div class="icon">📘</div>
+    <h2>Mathematics</h2>
+    <div class="lesson-count">0 Lessons</div>
+    <p>Algebra, geometry, statistics and exam practice.</p>
+    <a href="/school/lessons/mathematics" class="btn">Open Subject</a>
+  </div>
+
+  <div class="subject-card">
+    <div class="icon">🧪</div>
+    <h2>Science</h2>
+    <div class="lesson-count">0 Lessons</div>
+    <p>Biology, chemistry and physics revision resources.</p>
+    <a href="/school/lessons/science" class="btn">Open Subject</a>
+  </div>
+
+  <div class="subject-card">
+    <div class="icon">📚</div>
+    <h2>English</h2>
+    <div class="lesson-count">0 Lessons</div>
+    <p>Grammar, literature and creative writing skills.</p>
+    <a href="/school/lessons/english" class="btn">Open Subject</a>
+  </div>
+
+  <div class="subject-card">
+    <div class="icon">💻</div>
+    <h2>Computer Science</h2>
+    <div class="lesson-count">0 Lessons</div>
+    <p>Programming, cybersecurity and algorithms.</p>
+    <a href="/school/lessons/computer-science" class="btn">Open Subject</a>
+  </div>
+
+  <div class="subject-card">
+    <div class="icon">🌍</div>
+    <h2>Geography</h2>
+    <div class="lesson-count">0 Lessons</div>
+    <p>Climate, ecosystems and natural hazards.</p>
+    <a href="/school/lessons/geography" class="btn">Open Subject</a>
+  </div>
+
+  <div class="subject-card">
+    <div class="icon">🏛️</div>
+    <h2>History</h2>
+    <div class="lesson-count">0 Lessons</div>
+    <p>Historical events, timelines and analysis.</p>
+    <a href="/school/lessons/history" class="btn">Open Subject</a>
+  </div>
+
+  <div class="subject-card">
+    <div class="icon">🎨</div>
+    <h2>Art & Design</h2>
+    <div class="lesson-count">0 Lessons</div>
+    <p>Drawing, painting, digital art and portfolios.</p>
+    <a href="/school/lessons/art-design" class="btn">Open Subject</a>
+  </div>
+
+  <div class="subject-card">
+    <div class="icon">🎵</div>
+    <h2>Music</h2>
+    <div class="lesson-count">0 Lessons</div>
+    <p>Composition, instruments and music theory.</p>
+    <a href="/school/lessons/music" class="btn">Open Subject</a>
+  </div>
+
+  <div class="subject-card">
+    <div class="icon">🎭</div>
+    <h2>Drama</h2>
+    <div class="lesson-count">0 Lessons</div>
+    <p>Performance, acting techniques and scripts.</p>
+    <a href="/school/lessons/drama" class="btn">Open Subject</a>
+  </div>
+
+  <div class="subject-card">
+    <div class="icon">⚽</div>
+    <h2>Physical Education</h2>
+    <div class="lesson-count">0 Lessons</div>
+    <p>Fitness, sports science and healthy living.</p>
+    <a href="/school/lessons/pe" class="btn">Open Subject</a>
+  </div>
+
+  <div class="subject-card">
+    <div class="icon">🧠</div>
+    <h2>Psychology</h2>
+    <div class="lesson-count">0 Lessons</div>
+    <p>Memory, behaviour and cognitive studies.</p>
+    <a href="/school/lessons/psychology" class="btn">Open Subject</a>
+  </div>
+
+  <div class="subject-card">
+    <div class="icon">📈</div>
+    <h2>Business Studies</h2>
+    <div class="lesson-count">0 Lessons</div>
+    <p>Marketing, finance and entrepreneurship.</p>
+    <a href="/school/lessons/business-studies" class="btn">Open Subject</a>
+  </div>
+
+  <div class="subject-card">
+    <div class="icon">💰</div>
+    <h2>Economics</h2>
+    <div class="lesson-count">0 Lessons</div>
+    <p>Markets, trade and economic systems.</p>
+    <a href="/school/lessons/economics" class="btn">Open Subject</a>
+  </div>
+
+  <div class="subject-card">
+    <div class="icon">⚖️</div>
+    <h2>Law</h2>
+    <div class="lesson-count">0 Lessons</div>
+    <p>Criminal law, legal systems and rights.</p>
+    <a href="/school/lessons/law" class="btn">Open Subject</a>
+  </div>
+
+  <div class="subject-card">
+    <div class="icon">🩺</div>
+    <h2>Health & Social Care</h2>
+    <div class="lesson-count">0 Lessons</div>
+    <p>Healthcare systems and patient wellbeing.</p>
+    <a href="/school/lessons/health-social" class="btn">Open Subject</a>
+  </div>
+
+  <div class="subject-card">
+    <div class="icon">🍳</div>
+    <h2>Food Technology</h2>
+    <div class="lesson-count">0 Lessons</div>
+    <p>Cooking, nutrition and food safety.</p>
+    <a href="/school/lessons/food-technology" class="btn">Open Subject</a>
+  </div>
+
+  <div class="subject-card">
+    <div class="icon">🛠️</div>
+    <h2>Engineering</h2>
+    <div class="lesson-count">0 Lessons</div>
+    <p>Mechanics, structures and design systems.</p>
+    <a href="/school/lessons/engineering" class="btn">Open Subject</a>
+  </div>
+
+  <div class="subject-card">
+    <div class="icon">🚀</div>
+    <h2>Physics</h2>
+    <div class="lesson-count">0 Lessons</div>
+    <p>Energy, motion, electricity and space.</p>
+    <a href="/school/lessons/physics" class="btn">Open Subject</a>
+  </div>
+
+  <div class="subject-card">
+    <div class="icon">🧬</div>
+    <h2>Biology</h2>
+    <div class="lesson-count">0 Lessons</div>
+    <p>Cells, genetics, ecosystems and evolution.</p>
+    <a href="biology" class="btn">Open Subject</a>
+  </div>
+
+  <div class="subject-card">
+    <div class="icon">⚗️</div>
+    <h2>Chemistry</h2>
+    <div class="lesson-count">0 Lessons</div>
+    <p>Reactions, bonding and the periodic table.</p>
+    <a href="/school/lessons/chemistry" class="btn">Open Subject</a>
+  </div>
+
+  <div class="subject-card">
+    <div class="icon">🇫🇷</div>
+    <h2>French</h2>
+    <div class="lesson-count">0 Lessons</div>
+    <p>Vocabulary, speaking and listening practice.</p>
+    <a href="/school/lessons/french" class="btn">Open Subject</a>
+  </div>
+
+  <div class="subject-card">
+    <div class="icon">🇪🇸</div>
+    <h2>Spanish</h2>
+    <div class="lesson-count">0 Lessons</div>
+    <p>Grammar, pronunciation and conversations.</p>
+    <a href="/school/lessons/spanish" class="btn">Open Subject</a>
+  </div>
+
+  <div class="subject-card">
+    <div class="icon">🇩🇪</div>
+    <h2>German</h2>
+    <div class="lesson-count">0 Lessons</div>
+    <p>Language learning and communication skills.</p>
+    <a href="#" class="btn">Open Subject</a>
+  </div>
+
+  <div class="subject-card">
+    <div class="icon">🕌</div>
+    <h2>Religious Studies</h2>
+    <div class="lesson-count">0 Lessons</div>
+    <p>Beliefs, ethics and philosophical thinking.</p>
+    <a href="/school/lessons/re" class="btn">Open Subject</a>
+  </div>
+
+  <div class="subject-card">
+    <div class="icon">📰</div>
+    <h2>Media Studies</h2>
+    <div class="lesson-count">0 Lessons</div>
+    <p>Film, social media and digital production.</p>
+    <a href="/school/lessons/media-studies" class="btn">Open Subject</a>
+  </div>
+
+  <div class="subject-card">
+    <div class="icon">🎮</div>
+    <h2>Game Development</h2>
+    <div class="lesson-count">0 Lessons</div>
+    <p>Game design, coding and 3D environments.</p>
+    <a href="/school/lessons/game-development" class="btn">Open Subject</a>
+  </div>
+
+  <div class="subject-card">
+    <div class="icon">🤖</div>
+    <h2>Artificial Intelligence</h2>
+    <div class="lesson-count">0 Lessons</div>
+    <p>Machine learning and modern AI systems.</p>
+    <a href="/school/lessons/artificial-intelligence" class="btn">Open Subject</a>
+  </div>
+
+  <div class="subject-card">
+    <div class="icon">☁️</div>
+    <h2>Cloud Computing</h2>
+    <div class="lesson-count">0 Lessons</div>
+    <p>Servers, hosting and online infrastructure.</p>
+    <a href="/school/lessons/cloud-computing" class="btn">Open Subject</a>
+  </div>
+
+  <div class="subject-card">
+    <div class="icon">🔐</div>
+    <h2>Cyber Security</h2>
+    <div class="lesson-count">0 Lessons</div>
+    <p>Online safety, encryption and ethical hacking.</p>
+    <a href="/school/lessons/cyber-security" class="btn">Open Subject</a>
+  </div>
+
+</section>
+
+  <footer>
+    © 2026 Plum School • Learn Anywhere, Anytime 🍑
+  </footer>
+
+</div>
+
+</body>
+</html>
