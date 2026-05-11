@@ -183,6 +183,31 @@
 
     }
 
+    /* BUTTON CARDS */
+
+    .dashboard-btn {
+
+      border: none;
+
+      text-align: left;
+
+      cursor: pointer;
+
+      transition: 0.2s;
+
+    }
+
+    .dashboard-btn:hover {
+
+      transform: translateY(-3px);
+
+      background: #f3f4f6;
+
+      box-shadow:
+        0 8px 20px rgba(0,0,0,0.08);
+
+    }
+
     .status {
 
       display: inline-flex;
@@ -308,7 +333,15 @@
 
     <div class="grid">
 
-      <div class="mini-card">
+      <!-- ASSIGNMENTS -->
+
+      <button
+        class="mini-card dashboard-btn"
+        onclick="
+          window.location.href =
+          '/dashboard/student/assignments'
+        "
+      >
 
         <h3>
           📚 Assignments
@@ -319,9 +352,17 @@
           assigned by your teacher.
         </p>
 
-      </div>
+      </button>
 
-      <div class="mini-card">
+      <!-- RESOURCES -->
+
+      <button
+        class="mini-card dashboard-btn"
+        onclick="
+          window.location.href =
+          '/dashboard/student/resources'
+        "
+      >
 
         <h3>
           📝 Resources
@@ -332,9 +373,17 @@
           revision guides and worksheets.
         </p>
 
-      </div>
+      </button>
 
-      <div class="mini-card">
+      <!-- PROGRESS -->
+
+      <button
+        class="mini-card dashboard-btn"
+        onclick="
+          window.location.href =
+          '/dashboard/student/progress'
+        "
+      >
 
         <h3>
           📊 Progress
@@ -345,7 +394,7 @@
           and achievements.
         </p>
 
-      </div>
+      </button>
 
     </div>
 
