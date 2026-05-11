@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Plum School • Resources</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family:'Inter',sans-serif;
+      background:#0f1020;
+      color:white;
+      overflow-x:hidden;
+    }
+
+    a{
+      text-decoration:none;
+      color:inherit;
+    }
+
+    .background{
+      position:fixed;
+      inset:0;
+      background:
+        radial-gradient(circle at top left,#7b2ff7 0%,transparent 30%),
+        radial-gradient(circle at bottom right,#ff4ecd 0%,transparent 30%),
+        linear-gradient(135deg,#0f1020,#17182f);
+      z-index:-1;
+    }
+
+    nav{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:22px 6%;
+      background:rgba(15,16,32,0.7);
+      backdrop-filter:blur(12px);
+      border-bottom:1px solid rgba(255,255,255,0.08);
+      position:sticky;
+      top:0;
+      z-index:100;
+      gap:20px;
+    }
+
+    .logo{
+      font-size:1.6rem;
+      font-weight:800;
+      background:linear-gradient(90deg,#ff7ad9,#9f67ff);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+
+    .nav-links{
+      display:flex;
+      gap:22px;
+      flex-wrap:wrap;
+      justify-content:center;
+    }
+
+    .nav-links a{
+      opacity:0.8;
+      transition:0.2s;
+    }
+
+    .nav-links a:hover{
+      opacity:1;
+      color:#ff7ad9;
+    }
+
+    .container{
+      max-width:1450px;
+      margin:auto;
+      padding:70px 6%;
+    }
+
+    .hero{
+      text-align:center;
+      margin-bottom:65px;
+    }
+
+    .hero h1{
+      font-size:clamp(2.8rem,6vw,5rem);
+      line-height:1.05;
+      margin-bottom:20px;
+    }
+
+    .gradient{
+      background:linear-gradient(90deg,#ff7ad9,#9f67ff);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+
+    .hero p{
+      max-width:850px;
+      margin:auto;
+      opacity:0.8;
+      line-height:1.8;
+      font-size:1.05rem;
+    }
+
+    .search-bar{
+      margin:45px auto 0 auto;
+      max-width:850px;
+    }
+
+    .search-bar input{
+      width:100%;
+      padding:18px 22px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,0.08);
+      background:rgba(255,255,255,0.05);
+      color:white;
+      font-size:1rem;
+      outline:none;
+      backdrop-filter:blur(12px);
+    }
+
+    .search-bar input::placeholder{
+      color:rgba(255,255,255,0.55);
+    }
+
+    .categories{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      gap:24px;
+      margin-bottom:80px;
+    }
+
+    .category-card{
+      background:rgba(255,255,255,0.05);
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:26px;
+      padding:30px;
+      transition:0.25s;
+      backdrop-filter:blur(12px);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .category-card:hover{
+      transform:translateY(-5px);
+      border-color:#9f67ff;
+      box-shadow:0 20px 45px rgba(0,0,0,0.35);
+    }
+
+    .category-card::before{
+      content:'';
+      position:absolute;
+      width:220px;
+      height:220px;
+      background:rgba(255,255,255,0.03);
+      border-radius:50%;
+      top:-110px;
+      right:-110px;
+    }
+
+    .icon{
+      font-size:3rem;
+      margin-bottom:20px;
+    }
+
+    .category-card h2{
+      margin-bottom:12px;
+      font-size:1.5rem;
+    }
+
+    .category-card p{
+      opacity:0.75;
+      line-height:1.7;
+      margin-bottom:20px;
+    }
+
+    .resource-count{
+      display:inline-block;
+      padding:10px 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.08);
+      font-size:0.9rem;
+      margin-bottom:22px;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:100%;
+      padding:14px;
+      border-radius:16px;
+      background:linear-gradient(90deg,#ff4ecd,#7b2ff7);
+      font-weight:700;
+      transition:0.25s;
+      box-shadow:0 10px 30px rgba(168,85,247,0.3);
+    }
+
+    .btn:hover{
+      transform:translateY(-2px);
+    }
+
+    .section-title{
+      margin-bottom:35px;
+    }
+
+    .section-title h2{
+      font-size:2.3rem;
+      margin-bottom:12px;
+    }
+
+    .section-title p{
+      opacity:0.75;
+      line-height:1.7;
+      max-width:700px;
+    }
+
+    .resources-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:24px;
+    }
+
+    .resource-card{
+      background:rgba(255,255,255,0.05);
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:24px;
+      padding:28px;
+      transition:0.25s;
+      backdrop-filter:blur(10px);
+    }
+
+    .resource-card:hover{
+      transform:translateY(-4px);
+      border-color:#ff7ad9;
+    }
+
+    .resource-card h3{
+      margin-top:16px;
+      margin-bottom:12px;
+      font-size:1.35rem;
+    }
+
+    .resource-card p{
+      opacity:0.75;
+      line-height:1.7;
+      margin-bottom:20px;
+    }
+
+    .download-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:12px 18px;
+      border-radius:14px;
+      background:rgba(255,255,255,0.08);
+      border:1px solid rgba(255,255,255,0.08);
+      transition:0.25s;
+      font-weight:600;
+    }
+
+    .download-btn:hover{
+      background:rgba(255,255,255,0.12);
+    }
+
+    footer{
+      margin-top:90px;
+      padding-top:30px;
+      border-top:1px solid rgba(255,255,255,0.08);
+      text-align:center;
+      opacity:0.6;
+    }
+
+    @media(max-width:768px){
+
+      nav{
+        flex-direction:column;
+        gap:16px;
+      }
+
+      .container{
+        padding:50px 5%;
+      }
+
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="background"></div>
+
+<nav>
+
+  <div class="logo">🍑 Plum School</div>
+
+  <div class="nav-links">
+    <a href="#">Dashboard</a>
+    <a href="#">Subjects</a>
+    <a href="#">GCSE</a>
+    <a href="#">SATs</a>
+    <a href="#">Resources</a>
+  </div>
+
+</nav>
+
+<div class="container">
+
+  <section class="hero">
+
+    <h1>
+      Learning
+      <span class="gradient">Resources</span>
+    </h1>
+
+    <p>
+      Explore thousands of revision resources, worksheets,
+      quizzes, practice papers, flashcards and learning guides
+      designed for students of all ages.
+    </p>
+
+    <div class="search-bar">
+      <input type="text" placeholder="Search resources, subjects, quizzes or worksheets...">
+    </div>
+
+  </section>
+
+  <section>
+
+    <div class="section-title">
+
+      <h2>Featured Resources ⚡</h2>
+
+      <p>
+        Popular learning resources used by Plum School students every day.
+      </p>
+
+    </div>
+
+    <div class="resources-grid">
+
+      <div class="resource-card">
+        <div class="icon">📘</div>
+        <h3>GCSE Maths Formula Guide</h3>
+        <p>Essential formulas and examples for GCSE Mathematics revision.</p>
+        <a href="#" class="download-btn">Download PDF</a>
+      </div>
+
+      <div class="resource-card">
+        <div class="icon">🧪</div>
+        <h3>Biology Revision Pack</h3>
+        <p>Complete biology topic summaries with diagrams and notes.</p>
+        <a href="#" class="download-btn">Download PDF</a>
+      </div>
+
+      <div class="resource-card">
+        <div class="icon">📖</div>
+        <h3>Reading Comprehension Worksheets</h3>
+        <p>SATs reading practice worksheets and comprehension tasks.</p>
+        <a href="#" class="download-btn">Download Pack</a>
+      </div>
+
+      <div class="resource-card">
+        <div class="icon">💻</div>
+        <h3>Python Programming Basics</h3>
+        <p>Beginner-friendly coding guide for Computer Science students.</p>
+        <a href="#" class="download-btn">Download Guide</a>
+      </div>
+
+      <div class="resource-card">
+        <div class="icon">🌍</div>
+        <h3>Geography Case Studies</h3>
+        <p>Key GCSE geography case studies with examples and explanations.</p>
+        <a href="#" class="download-btn">Download PDF</a>
+      </div>
+
+      <div class="resource-card">
+        <div class="icon">🎮</div>
+        <h3>Interactive Science Quiz</h3>
+        <p>Test your science knowledge with fun interactive quizzes.</p>
+        <a href="#" class="download-btn">Start Quiz</a>
+      </div>
+
+      <div class="resource-card">
+        <div class="icon">📊</div>
+        <h3>GCSE Maths Revision Spreadsheet</h3>
+        <p>Track revision progress, grades, homework and exam preparation.</p>
+        <a href="#" class="download-btn">Download XLSX</a>
+      </div>
+
+      <div class="resource-card">
+        <div class="icon">📈</div>
+        <h3>Science Experiment Data Sheet</h3>
+        <p>Spreadsheet templates for recording and analysing science experiments.</p>
+        <a href="#" class="download-btn">Download Spreadsheet</a>
+      </div>
+
+      <div class="resource-card">
+        <div class="icon">📉</div>
+        <h3>Student Progress Tracker</h3>
+        <p>Monitor attendance, revision time and quiz scores in one dashboard.</p>
+        <a href="#" class="download-btn">Open Tracker</a>
+      </div>
+
+      <div class="resource-card">
+        <div class="icon">📽️</div>
+        <h3>GCSE Chemistry PowerPoint</h3>
+        <p>Interactive chemistry lesson slides with diagrams and animations.</p>
+        <a href="#" class="download-btn">Download PPTX</a>
+      </div>
+
+      <div class="resource-card">
+        <div class="icon">🖥️</div>
+        <h3>English Literature Presentation</h3>
+        <p>Shakespeare themes, quotes and analysis presentation slides.</p>
+        <a href="#" class="download-btn">Download Presentation</a>
+      </div>
+
+      <div class="resource-card">
+        <div class="icon">📚</div>
+        <h3>SATs Maths Lesson Slides</h3>
+        <p>Colourful SATs maths slides designed for younger students.</p>
+        <a href="#" class="download-btn">Open PowerPoint</a>
+      </div>
+
+      <div class="resource-card">
+        <div class="icon">📋</div>
+        <h3>Homework Planner Spreadsheet</h3>
+        <p>Organise assignments, deadlines and lesson schedules easily.</p>
+        <a href="#" class="download-btn">Download XLSX</a>
+      </div>
+
+      <div class="resource-card">
+        <div class="icon">📁</div>
+        <h3>Revision Timetable Template</h3>
+        <p>Editable spreadsheet timetable for GCSE and SATs revision planning.</p>
+        <a href="#" class="download-btn">Download Template</a>
+      </div>
+
+      <div class="resource-card">
+        <div class="icon">🎞️</div>
+        <h3>History Timeline Presentation</h3>
+        <p>Visual history timelines with animated lesson slides and summaries.</p>
+        <a href="#" class="download-btn">Download PPTX</a>
+      </div>
+
+      <div class="resource-card">
+        <div class="icon">🧮</div>
+        <h3>Grade Calculator Spreadsheet</h3>
+        <p>Automatically calculate predicted grades and assessment averages.</p>
+        <a href="#" class="download-btn">Open Calculator</a>
+      </div>
+
+    </div>
+
+  </section>
+
+  <footer>
+    © 2026 Plum School • Learn Anywhere, Anytime 🍑
+  </footer>
+
+</div>
+
+</body>
+</html>
