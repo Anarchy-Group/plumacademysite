@@ -31,7 +31,7 @@
 
       color: #1f2937;
 
-      padding: 30px;
+      padding: 20px;
 
     }
 
@@ -43,17 +43,17 @@
 
       align-items: center;
 
-      margin-bottom: 25px;
+      gap: 15px;
 
       flex-wrap: wrap;
 
-      gap: 15px;
+      margin-bottom: 20px;
 
     }
 
     .topbar h1 {
 
-      font-size: 30px;
+      font-size: 32px;
 
       font-weight: 700;
 
@@ -67,21 +67,31 @@
 
     }
 
+    .topbar-buttons {
+
+      display: flex;
+
+      gap: 12px;
+
+      flex-wrap: wrap;
+
+    }
+
     .btn {
 
-      padding: 13px 18px;
-
-      border: 1px solid #dbe1ea;
+      padding: 12px 18px;
 
       border-radius: 12px;
+
+      border: 1px solid #dbe1ea;
 
       background: white;
 
       color: #111827;
 
-      cursor: pointer;
-
       font-weight: 600;
+
+      cursor: pointer;
 
       text-decoration: none;
 
@@ -95,29 +105,13 @@
 
     }
 
-    .logout-btn {
-
-      background: #ef4444;
-
-      border: none;
-
-      color: white;
-
-    }
-
-    .logout-btn:hover {
-
-      background: #dc2626;
-
-    }
-
     .save-btn {
 
       background: #6366f1;
 
-      border: none;
-
       color: white;
+
+      border: none;
 
     }
 
@@ -127,21 +121,35 @@
 
     }
 
+    .logout-btn {
+
+      background: #ef4444;
+
+      color: white;
+
+      border: none;
+
+    }
+
+    .logout-btn:hover {
+
+      background: #dc2626;
+
+    }
+
     .card {
 
       background: white;
+
+      border: 1px solid #e5e7eb;
 
       border-radius: 18px;
 
       padding: 24px;
 
-      border: 1px solid #e5e7eb;
-
-      margin-bottom: 25px;
-
     }
 
-    input {
+    #documentTitle {
 
       width: 100%;
 
@@ -151,19 +159,46 @@
 
       border: 1px solid #d1d5db;
 
+      font-size: 16px;
+
       margin-bottom: 20px;
-
-      font-size: 15px;
-
-      background: white;
 
     }
 
-    input:focus {
+    #documentTitle:focus {
 
       outline: none;
 
       border-color: #6366f1;
+
+    }
+
+    .toolbar {
+
+      display: flex;
+
+      gap: 10px;
+
+      flex-wrap: wrap;
+
+      margin-bottom: 20px;
+
+    }
+
+    .toolbar button,
+    .toolbar select {
+
+      padding: 11px 14px;
+
+      border-radius: 10px;
+
+      border: 1px solid #dbe1ea;
+
+      background: white;
+
+      font-weight: 600;
+
+      cursor: pointer;
 
     }
 
@@ -191,11 +226,11 @@
 
     .header-row {
 
-      margin-bottom: 10px;
-
-      font-size: 14px;
+      margin-bottom: 8px;
 
       color: #4b5563;
+
+      font-size: 14px;
 
     }
 
@@ -207,21 +242,15 @@
 
     #editor {
 
-      width: 100%;
-
-      min-height: 500px;
+      min-height: 600px;
 
       padding: 24px;
+
+      outline: none;
 
       font-size: 16px;
 
       line-height: 1.8;
-
-      outline: none;
-
-      overflow-y: auto;
-
-      background: white;
 
     }
 
@@ -232,60 +261,6 @@
       color: #6b7280;
 
       font-size: 14px;
-
-    }
-
-    .toolbar {
-
-      display: flex;
-
-      gap: 10px;
-
-      flex-wrap: wrap;
-
-      margin-top: 20px;
-
-      margin-bottom: 20px;
-
-    }
-
-    .toolbar button {
-
-      padding: 11px 14px;
-
-      border: 1px solid #dbe1ea;
-
-      border-radius: 10px;
-
-      background: white;
-
-      cursor: pointer;
-
-      font-weight: 600;
-
-      transition: 0.15s;
-
-    }
-
-    .toolbar button:hover {
-
-      background: #f3f4f6;
-
-    }
-
-    .toolbar select {
-
-      padding: 11px 14px;
-
-      border-radius: 10px;
-
-      border: 1px solid #dbe1ea;
-
-      background: white;
-
-      cursor: pointer;
-
-      font-weight: 600;
 
     }
 
@@ -311,9 +286,9 @@
 
       }
 
+      .topbar,
       .toolbar,
       .action-buttons,
-      .topbar,
       .status {
 
         display: none;
@@ -340,6 +315,8 @@
 </head>
 <body>
 
+  <!-- TOPBAR -->
+
   <div class="topbar">
 
     <div>
@@ -354,13 +331,7 @@
 
     </div>
 
-    <div
-      style="
-        display:flex;
-        gap:12px;
-        flex-wrap:wrap;
-      "
-    >
+    <div class="topbar-buttons">
 
       <a
         href="/dashboard/student/documents"
@@ -387,13 +358,19 @@
 
   </div>
 
+  <!-- MAIN CARD -->
+
   <div class="card">
+
+    <!-- TITLE -->
 
     <input
       type="text"
       id="documentTitle"
       placeholder="Document Title"
     />
+
+    <!-- TOOLBAR -->
 
     <div class="toolbar">
 
@@ -466,6 +443,8 @@
 
     </div>
 
+    <!-- EDITOR -->
+
     <div id="editorWrapper">
 
       <div id="documentHeader">
@@ -527,12 +506,16 @@
 
     </div>
 
+    <!-- STATUS -->
+
     <div
       class="status"
       id="saveStatus"
     >
       Ready
     </div>
+
+    <!-- ACTION BUTTONS -->
 
     <div class="action-buttons">
 
@@ -556,6 +539,28 @@
       >
         Export .pawdocx
       </button>
+
+      <button
+        class="btn"
+        onclick="
+          document.getElementById(
+            'pawdocxInput'
+          ).click()
+        "
+      >
+        Open .pawdocx
+      </button>
+
+      <!-- FILE INPUT -->
+
+      <input
+        type="file"
+        id="pawdocxInput"
+        accept=".pawdocx"
+        style="display:none"
+      />
+
+    </div>
 
   </div>
 
@@ -622,11 +627,6 @@
         "studentInfo"
       );
 
-    const saveBtn =
-      document.getElementById(
-        "saveBtn"
-      );
-
     const headerStudentId =
       document.getElementById(
         "headerStudentId"
@@ -647,10 +647,15 @@
         "headerDocumentDate"
       );
 
+    const saveBtn =
+      document.getElementById(
+        "saveBtn"
+      );
+
     let currentStudent = null;
 
     // ==================================================
-    // AUTH INITIALIZATION
+    // AUTH
     // ==================================================
 
     async function initializeAuth() {
@@ -663,6 +668,11 @@
         .auth
         .getSession();
 
+      console.log(
+        "Session:",
+        session
+      );
+
       if (!session) {
 
         window.location.href =
@@ -672,28 +682,57 @@
 
       }
 
-      const user =
+      currentStudent =
         session.user;
 
-      currentStudent = user;
+      console.log(
+        "Current Student:",
+        currentStudent
+      );
+
+      console.log(
+        "Document ID:",
+        documentId
+      );
+
+      // UPDATE UI
 
       studentInfo.textContent =
-        `${user.user_metadata.full_name} • ${user.email}`;
+        `${currentStudent.user_metadata.full_name} • ${currentStudent.email}`;
 
       headerStudentId.textContent =
-        user.id;
+        currentStudent.id;
 
       headerStudentName.textContent =
-        user.user_metadata.full_name
+        currentStudent.user_metadata.full_name
         || "Student";
 
       headerStudentEmail.textContent =
-        user.email;
+        currentStudent.email;
 
       headerDocumentDate.textContent =
         new Date().toLocaleString();
 
-      await loadDocument();
+      // LOAD DOCUMENT
+
+      try {
+
+        await loadDocument();
+
+      }
+
+      catch (error) {
+
+        console.error(error);
+
+        saveStatus.textContent =
+          "Failed to load document.";
+
+      }
+
+      // IMPORT CHECK
+
+      checkImportedPawdocx();
 
     }
 
@@ -702,6 +741,10 @@
     // ==================================================
 
     async function loadDocument() {
+
+      console.log(
+        "Loading document..."
+      );
 
       if (!documentId) {
 
@@ -721,8 +764,21 @@
       } = await studentSupabase
         .from("student_documents")
         .select("*")
-        .eq("id", documentId)
+        .eq(
+          "id",
+          documentId
+        )
         .single();
+
+      console.log(
+        "Document Data:",
+        data
+      );
+
+      console.log(
+        "Document Error:",
+        error
+      );
 
       if (error) {
 
@@ -735,7 +791,10 @@
 
       }
 
+      // SECURITY CHECK
+
       if (
+        !data ||
         data.student_id !==
         currentStudent.id
       ) {
@@ -746,6 +805,8 @@
         return;
 
       }
+
+      // LOAD CONTENT
 
       documentTitle.value =
         data.title;
@@ -760,6 +821,63 @@
 
       saveStatus.textContent =
         "Document loaded.";
+
+    }
+
+    // ==================================================
+    // IMPORT CHECK
+    // ==================================================
+
+    function checkImportedPawdocx() {
+
+      const imported =
+        localStorage.getItem(
+          "pawdocx_import"
+        );
+
+      if (!imported) {
+        return;
+      }
+
+      try {
+
+        const data =
+          JSON.parse(imported);
+
+        documentTitle.value =
+          data.title || "";
+
+        editor.innerHTML =
+          data.content || "";
+
+        headerStudentId.textContent =
+          data.student_id || "-";
+
+        headerStudentName.textContent =
+          data.student_name || "-";
+
+        headerStudentEmail.textContent =
+          data.student_email || "-";
+
+        headerDocumentDate.textContent =
+          new Date(
+            data.updated_at
+          ).toLocaleString();
+
+        saveStatus.textContent =
+          ".pawdocx imported successfully!";
+
+        localStorage.removeItem(
+          "pawdocx_import"
+        );
+
+      }
+
+      catch (error) {
+
+        console.error(error);
+
+      }
 
     }
 
@@ -789,7 +907,7 @@
 
       let saveError = null;
 
-      // UPDATE DOCUMENT
+      // UPDATE
 
       if (documentId) {
 
@@ -818,7 +936,7 @@
 
       }
 
-      // CREATE DOCUMENT
+      // CREATE
 
       else {
 
@@ -874,6 +992,8 @@
 
       }
 
+      // ERROR
+
       if (saveError) {
 
         console.error(saveError);
@@ -891,7 +1011,7 @@
     }
 
     // ==================================================
-    // EXPORT PAWDOCX
+    // EXPORT
     // ==================================================
 
     function exportPawDocx() {
@@ -974,7 +1094,7 @@
     }
 
     // ==================================================
-    // IMPORT PAWDOCX
+    // IMPORT
     // ==================================================
 
     document.getElementById(
@@ -1187,7 +1307,7 @@
 
     window.addEventListener(
       "load",
-      async () => {
+      () => {
 
         setTimeout(() => {
 
