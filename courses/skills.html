@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plum Courses — Skills</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #fff7f4;
+      overflow-x: hidden;
+    }
+
+    .main-bg {
+      background:
+        radial-gradient(circle at top left, rgba(255, 71, 126, 0.15), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(255, 132, 64, 0.15), transparent 35%),
+        linear-gradient(135deg, #fff5f2 0%, #fff8f6 60%, #ffffff 100%);
+    }
+
+    .gradient-text {
+      background: linear-gradient(90deg, #ff477e 0%, #ff7a45 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .logo {
+      font-size: 1.6rem;
+      font-weight: 800;
+      background: linear-gradient(90deg,#ff477e,#ff7a45);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .gradient-button {
+      background: linear-gradient(135deg, #ff477e 0%, #ff7a45 100%);
+      box-shadow: 0 0 30px rgba(255, 105, 97, 0.35);
+    }
+
+    .card-bg {
+      background: rgba(255,255,255,0.82);
+      border: 1px solid rgba(255,255,255,0.9);
+      backdrop-filter: blur(12px);
+    }
+
+    .skill-card {
+      background: rgba(255,255,255,0.72);
+      border: 1px solid rgba(255,120,120,0.08);
+      transition: all .3s ease;
+    }
+
+    .skill-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 25px 60px rgba(255,120,120,0.12);
+    }
+
+    .locked-overlay {
+      backdrop-filter: blur(8px);
+      background: rgba(255,255,255,0.65);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="main-bg min-h-screen">
+
+    <!-- HEADER -->
+    <header class="w-full border-b border-orange-100 bg-white/80 backdrop-blur-xl sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+
+        <div class="logo">🍑 Plum Courses</div>
+
+        <nav class="hidden lg:flex items-center gap-8 text-gray-600 font-semibold text-sm">
+          <a href="#" class="hover:text-gray-900 transition">Home</a>
+          <a href="#" class="hover:text-gray-900 transition">Courses</a>
+          <a href="#" class="text-gray-900">Skills</a>
+          <a href="#" class="hover:text-gray-900 transition">Resources</a>
+          <a href="#" class="hover:text-gray-900 transition">Community</a>
+        </nav>
+
+        <a href="login.html" class="gradient-button text-gray-900 px-6 py-3 rounded-2xl font-bold hover:scale-105 transition duration-300 text-sm sm:text-base">
+          Log In
+        </a>
+      </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-20 lg:py-24 text-center">
+
+      <div class="inline-flex items-center gap-2 bg-white px-5 py-2 rounded-full border border-orange-100 shadow-lg text-sm font-bold text-gray-700 mb-8">
+        🚀 Personalized Skill Tracking
+      </div>
+
+      <h1 class="text-5xl sm:text-6xl lg:text-7xl font-black text-gray-900 leading-tight mb-8">
+        Track your
+        <span class="gradient-text">learning journey</span>
+      </h1>
+
+      <p class="text-gray-600 text-lg sm:text-xl leading-relaxed max-w-3xl mx-auto mb-12">
+        Build valuable creative and digital skills while tracking your progress across lessons, projects, and achievements.
+      </p>
+
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <a href="login.html" class="gradient-button text-center text-gray-900 px-8 py-4 rounded-2xl font-black text-lg hover:scale-105 transition duration-300">
+          Log Into Magic Plum
+        </a>
+
+        <a href="courses.html" class="bg-white border border-orange-100 text-gray-900 px-8 py-4 rounded-2xl font-black text-lg hover:bg-orange-50 transition duration-300 text-center">
+          Browse Courses
+        </a>
+      </div>
+    </section>
+
+    <!-- PREVIEW CARDS -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+
+      <div class="text-center mb-14">
+        <h2 class="text-4xl sm:text-5xl font-black text-gray-900 mb-4">
+          Skill categories available
+        </h2>
+
+        <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+          Sign into your Magic Plum account to unlock personalized progress tracking and learning analytics.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-8 relative">
+
+        <!-- CARD -->
+        <div class="skill-card rounded-[36px] p-8 shadow-xl relative overflow-hidden">
+
+          <div class="w-16 h-16 rounded-3xl bg-gradient-to-br from-pink-400 to-orange-300 flex items-center justify-center text-3xl shadow-lg mb-8">
+            🎬
+          </div>
+
+          <h3 class="text-3xl font-black text-gray-900 mb-4">
+            Content Creation
+          </h3>
+
+          <p class="text-gray-600 leading-relaxed mb-8">
+            Learn editing, branding, storytelling, thumbnails, and creator growth strategies.
+          </p>
+
+          <div class="locked-overlay absolute inset-0 flex flex-col items-center justify-center text-center p-8">
+            <div class="text-6xl mb-4">🔒</div>
+            <h4 class="text-2xl font-black text-gray-900 mb-3">
+              Login Required
+            </h4>
+            <p class="text-gray-600 mb-6 max-w-xs">
+              Sign in to view your skill progress and achievements.
+            </p>
+
+            <a href="login.html" class="gradient-button text-gray-900 px-6 py-3 rounded-2xl font-black hover:scale-105 transition duration-300">
+              Log In
+            </a>
+          </div>
+        </div>
+
+        <!-- CARD -->
+        <div class="skill-card rounded-[36px] p-8 shadow-xl relative overflow-hidden">
+
+          <div class="w-16 h-16 rounded-3xl bg-gradient-to-br from-orange-300 to-pink-300 flex items-center justify-center text-3xl shadow-lg mb-8">
+            📸
+          </div>
+
+          <h3 class="text-3xl font-black text-gray-900 mb-4">
+            Photography
+          </h3>
+
+          <p class="text-gray-600 leading-relaxed mb-8">
+            Improve lighting, composition, editing, and cinematic visual storytelling.
+          </p>
+
+          <div class="locked-overlay absolute inset-0 flex flex-col items-center justify-center text-center p-8">
+            <div class="text-6xl mb-4">🔒</div>
+            <h4 class="text-2xl font-black text-gray-900 mb-3">
+              Login Required
+            </h4>
+            <p class="text-gray-600 mb-6 max-w-xs">
+              Sign in to unlock personalized photography progress tracking.
+            </p>
+
+            <a href="login.html" class="gradient-button text-gray-900 px-6 py-3 rounded-2xl font-black hover:scale-105 transition duration-300">
+              Log In
+            </a>
+          </div>
+        </div>
+
+        <!-- CARD -->
+        <div class="skill-card rounded-[36px] p-8 shadow-xl relative overflow-hidden">
+
+          <div class="w-16 h-16 rounded-3xl bg-gradient-to-br from-pink-300 to-orange-200 flex items-center justify-center text-3xl shadow-lg mb-8">
+            💻
+          </div>
+
+          <h3 class="text-3xl font-black text-gray-900 mb-4">
+            Web Design
+          </h3>
+
+          <p class="text-gray-600 leading-relaxed mb-8">
+            Learn responsive UI design, frontend development, and modern web systems.
+          </p>
+
+          <div class="locked-overlay absolute inset-0 flex flex-col items-center justify-center text-center p-8">
+            <div class="text-6xl mb-4">🔒</div>
+            <h4 class="text-2xl font-black text-gray-900 mb-3">
+              Login Required
+            </h4>
+            <p class="text-gray-600 mb-6 max-w-xs">
+              Access detailed skill analytics after signing into your account.
+            </p>
+
+            <a href="login.html" class="gradient-button text-gray-900 px-6 py-3 rounded-2xl font-black hover:scale-105 transition duration-300">
+              Log In
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="max-w-5xl mx-auto px-4 sm:px-6 py-24">
+
+      <div class="card-bg rounded-[40px] p-10 sm:p-14 shadow-2xl text-center">
+
+        <div class="text-6xl mb-6">🍑</div>
+
+        <h2 class="text-4xl sm:text-5xl font-black text-gray-900 mb-6">
+          Unlock your personalized skills dashboard
+        </h2>
+
+        <p class="text-gray-600 text-lg max-w-2xl mx-auto leading-relaxed mb-10">
+          Create or log into your Magic Plum account to access progress tracking, learning insights, achievements, and personalized recommendations.
+        </p>
+
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+          <a href="login.html" class="gradient-button text-center text-gray-900 px-8 py-4 rounded-2xl font-black text-lg hover:scale-105 transition duration-300">
+            Log In
+          </a>
+
+          <a href="signup.html" class="bg-white border border-orange-100 text-gray-900 px-8 py-4 rounded-2xl font-black text-lg hover:bg-orange-50 transition duration-300 text-center">
+            Create Account
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-orange-100 bg-white/60 backdrop-blur-xl">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
+
+        <div>
+          <div class="logo mb-2">🍑 Plum Courses</div>
+          <p class="text-gray-500">
+            © 2026 Plum Courses. All rights reserved.
+          </p>
+        </div>
+
+        <div class="flex gap-8 text-gray-600 font-semibold">
+          <a href="#" class="hover:text-gray-900 transition">Privacy</a>
+          <a href="#" class="hover:text-gray-900 transition">Terms</a>
+          <a href="#" class="hover:text-gray-900 transition">Support</a>
+        </div>
+
+      </div>
+    </footer>
+
+  </div>
+
+</body>
+</html>
