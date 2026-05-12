@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Magic Plum Account Login</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      overflow: hidden;
+      background: #fff7f4;
+    }
+
+    .main-bg {
+      background:
+        radial-gradient(circle at top left, rgba(255, 71, 126, 0.18), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(255, 132, 64, 0.18), transparent 35%),
+        linear-gradient(135deg, #fff5f2 0%, #fff8f6 60%, #ffffff 100%);
+    }
+
+    .gradient-text {
+      background: linear-gradient(90deg, #ff477e 0%, #ff7a45 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .gradient-button {
+      background: linear-gradient(135deg, #ff477e 0%, #ff7a45 100%);
+      box-shadow: 0 0 30px rgba(255, 105, 97, 0.35);
+    }
+
+    .glass-card {
+      background: rgba(255,255,255,0.78);
+      border: 1px solid rgba(255,255,255,0.9);
+      backdrop-filter: blur(16px);
+    }
+
+    .input-style {
+      background: rgba(255,255,255,0.75);
+      border: 1px solid rgba(255,120,120,0.12);
+    }
+
+    .input-style:focus {
+      outline: none;
+      border-color: #ff7a45;
+      box-shadow: 0 0 0 4px rgba(255,122,69,0.12);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="main-bg min-h-screen flex items-center justify-center px-4 sm:px-6 py-10">
+
+    <div class="grid lg:grid-cols-2 gap-10 max-w-6xl w-full items-center">
+
+      <!-- LEFT CONTENT -->
+      <div class="hidden lg:block">
+
+        <div class="inline-flex items-center gap-2 bg-white px-5 py-2 rounded-full border border-orange-100 shadow-lg text-sm font-bold text-gray-700 mb-8">
+          🍑 Magic Plum Account System
+        </div>
+
+        <h1 class="text-6xl font-black text-gray-900 leading-tight mb-8">
+          Welcome back to your
+          <span class="gradient-text">Magic Plum Account</span>
+        </h1>
+
+        <p class="text-gray-600 text-xl leading-relaxed max-w-2xl mb-12">
+          Sign in to continue learning on Plum Courses, track your progress, access premium resources, and connect with the community.
+        </p>
+
+        <div class="grid grid-cols-2 gap-6 max-w-xl">
+
+          <div class="glass-card rounded-[28px] p-6 shadow-xl">
+            <div class="text-4xl mb-4">📚</div>
+            <h3 class="text-2xl font-black text-gray-900 mb-2">Courses</h3>
+            <p class="text-gray-600">Continue learning across all your enrolled courses.</p>
+          </div>
+
+          <div class="glass-card rounded-[28px] p-6 shadow-xl">
+            <div class="text-4xl mb-4">🚀</div>
+            <h3 class="text-2xl font-black text-gray-900 mb-2">Progress</h3>
+            <p class="text-gray-600">Track skill growth and learning achievements.</p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- LOGIN CARD -->
+      <div class="glass-card rounded-[40px] p-8 sm:p-10 shadow-2xl w-full max-w-xl mx-auto">
+
+        <div class="text-center mb-10">
+
+          <div class="w-20 h-20 rounded-[30px] gradient-button flex items-center justify-center text-5xl mx-auto mb-6 shadow-xl">
+            🍑
+          </div>
+
+          <h2 class="text-4xl sm:text-5xl font-black text-gray-900 mb-4">
+            Magic Plum Login
+          </h2>
+
+          <p class="text-gray-600 text-lg leading-relaxed max-w-md mx-auto">
+            Sign in with your Magic Plum account to access Plum Courses.
+          </p>
+        </div>
+
+        <form id="loginForm" class="space-y-6">
+
+          <div>
+            <label class="block text-gray-700 font-bold mb-3">
+              Email Address
+            </label>
+
+            <input
+              id="email"
+              type="email"
+              placeholder="you@example.com"
+              class="input-style w-full rounded-2xl px-5 py-4 text-gray-800 font-medium"
+              required
+            />
+          </div>
+
+          <div>
+            <label class="block text-gray-700 font-bold mb-3">
+              Password
+            </label>
+
+            <input
+              id="password"
+              type="password"
+              placeholder="Enter your password"
+              class="input-style w-full rounded-2xl px-5 py-4 text-gray-800 font-medium"
+              required
+            />
+          </div>
+
+          <div class="flex justify-center">
+            <div
+              class="g-recaptcha"
+              data-sitekey="YOUR_RECAPTCHA_SITE_KEY"
+            ></div>
+          </div>
+
+          <button
+            type="submit"
+            class="gradient-button w-full text-gray-900 py-4 rounded-2xl font-black text-lg hover:scale-[1.02] transition duration-300"
+          >
+            Sign In
+          </button>
+
+          <button
+            type="button"
+            id="signupButton"
+            class="w-full bg-white border border-orange-100 text-gray-900 py-4 rounded-2xl font-black text-lg hover:bg-orange-50 transition duration-300"
+          >
+            Create Magic Plum Account
+          </button>
+
+        </form>
+
+        <div id="message" class="mt-6 text-center font-semibold"></div>
+
+        <div class="mt-10 pt-8 border-t border-orange-100 text-center">
+          <p class="text-gray-500">
+            By continuing, you agree to the Magic Plum Terms & Privacy Policy.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    // Replace these with your Supabase credentials
+    const SUPABASE_URL = 'https://jihpgbsghatuwwkacsur.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppaHBnYnNnaGF0dXd3a2Fjc3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxMzkxNzcsImV4cCI6MjA5MzcxNTE3N30.qH7iso7t2zoOLi0C68DiUKZecyIDhlxVcJAcNhYLHTk';
+
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const loginForm = document.getElementById('loginForm');
+    const signupButton = document.getElementById('signupButton');
+    const message = document.getElementById('message');
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const recaptchaResponse = grecaptcha.getResponse();
+      
+      if (!recaptchaResponse) {
+        message.innerHTML = 'Please complete the CAPTCHA verification.';
+        message.className = 'mt-6 text-center font-semibold text-red-500';
+        return;
+      }
+
+      const recaptchaResponse = grecaptcha.getResponse();
+
+      if (!recaptchaResponse) {
+        message.innerHTML = 'Please complete the CAPTCHA verification.';
+        message.className = 'mt-6 text-center font-semibold text-red-500';
+        return;
+      }
+
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      message.innerHTML = 'Signing in...';
+      message.className = 'mt-6 text-center font-semibold text-gray-600';
+
+      const { data, error } = await supabaseClient.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        message.innerHTML = error.message;
+        message.className = 'mt-6 text-center font-semibold text-red-500';
+        return;
+      }
+
+      grecaptcha.reset();
+
+      message.innerHTML = 'Successfully signed into your Magic Plum account!';
+      message.className = 'mt-6 text-center font-semibold text-green-600';
+
+      // Redirect after login
+      setTimeout(() => {
+        window.location.href = '/dashboard.html';
+      }, 1200);
+    });
+
+    signupButton.addEventListener('click', async () => {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      if (!email || !password) {
+        message.innerHTML = 'Please enter an email and password first.';
+        message.className = 'mt-6 text-center font-semibold text-red-500';
+        return;
+      }
+
+      message.innerHTML = 'Creating account...';
+      message.className = 'mt-6 text-center font-semibold text-gray-600';
+
+      const { data, error } = await supabaseClient.auth.signUp({
+        email,
+        password,
+      });
+
+      if (error) {
+        message.innerHTML = error.message;
+        message.className = 'mt-6 text-center font-semibold text-red-500';
+        return;
+      }
+
+      grecaptcha.reset();
+
+      message.innerHTML = 'Magic Plum account created successfully!';
+      message.className = 'mt-6 text-center font-semibold text-green-600';
+    });
+  </script>
+
+</body>
+</html>
