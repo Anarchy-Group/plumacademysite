@@ -9,7 +9,7 @@
   />
 
   <title>
-    Plum Academy Writer
+    Magic Academy Writer
   </title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -301,61 +301,6 @@
 
     }
 
-    ::-webkit-scrollbar {
-
-      width: 10px;
-
-    }
-
-    ::-webkit-scrollbar-thumb {
-
-      background: #d1d5db;
-
-      border-radius: 999px;
-
-    }
-
-    ::-webkit-scrollbar-track {
-
-      background: transparent;
-
-    }
-
-    @media print {
-
-      body {
-
-        background: white;
-
-        padding: 0;
-
-      }
-
-      .toolbar,
-      .action-buttons,
-      .topbar,
-      .status {
-
-        display: none;
-
-      }
-
-      .card {
-
-        border: none;
-
-        padding: 0;
-
-      }
-
-      #editorWrapper {
-
-        border: none;
-
-      }
-
-    }
-
   </style>
 </head>
 <body>
@@ -383,7 +328,7 @@
     >
 
       <a
-        href="/documents/student"
+        href="/dashboard/student/plum-academy-writer"
         class="btn"
       >
         My Documents
@@ -459,10 +404,6 @@
           Pink
         </option>
 
-        <option value="#ffa500">
-          Orange
-        </option>
-
       </select>
 
       <select
@@ -484,10 +425,6 @@
 
         <option value="Verdana">
           Verdana
-        </option>
-
-        <option value="Courier New">
-          Courier New
         </option>
 
       </select>
@@ -585,18 +522,14 @@
   <script>
 
     // ==================================================
-    // 🔑 SUPABASE
+    // SUPABASE
     // ==================================================
 
     const STUDENT_SUPABASE_URL =
       "https://ebzcflngssljyqieizws.supabase.co";
 
     const STUDENT_SUPABASE_ANON_KEY =
-      "YOUR_STUDENT_SUPABASE_ANON_KEY";
-
-    // ==================================================
-    // CLIENT
-    // ==================================================
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImViemNmbG5nc3NsanlxaWVpendzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MDQ3NDEsImV4cCI6MjA5Mzk4MDc0MX0.ZnPi4jKEtkr0iUN_ymVrhUI7A_OMkhWjRn3shA2D9yk";
 
     const studentSupabase =
       supabase.createClient(
@@ -676,82 +609,61 @@
 
     let currentStudent = null;
 
-// ==================================================
-// CHECK LOGIN
-// ==================================================
+    // ==================================================
+    // AUTH INITIALIZATION
+    // ==================================================
 
-async function checkLogin() {
+    async function initializeAuth() {
 
-  // GET SESSION
+      const {
+        data: {
+          session
+        }
+      } = await studentSupabase
+        .auth
+        .getSession();
 
-  const {
-    data: sessionData
-  } = await studentSupabase
-    .auth
-    .getSession();
+      // NO SESSION
 
-  const session =
-    sessionData?.session;
+      if (!session) {
 
-  // NO SESSION
+        window.location.href =
+          "/login/student";
 
-  if (!session) {
+        return;
 
-    window.location.href =
-      "/login/student";
+      }
 
-    return;
+      // USER
 
-  }
+      const user =
+        session.user;
 
-  // GET USER
+      currentStudent = user;
 
-  const {
-    data,
-    error
-  } = await studentSupabase
-    .auth
-    .getUser();
+      // UPDATE UI
 
-  const user =
-    data?.user;
+      studentInfo.textContent =
+        `${user.user_metadata.full_name} • ${user.email}`;
 
-  // INVALID USER
+      headerStudentId.textContent =
+        user.id;
 
-  if (!user || error) {
+      headerStudentName.textContent =
+        user.user_metadata.full_name
+        || "Student";
 
-    window.location.href =
-      "/login/student";
+      headerStudentEmail.textContent =
+        user.email;
 
-    return;
+      headerDocumentDate.textContent =
+        new Date().toLocaleString();
 
-  }
+      // LOAD DOCUMENT
 
-  currentStudent = user;
+      await loadDocument();
 
-  // STUDENT INFO
-
-  studentInfo.textContent =
-    `${user.user_metadata.full_name} • ${user.email}`;
-
-  headerStudentId.textContent =
-    user.id;
-
-  headerStudentName.textContent =
-    user.user_metadata.full_name
-    || "Student";
-
-  headerStudentEmail.textContent =
-    user.email;
-
-  headerDocumentDate.textContent =
-    new Date().toLocaleString();
-
-  // LOAD DOCUMENT
-
-  await loadDocument();
-
-}
+    }
 
     // ==================================================
     // LOAD DOCUMENT
@@ -777,10 +689,7 @@ async function checkLogin() {
       } = await studentSupabase
         .from("student_documents")
         .select("*")
-        .eq(
-          "id",
-          documentId
-        )
+        .eq("id", documentId)
         .single();
 
       if (error) {
@@ -808,8 +717,6 @@ async function checkLogin() {
 
       }
 
-      // LOAD DOCUMENT
-
       documentTitle.value =
         data.title;
 
@@ -822,7 +729,7 @@ async function checkLogin() {
         ).toLocaleString();
 
       saveStatus.textContent =
-        "Document loaded successfully.";
+        "Document loaded.";
 
     }
 
@@ -831,10 +738,6 @@ async function checkLogin() {
     // ==================================================
 
     async function saveDocument() {
-
-      if (!currentStudent) {
-        return;
-      }
 
       const title =
         documentTitle.value.trim();
@@ -856,9 +759,7 @@ async function checkLogin() {
 
       let saveError = null;
 
-      // ==================================================
-      // UPDATE EXISTING DOCUMENT
-      // ==================================================
+      // UPDATE
 
       if (documentId) {
 
@@ -887,9 +788,7 @@ async function checkLogin() {
 
       }
 
-      // ==================================================
-      // CREATE NEW DOCUMENT
-      // ==================================================
+      // CREATE
 
       else {
 
@@ -929,23 +828,21 @@ async function checkLogin() {
 
         saveError = error;
 
-        // REDIRECT TO DOCUMENT URL
+        // REDIRECT TO NEW URL
 
         if (!error && data) {
 
           window.history.replaceState(
             {},
             "",
-            `/writer/student?id=${data.id}`
+            `/dashboard/student/apps/plum-academy-writer/document?id=${data.id}`
           );
 
         }
 
       }
 
-      // ==================================================
-      // SAVE ERROR
-      // ==================================================
+      // ERROR
 
       if (saveError) {
 
@@ -958,78 +855,13 @@ async function checkLogin() {
 
       }
 
-      // ==================================================
-      // STORAGE SAVE
-      // ==================================================
-
-      const htmlDocument = `
-
-        <html>
-
-        <head>
-
-          <title>
-            ${title}
-          </title>
-
-        </head>
-
-        <body>
-
-          <h1>
-            ${title}
-          </h1>
-
-          ${content}
-
-        </body>
-
-        </html>
-
-      `;
-
-      const file = new Blob(
-        [htmlDocument],
-        {
-          type: "text/html"
-        }
-      );
-
-      const storagePath = `
-        ${currentStudent.id}/${title}.html
-      `.replace(/\s+/g, "-");
-
-      const {
-        error: storageError
-      } = await studentSupabase
-        .storage
-        .from("student-documents")
-        .upload(
-          storagePath,
-          file,
-          {
-            upsert: true
-          }
-        );
-
-      if (storageError) {
-
-        console.error(storageError);
-
-        saveStatus.textContent =
-          storageError.message;
-
-        return;
-
-      }
-
       saveStatus.textContent =
         "Document saved successfully!";
 
     }
 
     // ==================================================
-    // FORMAT FUNCTIONS
+    // FORMATTING
     // ==================================================
 
     function format(command, value = null) {
@@ -1060,121 +892,26 @@ async function checkLogin() {
       format("insertUnorderedList");
     }
 
-    // ==================================================
-    // TOGGLE HEADING
-    // ==================================================
-
     function heading() {
-
-      const selection =
-        window.getSelection();
-
-      if (
-        selection.rangeCount === 0
-      ) {
-        return;
-      }
-
-      const range =
-        selection.getRangeAt(0);
-
-      const parent =
-        range.commonAncestorContainer
-        .parentElement;
-
-      if (
-        parent &&
-        parent.tagName === "H1"
-      ) {
-
-        const paragraph =
-          document.createElement("p");
-
-        paragraph.innerHTML =
-          parent.innerHTML;
-
-        parent.replaceWith(
-          paragraph
-        );
-
-        editor.focus();
-
-        return;
-
-      }
-
       format(
         "formatBlock",
         "<h1>"
       );
-
     }
 
-    // ==================================================
-    // TOGGLE HIGHLIGHT
-    // ==================================================
-
     function highlightText() {
-
-      const selection =
-        window.getSelection();
-
-      if (
-        selection.rangeCount === 0
-      ) {
-        return;
-      }
-
-      const range =
-        selection.getRangeAt(0);
-
-      const parent =
-        range.commonAncestorContainer
-        .parentElement;
-
-      if (
-        parent &&
-        parent.style &&
-        parent.style.backgroundColor
-      ) {
-
-        const text =
-          document.createTextNode(
-            parent.textContent
-          );
-
-        parent.replaceWith(text);
-
-        return;
-
-      }
 
       const color =
         document.getElementById(
           "highlightColor"
         ).value;
 
-      const span =
-        document.createElement(
-          "span"
-        );
-
-      span.style.backgroundColor =
-        color;
-
-      span.appendChild(
-        range.extractContents()
+      format(
+        "hiliteColor",
+        color
       );
 
-      range.insertNode(span);
-
-      editor.focus();
-
     }
-
-    // ==================================================
-    // FONT CHANGER
-    // ==================================================
 
     function changeFont() {
 
@@ -1183,59 +920,15 @@ async function checkLogin() {
           "fontSelector"
         ).value;
 
-      const selection =
-        window.getSelection();
-
-      if (
-        selection.rangeCount === 0
-      ) {
-        return;
-      }
-
-      const range =
-        selection.getRangeAt(0);
-
-      const parent =
-        range.commonAncestorContainer
-        .parentElement;
-
-      if (
-        parent &&
-        parent.tagName === "SPAN"
-      ) {
-
-        parent.style.fontFamily =
-          font;
-
-        editor.focus();
-
-        return;
-
-      }
-
-      const selectedText =
-        range.extractContents();
-
-      const span =
-        document.createElement(
-          "span"
-        );
-
-      span.style.fontFamily =
-        font;
-
-      span.appendChild(
-        selectedText
+      format(
+        "fontName",
+        font
       );
-
-      range.insertNode(span);
-
-      editor.focus();
 
     }
 
     // ==================================================
-    // PRINT DOCUMENT
+    // PRINT
     // ==================================================
 
     function printDocument() {
@@ -1306,9 +999,15 @@ async function checkLogin() {
 
     window.addEventListener(
       "load",
-      () => {
+      async () => {
 
-        checkLogin();
+        // WAIT FOR SESSION RESTORE
+
+        setTimeout(() => {
+
+          initializeAuth();
+
+        }, 500);
 
       }
     );
