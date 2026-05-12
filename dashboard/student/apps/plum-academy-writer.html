@@ -360,7 +360,7 @@
     <div>
 
       <h1>
-        📄 Plum Academy Writer
+        📄 My Documents
       </h1>
 
       <p id="studentInfo">
@@ -378,6 +378,17 @@
         ✨ Create New Document
       </a>
 
+      <button
+        class="btn"
+        onclick="
+          document.getElementById(
+            'pawdocxInput'
+          ).click()
+        "
+      >
+        📂 Open .pawdocx
+      </button>
+
       <a
         href="/dashboard/student"
         class="btn"
@@ -391,6 +402,15 @@
       >
         Logout
       </button>
+
+      <!-- HIDDEN FILE INPUT -->
+
+      <input
+        type="file"
+        id="pawdocxInput"
+        accept=".pawdocx"
+        style="display:none"
+      />
 
     </div>
 
@@ -490,14 +510,14 @@
   <script>
 
     // ==================================================
-    // 🔑 SUPABASE
+    // SUPABASE
     // ==================================================
 
     const STUDENT_SUPABASE_URL =
       "https://ebzcflngssljyqieizws.supabase.co";
 
     const STUDENT_SUPABASE_ANON_KEY =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImViemNmbG5nc3NsanlxaWVpendzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MDQ3NDEsImV4cCI6MjA5Mzk4MDc0MX0.ZnPi4jKEtkr0iUN_ymVrhUI7A_OMkhWjRn3shA2D9yk";
+      "YOUR_STUDENT_SUPABASE_ANON_KEY";
 
     // ==================================================
     // CLIENT
@@ -549,16 +569,14 @@
     async function checkLogin() {
 
       const {
-        data,
-        error
+        data: {
+          session
+        }
       } = await studentSupabase
         .auth
-        .getUser();
+        .getSession();
 
-      const user =
-        data?.user;
-
-      if (!user || error) {
+      if (!session) {
 
         window.location.href =
           "/login/student";
@@ -567,10 +585,11 @@
 
       }
 
-      currentStudent = user;
+      currentStudent =
+        session.user;
 
       studentInfo.textContent =
-        `${user.user_metadata.full_name} • ${user.email}`;
+        `${currentStudent.user_metadata.full_name} • ${currentStudent.email}`;
 
       loadDocuments();
 
@@ -654,7 +673,7 @@
             <br><br>
 
             <a
-              href="/writer/student"
+              href="/dashboard/student/apps/plum-academy-writer/document"
               class="btn primary-btn"
             >
               Create Your First Document
@@ -698,7 +717,7 @@
 
             <div class="document-actions">
 
-              <!-- OPEN EDITOR -->
+              <!-- OPEN -->
 
               <button
                 class="btn primary-btn"
@@ -715,12 +734,7 @@
               <button
                 class="btn"
                 onclick='downloadDocument(
-                  ${JSON.stringify(
-                    doc.title
-                  )},
-                  ${JSON.stringify(
-                    doc.content
-                  )}
+                  ${JSON.stringify(doc)}
                 )'
               >
                 Download
@@ -753,33 +767,48 @@
     }
 
     // ==================================================
-    // DOWNLOAD DOCUMENT
+    // DOWNLOAD PAWDOCX
     // ==================================================
 
-    function downloadDocument(
-      title,
-      content
-    ) {
+    function downloadDocument(doc) {
 
-      const html = `
-        <html>
+      const pawdocxData = {
 
-        <head>
-          <title>${title}</title>
-        </head>
+        title:
+          doc.title,
 
-        <body>
-          ${content}
-        </body>
+        content:
+          doc.content,
 
-        </html>
-      `;
+        student_name:
+          doc.student_name,
+
+        student_email:
+          doc.student_email,
+
+        student_id:
+          doc.student_id,
+
+        keystage:
+          doc.student_keystage,
+
+        updated_at:
+          doc.updated_at
+
+      };
 
       const blob =
         new Blob(
-          [html],
+          [
+            JSON.stringify(
+              pawdocxData,
+              null,
+              2
+            )
+          ],
           {
-            type: "text/html"
+            type:
+              "application/pawdocx"
           }
         );
 
@@ -792,13 +821,79 @@
       a.href = url;
 
       a.download =
-        `${title}.html`;
+        `${doc.title}.pawdocx`;
 
       a.click();
 
       URL.revokeObjectURL(url);
 
     }
+
+    // ==================================================
+    // OPEN PAWDOCX
+    // ==================================================
+
+    document.getElementById(
+      "pawdocxInput"
+    ).addEventListener(
+      "change",
+      async (event) => {
+
+        const file =
+          event.target.files[0];
+
+        if (!file) {
+          return;
+        }
+
+        if (
+          !file.name.endsWith(
+            ".pawdocx"
+          )
+        ) {
+
+          alert(
+            "Invalid file type."
+          );
+
+          return;
+
+        }
+
+        try {
+
+          const text =
+            await file.text();
+
+          const data =
+            JSON.parse(text);
+
+          // SAVE TEMP DATA
+
+          localStorage.setItem(
+            "pawdocx_import",
+            JSON.stringify(data)
+          );
+
+          // REDIRECT TO WRITER
+
+          window.location.href =
+            "/dashboard/student/apps/plum-academy-writer/document";
+
+        }
+
+        catch (error) {
+
+          console.error(error);
+
+          alert(
+            "Failed to open .pawdocx file."
+          );
+
+        }
+
+      }
+    );
 
     // ==================================================
     // DELETE DOCUMENT
@@ -862,7 +957,11 @@
       "load",
       () => {
 
-        checkLogin();
+        setTimeout(() => {
+
+          checkLogin();
+
+        }, 500);
 
       }
     );
