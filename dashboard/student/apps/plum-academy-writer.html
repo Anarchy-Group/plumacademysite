@@ -9,7 +9,7 @@
   />
 
   <title>
-    Magic Academy Writer
+    My Documents
   </title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -43,7 +43,7 @@
 
       align-items: center;
 
-      margin-bottom: 25px;
+      margin-bottom: 30px;
 
       flex-wrap: wrap;
 
@@ -53,7 +53,7 @@
 
     .topbar h1 {
 
-      font-size: 30px;
+      font-size: 34px;
 
       font-weight: 700;
 
@@ -63,7 +63,17 @@
 
       color: #6b7280;
 
-      margin-top: 6px;
+      margin-top: 8px;
+
+    }
+
+    .button-group {
+
+      display: flex;
+
+      gap: 12px;
+
+      flex-wrap: wrap;
 
     }
 
@@ -71,19 +81,19 @@
 
       padding: 13px 18px;
 
-      border: 1px solid #dbe1ea;
-
       border-radius: 12px;
+
+      border: 1px solid #dbe1ea;
 
       background: white;
 
       color: #111827;
 
+      text-decoration: none;
+
       cursor: pointer;
 
       font-weight: 600;
-
-      text-decoration: none;
 
       transition: 0.15s;
 
@@ -95,31 +105,17 @@
 
     }
 
-    .logout-btn {
-
-      background: #ef4444;
-
-      border: none;
-
-      color: white;
-
-    }
-
-    .logout-btn:hover {
-
-      background: #dc2626;
-
-    }
-
-    .save-btn {
+    .primary-btn {
 
       background: #6366f1;
+
       color: white;
+
       border: none;
 
     }
 
-    .save-btn:hover {
+    .primary-btn:hover {
 
       background: #4f46e5;
 
@@ -129,111 +125,163 @@
 
       background: white;
 
+      border: 1px solid #e5e7eb;
+
       border-radius: 18px;
 
       padding: 24px;
-
-      border: 1px solid #e5e7eb;
 
       margin-bottom: 25px;
 
     }
 
-    input {
+    .welcome-card {
 
-      width: 100%;
+      display: flex;
 
-      padding: 14px;
+      justify-content: space-between;
 
-      border-radius: 12px;
+      align-items: center;
 
-      border: 1px solid #d1d5db;
+      gap: 20px;
 
-      margin-bottom: 20px;
-
-      font-size: 15px;
-
-      background: white;
+      flex-wrap: wrap;
 
     }
 
-    input:focus {
+    .welcome-card h2 {
 
-      outline: none;
-
-      border-color: #6366f1;
-
-    }
-
-    #editorWrapper {
-
-      border: 1px solid #d1d5db;
-
-      border-radius: 16px;
-
-      overflow: hidden;
-
-      background: white;
-
-    }
-
-    #documentHeader {
-
-      background: #f9fafb;
-
-      border-bottom: 1px solid #e5e7eb;
-
-      padding: 18px;
-
-    }
-
-    .header-row {
+      font-size: 28px;
 
       margin-bottom: 10px;
 
-      font-size: 14px;
-
-      color: #4b5563;
-
     }
 
-    .header-row:last-child {
-
-      margin-bottom: 0;
-
-    }
-
-    #editor {
-
-      width: 100%;
-
-      min-height: 500px;
-
-      padding: 24px;
-
-      font-size: 16px;
-
-      line-height: 1.8;
-
-      outline: none;
-
-      overflow-y: auto;
-
-      background: white;
-
-    }
-
-    .status {
-
-      margin-top: 15px;
+    .welcome-card p {
 
       color: #6b7280;
 
-      font-size: 14px;
+      line-height: 1.7;
+
+      max-width: 700px;
 
     }
 
-    .toolbar {
+    .stats-grid {
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(
+          auto-fit,
+          minmax(220px, 1fr)
+        );
+
+      gap: 20px;
+
+      margin-top: 25px;
+
+    }
+
+    .stat-card {
+
+      background: white;
+
+      border: 1px solid #e5e7eb;
+
+      border-radius: 18px;
+
+      padding: 22px;
+
+    }
+
+    .stat-card h3 {
+
+      font-size: 15px;
+
+      color: #6b7280;
+
+      margin-bottom: 12px;
+
+    }
+
+    .stat-card .number {
+
+      font-size: 34px;
+
+      font-weight: 700;
+
+    }
+
+    .section-title {
+
+      font-size: 24px;
+
+      font-weight: 700;
+
+      margin-bottom: 20px;
+
+    }
+
+    .document-grid {
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(
+          auto-fit,
+          minmax(320px, 1fr)
+        );
+
+      gap: 20px;
+
+    }
+
+    .document-card {
+
+      border: 1px solid #e5e7eb;
+
+      border-radius: 16px;
+
+      padding: 20px;
+
+      background: #fff;
+
+      transition: 0.15s;
+
+    }
+
+    .document-card:hover {
+
+      border-color: #c7d2fe;
+
+      transform: translateY(-2px);
+
+    }
+
+    .document-title {
+
+      font-size: 20px;
+
+      font-weight: 700;
+
+      margin-bottom: 10px;
+
+    }
+
+    .document-meta {
+
+      font-size: 14px;
+
+      color: #6b7280;
+
+      margin-bottom: 18px;
+
+      line-height: 1.7;
+
+    }
+
+    .document-actions {
 
       display: flex;
 
@@ -241,106 +289,45 @@
 
       flex-wrap: wrap;
 
-      margin-top: 20px;
+    }
 
-      margin-bottom: 20px;
+    .empty-state {
+
+      text-align: center;
+
+      padding: 70px 20px;
+
+      color: #6b7280;
 
     }
 
-    .toolbar button {
+    .empty-state h2 {
 
-      padding: 11px 14px;
+      margin-bottom: 10px;
 
-      border: 1px solid #dbe1ea;
+      color: #111827;
 
-      border-radius: 10px;
-
-      background: white;
-
-      cursor: pointer;
-
-      font-weight: 600;
-
-      transition: 0.15s;
+      font-size: 28px;
 
     }
 
-    .toolbar button:hover {
+    .empty-state p {
 
-      background: #f3f4f6;
+      line-height: 1.7;
 
-    }
+      max-width: 600px;
 
-    .toolbar select {
-
-      padding: 11px 14px;
-
-      border-radius: 10px;
-
-      border: 1px solid #dbe1ea;
-
-      background: white;
-
-      cursor: pointer;
-
-      font-weight: 600;
+      margin: auto;
 
     }
 
-    .action-buttons {
+    .loading {
 
-      display: flex;
+      text-align: center;
 
-      gap: 12px;
+      color: #6b7280;
 
-      flex-wrap: wrap;
-
-      margin-top: 20px;
-
-    }
-
-    ::-webkit-scrollbar {
-
-      width: 10px;
-
-    }
-
-    ::-webkit-scrollbar-thumb {
-
-      background: #d1d5db;
-
-      border-radius: 999px;
-
-    }
-
-    ::-webkit-scrollbar-track {
-
-      background: transparent;
-
-    }
-
-    @media print {
-
-      body {
-        background: white;
-        padding: 0;
-      }
-
-      .toolbar,
-      .action-buttons,
-      .topbar,
-      .status {
-        display: none;
-      }
-
-      .card {
-        border: none;
-        padding: 0;
-      }
-
-      #editorWrapper {
-        border: none;
-      }
+      padding: 30px;
 
     }
 
@@ -348,12 +335,14 @@
 </head>
 <body>
 
+  <!-- TOPBAR -->
+
   <div class="topbar">
 
     <div>
 
       <h1>
-        ✨ Magic Academy Writer
+        📄 My Documents
       </h1>
 
       <p id="studentInfo">
@@ -362,182 +351,116 @@
 
     </div>
 
-    <div
-      style="
-        display:flex;
-        gap:12px;
-        flex-wrap:wrap;
-      "
-    >
+    <div class="button-group">
+
+      <a
+        href="/writer/student"
+        class="btn primary-btn"
+      >
+        ✨ Create New Document
+      </a>
 
       <a
         href="/dashboard/student"
         class="btn"
       >
-        Back To Dashboard
+        Return To Dashboard
       </a>
-
-      <button
-        id="logoutBtn"
-        class="btn logout-btn"
-      >
-        Logout
-      </button>
 
     </div>
 
   </div>
 
-  <div class="card">
+  <!-- WELCOME -->
 
-    <input
-      type="text"
-      id="documentTitle"
-      placeholder="Document Title"
-    />
+  <div class="card welcome-card">
 
-    <div class="toolbar">
+    <div>
 
-      <button onclick="makeBold()">
-        Bold
-      </button>
+      <h2>
+        Welcome back 👋
+      </h2>
 
-      <button onclick="makeItalic()">
-        Italic
-      </button>
-
-      <button onclick="underlineText()">
-        Underline
-      </button>
-
-      <button onclick="heading()">
-        Heading
-      </button>
-
-      <button onclick="bulletList()">
-        Bullet List
-      </button>
-
-      <button onclick="highlightText()">
-        Highlight
-      </button>
-
-      <select id="highlightColor">
-
-        <option value="yellow">
-          Yellow
-        </option>
-
-        <option value="#90ee90">
-          Green
-        </option>
-
-        <option value="#87cefa">
-          Blue
-        </option>
-
-        <option value="#ffb6c1">
-          Pink
-        </option>
-
-        <option value="#ffa500">
-          Orange
-        </option>
-
-      </select>
-
-      <select
-        id="fontSelector"
-        onchange="changeFont()"
-      >
-
-        <option value="Arial">
-          Arial
-        </option>
-
-        <option value="Times New Roman">
-          Times New Roman
-        </option>
-
-        <option value="Georgia">
-          Georgia
-        </option>
-
-        <option value="Verdana">
-          Verdana
-        </option>
-
-        <option value="Courier New">
-          Courier New
-        </option>
-
-      </select>
+      <p>
+        This is your Magic Academy workspace.
+        Create assignments, write coursework,
+        store revision notes and manage all
+        your saved documents securely in the cloud.
+      </p>
 
     </div>
 
-    <div id="editorWrapper">
+  </div>
 
-      <div id="documentHeader">
+  <!-- STATS -->
 
-        <div class="header-row">
-          <strong>Student ID:</strong>
-          <span id="headerStudentId">
-            Loading...
-          </span>
-        </div>
+  <div class="stats-grid">
 
-        <div class="header-row">
-          <strong>Student Name:</strong>
-          <span id="headerStudentName">
-            Loading...
-          </span>
-        </div>
+    <div class="stat-card">
 
-        <div class="header-row">
-          <strong>Email Address:</strong>
-          <span id="headerStudentEmail">
-            Loading...
-          </span>
-        </div>
-
-        <div class="header-row">
-          <strong>Document Created:</strong>
-          <span id="headerDocumentDate">
-            Loading...
-          </span>
-        </div>
-
-      </div>
+      <h3>
+        Total Documents
+      </h3>
 
       <div
-        id="editor"
-        contenteditable="true"
-      ></div>
+        class="number"
+        id="documentCount"
+      >
+        0
+      </div>
 
     </div>
 
-    <div
-      class="status"
-      id="saveStatus"
-    >
-      Ready
+    <div class="stat-card">
+
+      <h3>
+        Latest Activity
+      </h3>
+
+      <div
+        class="number"
+        style="
+          font-size:18px;
+        "
+        id="latestActivity"
+      >
+        None
+      </div>
+
     </div>
 
-    <div class="action-buttons">
+    <div class="stat-card">
 
-      <button
-        class="btn save-btn"
-        id="saveBtn"
-      >
-        Save Document
-      </button>
+      <h3>
+        Cloud Storage
+      </h3>
 
-      <button
-        class="btn"
-        onclick="printDocument()"
+      <div
+        class="number"
+        style="
+          font-size:20px;
+        "
       >
-        Print Document
-      </button>
+        Connected
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- DOCUMENTS -->
+
+  <div class="card">
+
+    <div class="section-title">
+      Your Documents
+    </div>
+
+    <div id="documentsContainer">
+
+      <div class="loading">
+        Loading documents...
+      </div>
 
     </div>
 
@@ -546,7 +469,7 @@
   <script>
 
     // ==================================================
-    // 🔑 STUDENT SUPABASE
+    // 🔑 SUPABASE
     // ==================================================
 
     const STUDENT_SUPABASE_URL =
@@ -556,7 +479,7 @@
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImViemNmbG5nc3NsanlxaWVpendzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MDQ3NDEsImV4cCI6MjA5Mzk4MDc0MX0.ZnPi4jKEtkr0iUN_ymVrhUI7A_OMkhWjRn3shA2D9yk";
 
     // ==================================================
-    // CREATE CLIENT
+    // CLIENT
     // ==================================================
 
     const studentSupabase =
@@ -576,19 +499,9 @@
     // ELEMENTS
     // ==================================================
 
-    const editor =
+    const documentsContainer =
       document.getElementById(
-        "editor"
-      );
-
-    const documentTitle =
-      document.getElementById(
-        "documentTitle"
-      );
-
-    const saveStatus =
-      document.getElementById(
-        "saveStatus"
+        "documentsContainer"
       );
 
     const studentInfo =
@@ -596,29 +509,14 @@
         "studentInfo"
       );
 
-    const saveBtn =
+    const documentCount =
       document.getElementById(
-        "saveBtn"
+        "documentCount"
       );
 
-    const headerStudentId =
+    const latestActivity =
       document.getElementById(
-        "headerStudentId"
-      );
-
-    const headerStudentName =
-      document.getElementById(
-        "headerStudentName"
-      );
-
-    const headerStudentEmail =
-      document.getElementById(
-        "headerStudentEmail"
-      );
-
-    const headerDocumentDate =
-      document.getElementById(
-        "headerDocumentDate"
+        "latestActivity"
       );
 
     let currentStudent = null;
@@ -653,401 +551,264 @@
       studentInfo.textContent =
         `${user.user_metadata.full_name} • ${user.email}`;
 
-      headerStudentId.textContent =
-        user.id;
-
-      headerStudentName.textContent =
-        user.user_metadata.full_name
-        || "Student";
-
-      headerStudentEmail.textContent =
-        user.email;
-
-      headerDocumentDate.textContent =
-        new Date().toLocaleString();
+      loadDocuments();
 
     }
 
     // ==================================================
-    // SAVE DOCUMENT + STORAGE
+    // LOAD DOCUMENTS
     // ==================================================
 
-    async function saveDocument() {
-
-      if (!currentStudent) {
-        return;
-      }
-
-      const title =
-        documentTitle.value.trim();
-
-      const content =
-        editor.innerHTML.trim();
-
-      if (!title || !content) {
-
-        saveStatus.textContent =
-          "Please enter a title and content.";
-
-        return;
-
-      }
-
-      saveStatus.textContent =
-        "Saving document...";
-
-      // DATABASE SAVE
+    async function loadDocuments() {
 
       const {
+        data,
         error
       } = await studentSupabase
         .from("student_documents")
-        .insert([{
-
-          student_id:
-            currentStudent.id,
-
-          student_email:
-            currentStudent.email,
-
-          student_name:
-            currentStudent.user_metadata
-            .full_name,
-
-          teacher_id:
-            currentStudent.user_metadata
-            .teacher_id,
-
-          title:
-            title,
-
-          content:
-            content,
-
-          updated_at:
-            new Date().toISOString()
-
-        }]);
-
-      if (error) {
-
-        console.error(error);
-
-        saveStatus.textContent =
-          "Failed to save document.";
-
-        return;
-
-      }
-
-      // STORAGE SAVE
-
-      const htmlDocument = `
-        <html>
-        <head>
-          <title>${title}</title>
-        </head>
-        <body>
-          <h1>${title}</h1>
-          ${content}
-        </body>
-        </html>
-      `;
-
-      const file = new Blob(
-        [htmlDocument],
-        {
-          type: "text/html"
-        }
-      );
-
-      await studentSupabase
-        .storage
-        .from("student-documents")
-        .upload(
-          `${currentStudent.id}/${Date.now()}.html`,
-          file,
+        .select("*")
+        .eq(
+          "student_id",
+          currentStudent.id
+        )
+        .order(
+          "updated_at",
           {
-            upsert: true
+            ascending: false
           }
         );
 
-      saveStatus.textContent =
-        "Document saved successfully!";
+      // ERROR
 
-    }
+      if (error) {
 
-    // ==================================================
-    // FORMAT FUNCTIONS
-    // ==================================================
+        documentsContainer.innerHTML = `
+          <div class="empty-state">
 
-    function format(command, value = null) {
+            <h2>
+              Failed to load documents
+            </h2>
 
-      document.execCommand(
-        command,
-        false,
-        value
-      );
+            <p>
+              ${error.message}
+            </p>
 
-      editor.focus();
+          </div>
+        `;
 
-    }
-
-    function makeBold() {
-      format("bold");
-    }
-
-    function makeItalic() {
-      format("italic");
-    }
-
-    function underlineText() {
-      format("underline");
-    }
-
-    function bulletList() {
-      format("insertUnorderedList");
-    }
-
-    // ==================================================
-    // TOGGLE HEADING
-    // ==================================================
-
-    function heading() {
-
-      const selection =
-        window.getSelection();
-
-      if (
-        selection.rangeCount === 0
-      ) {
         return;
+
       }
 
-      const range =
-        selection.getRangeAt(0);
+      // UPDATE STATS
 
-      const parent =
-        range.commonAncestorContainer
-        .parentElement;
+      documentCount.textContent =
+        data.length;
 
-      if (
-        parent &&
-        parent.tagName === "H1"
-      ) {
+      if (data.length > 0) {
 
-        const paragraph =
-          document.createElement("p");
+        latestActivity.textContent =
+          new Date(
+            data[0].updated_at
+          ).toLocaleDateString();
 
-        paragraph.innerHTML =
-          parent.innerHTML;
+      }
 
-        parent.replaceWith(
-          paragraph
+      // EMPTY
+
+      if (!data || data.length === 0) {
+
+        documentsContainer.innerHTML = `
+          <div class="empty-state">
+
+            <h2>
+              No Documents Yet
+            </h2>
+
+            <p>
+              Start writing with Magic Academy Writer
+              to create your first document ✨
+            </p>
+
+            <br><br>
+
+            <a
+              href="/writer/student"
+              class="btn primary-btn"
+            >
+              Create Your First Document
+            </a>
+
+          </div>
+        `;
+
+        return;
+
+      }
+
+      // BUILD UI
+
+      let html =
+        `<div class="document-grid">`;
+
+      data.forEach(doc => {
+
+        html += `
+
+          <div class="document-card">
+
+            <div class="document-title">
+              ${doc.title}
+            </div>
+
+            <div class="document-meta">
+
+              Last Updated:
+              ${new Date(
+                doc.updated_at
+              ).toLocaleString()}
+
+              <br><br>
+
+              Student:
+              ${doc.student_name}
+
+            </div>
+
+            <div class="document-actions">
+
+              <button
+                class="btn"
+                onclick='openDocument(
+                  ${JSON.stringify(
+                    doc.content
+                  )}
+                )'
+              >
+                Open
+              </button>
+
+              <button
+                class="btn"
+                onclick='downloadDocument(
+                  ${JSON.stringify(
+                    doc.title
+                  )},
+                  ${JSON.stringify(
+                    doc.content
+                  )}
+                )'
+              >
+                Download
+              </button>
+
+            </div>
+
+          </div>
+
+        `;
+
+      });
+
+      html += `</div>`;
+
+      documentsContainer.innerHTML =
+        html;
+
+    }
+
+    // ==================================================
+    // OPEN DOCUMENT
+    // ==================================================
+
+    function openDocument(content) {
+
+      const newWindow =
+        window.open();
+
+      newWindow.document.write(`
+        <html>
+
+        <head>
+
+          <title>
+            Document Viewer
+          </title>
+
+          <style>
+
+            body {
+
+              font-family: Arial;
+
+              padding: 40px;
+
+              line-height: 1.8;
+
+            }
+
+          </style>
+
+        </head>
+
+        <body>
+
+          ${content}
+
+        </body>
+
+        </html>
+      `);
+
+    }
+
+    // ==================================================
+    // DOWNLOAD DOCUMENT
+    // ==================================================
+
+    function downloadDocument(
+      title,
+      content
+    ) {
+
+      const html = `
+        <html>
+
+        <head>
+          <title>${title}</title>
+        </head>
+
+        <body>
+          ${content}
+        </body>
+
+        </html>
+      `;
+
+      const blob =
+        new Blob(
+          [html],
+          {
+            type: "text/html"
+          }
         );
 
-        editor.focus();
+      const url =
+        URL.createObjectURL(blob);
 
-        return;
+      const a =
+        document.createElement("a");
 
-      }
+      a.href = url;
 
-      format(
-        "formatBlock",
-        "<h1>"
-      );
+      a.download =
+        `${title}.html`;
 
-    }
+      a.click();
 
-    // ==================================================
-    // TOGGLE HIGHLIGHT
-    // ==================================================
-
-    function highlightText() {
-
-      const selection =
-        window.getSelection();
-
-      if (
-        selection.rangeCount === 0
-      ) {
-        return;
-      }
-
-      const range =
-        selection.getRangeAt(0);
-
-      const parent =
-        range.commonAncestorContainer
-        .parentElement;
-
-      if (
-        parent &&
-        parent.style &&
-        parent.style.backgroundColor
-      ) {
-
-        const text =
-          document.createTextNode(
-            parent.textContent
-          );
-
-        parent.replaceWith(text);
-
-        return;
-
-      }
-
-      const color =
-        document.getElementById(
-          "highlightColor"
-        ).value;
-
-      const span =
-        document.createElement(
-          "span"
-        );
-
-      span.style.backgroundColor =
-        color;
-
-      span.appendChild(
-        range.extractContents()
-      );
-
-      range.insertNode(span);
-
-      editor.focus();
+      URL.revokeObjectURL(url);
 
     }
-
-    // ==================================================
-    // FONT CHANGER
-    // ==================================================
-
-    function changeFont() {
-
-      const font =
-        document.getElementById(
-          "fontSelector"
-        ).value;
-
-      const selection =
-        window.getSelection();
-
-      if (
-        selection.rangeCount === 0
-      ) {
-        return;
-      }
-
-      const range =
-        selection.getRangeAt(0);
-
-      const parent =
-        range.commonAncestorContainer
-        .parentElement;
-
-      if (
-        parent &&
-        parent.tagName === "SPAN"
-      ) {
-
-        parent.style.fontFamily =
-          font;
-
-        editor.focus();
-
-        return;
-
-      }
-
-      const selectedText =
-        range.extractContents();
-
-      const span =
-        document.createElement(
-          "span"
-        );
-
-      span.style.fontFamily =
-        font;
-
-      span.appendChild(
-        selectedText
-      );
-
-      range.insertNode(span);
-
-      editor.focus();
-
-    }
-
-    // ==================================================
-    // PRINT DOCUMENT
-    // ==================================================
-
-    function printDocument() {
-
-      window.print();
-
-    }
-
-    // ==================================================
-    // SAVE BUTTON
-    // ==================================================
-
-    saveBtn.addEventListener(
-      "click",
-      saveDocument
-    );
-
-    // ==================================================
-    // AUTOSAVE
-    // ==================================================
-
-    let autosaveTimeout;
-
-    editor.addEventListener(
-      "input",
-      () => {
-
-        clearTimeout(
-          autosaveTimeout
-        );
-
-        saveStatus.textContent =
-          "Typing...";
-
-        autosaveTimeout =
-          setTimeout(() => {
-
-            saveDocument();
-
-          }, 4000);
-
-      }
-    );
-
-    // ==================================================
-    // LOGOUT
-    // ==================================================
-
-    document.getElementById(
-      "logoutBtn"
-    ).addEventListener(
-      "click",
-      async () => {
-
-        await studentSupabase
-          .auth
-          .signOut();
-
-        window.location.href =
-          "/login/student";
-
-      }
-    );
 
     // ==================================================
     // START
@@ -1066,6 +827,3 @@
 
 </body>
 </html>
-
-
-from the database table ✨
