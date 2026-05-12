@@ -534,7 +534,7 @@
 
   </div>
 
-  <!-- CLASSES -->
+  <!-- MAIN CARD -->
 
   <div class="card">
 
@@ -562,7 +562,7 @@
 
     </div>
 
-    <!-- CLASSES GRID -->
+    <!-- GRID -->
 
     <div id="classesContainer">
 
@@ -645,7 +645,7 @@
 
         <select id="teacherSelect">
 
-          <option value="">
+          <option>
             Loading teachers...
           </option>
 
@@ -711,7 +711,7 @@
   <script>
 
     // ==================================================
-    // TEACHER SUPABASE
+    // SUPABASE
     // ==================================================
 
     const TEACHER_SUPABASE_URL =
@@ -796,6 +796,8 @@
         .auth
         .getSession();
 
+      // NO SESSION
+
       if (!session) {
 
         window.location.href =
@@ -805,13 +807,20 @@
 
       }
 
+      // USER
+
       currentTeacher =
         session.user;
 
-      // UI
+      console.log(
+        "Teacher:",
+        currentTeacher
+      );
+
+      // UPDATE UI
 
       teacherInfo.textContent =
-        `${currentTeacher.email}`;
+        `${currentTeacher.user_metadata.full_name} • ${currentTeacher.email}`;
 
       schoolName.textContent =
         currentTeacher.user_metadata
@@ -832,32 +841,63 @@
 
     async function loadTeachers() {
 
-      const {
-        data,
-        error
-      } = await teacherSupabase
-        .from("teacher_profiles")
-        .select("*")
-        .eq(
-          "school_id",
-          currentTeacher.user_metadata
-          .school_id
-        );
-
-      if (error) {
-
-        console.error(error);
-
-        return;
-
-      }
-
       const teacherSelect =
         document.getElementById(
           "teacherSelect"
         );
 
       teacherSelect.innerHTML = "";
+
+      // QUERY TEACHERS
+
+      const {
+        data,
+        error
+      } = await teacherSupabase
+        .from("teachers")
+        .select("*")
+        .eq(
+          "school_name",
+          currentTeacher.user_metadata
+          .school_name
+        );
+
+      console.log(
+        "Teachers:",
+        data
+      );
+
+      // ERROR
+
+      if (error) {
+
+        console.error(error);
+
+        teacherSelect.innerHTML = `
+          <option>
+            Failed to load teachers
+          </option>
+        `;
+
+        return;
+
+      }
+
+      // EMPTY
+
+      if (!data || data.length === 0) {
+
+        teacherSelect.innerHTML = `
+          <option>
+            No teachers found
+          </option>
+        `;
+
+        return;
+
+      }
+
+      // BUILD OPTIONS
 
       data.forEach(teacher => {
 
@@ -888,9 +928,9 @@
         .from("classes")
         .select("*")
         .eq(
-          "school_id",
+          "school_name",
           currentTeacher.user_metadata
-          .school_id
+          .school_name
         )
         .order(
           "created_at",
@@ -898,6 +938,8 @@
             ascending: false
           }
         );
+
+      // ERROR
 
       if (error) {
 
@@ -1178,9 +1220,10 @@
       // GET TEACHER
 
       const {
-        data: teacherData
+        data: teacherData,
+        error: teacherError
       } = await teacherSupabase
-        .from("teacher_profiles")
+        .from("teachers")
         .select("*")
         .eq(
           "id",
@@ -1188,7 +1231,23 @@
         )
         .single();
 
-      // INSERT
+      // ERROR
+
+      if (teacherError) {
+
+        console.error(
+          teacherError
+        );
+
+        alert(
+          teacherError.message
+        );
+
+        return;
+
+      }
+
+      // INSERT CLASS
 
       const {
         error
@@ -1196,9 +1255,9 @@
         .from("classes")
         .insert([{
 
-          school_id:
+          school_name:
             currentTeacher.user_metadata
-            .school_id,
+            .school_name,
 
           teacher_id:
             teacherId,
@@ -1223,6 +1282,8 @@
 
         }]);
 
+      // ERROR
+
       if (error) {
 
         console.error(error);
@@ -1234,6 +1295,8 @@
         return;
 
       }
+
+      // SUCCESS
 
       closeModal();
 
