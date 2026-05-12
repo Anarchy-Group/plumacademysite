@@ -120,6 +120,36 @@
 
     }
 
+    /* RESET PASSWORD BUTTON */
+
+    .reset-btn {
+
+      background: transparent;
+
+      color: #4f46e5;
+
+      border: none;
+
+      padding: 0;
+
+      text-align: left;
+
+      font-size: 14px;
+
+      cursor: pointer;
+
+      margin-top: -5px;
+
+    }
+
+    .reset-btn:hover {
+
+      text-decoration: underline;
+
+      background: transparent;
+
+    }
+
     .message {
 
       margin-top: 18px;
@@ -192,6 +222,16 @@
         placeholder="Password"
         required
       />
+
+      <!-- FORGOT PASSWORD -->
+
+      <button
+        type="button"
+        id="resetPasswordBtn"
+        class="reset-btn"
+      >
+        Forgot Password?
+      </button>
 
       <!-- LOGIN BUTTON -->
 
@@ -341,6 +381,84 @@
             "/dashboard/student";
 
         }, 1500);
+
+      }
+    );
+
+    // ==================================================
+    // PASSWORD RESET
+    // ==================================================
+
+    document.getElementById(
+      "resetPasswordBtn"
+    ).addEventListener(
+      "click",
+      async () => {
+
+        const email =
+          document.getElementById(
+            "email"
+          ).value;
+
+        // CHECK EMAIL
+
+        if (!email) {
+
+          message.textContent =
+            "Please enter your email first.";
+
+          message.className =
+            "message error";
+
+          return;
+
+        }
+
+        message.textContent =
+          "Sending password reset email...";
+
+        message.className =
+          "message";
+
+        // SEND RESET EMAIL
+
+        const {
+          error
+        } = await studentSupabase
+          .auth
+          .resetPasswordForEmail(
+            email,
+            {
+
+              redirectTo:
+                "https://academy.magicplum.co.uk/login/student/reset-password"
+
+            }
+          );
+
+        // ERROR
+
+        if (error) {
+
+          message.textContent =
+            error.message;
+
+          message.className =
+            "message error";
+
+          console.error(error);
+
+          return;
+
+        }
+
+        // SUCCESS
+
+        message.textContent =
+          "Password reset email sent successfully!";
+
+        message.className =
+          "message success";
 
       }
     );
