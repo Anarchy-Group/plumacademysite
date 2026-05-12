@@ -183,7 +183,7 @@
       } = await supabaseClient.auth.getSession();
 
       if (!session) {
-        window.location.href = '/skills.html';
+        window.location.href = '/courses/skills.html';
         return;
       }
 
