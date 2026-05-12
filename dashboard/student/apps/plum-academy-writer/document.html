@@ -301,6 +301,41 @@
 
     }
 
+    @media print {
+
+      body {
+
+        background: white;
+
+        padding: 0;
+
+      }
+
+      .toolbar,
+      .action-buttons,
+      .topbar,
+      .status {
+
+        display: none;
+
+      }
+
+      .card {
+
+        border: none;
+
+        padding: 0;
+
+      }
+
+      #editorWrapper {
+
+        border: none;
+
+      }
+
+    }
+
   </style>
 </head>
 <body>
@@ -310,7 +345,7 @@
     <div>
 
       <h1>
-        ✨ Magic Academy Writer
+        ✨ Plum Academy Writer
       </h1>
 
       <p id="studentInfo">
@@ -328,7 +363,7 @@
     >
 
       <a
-        href="/dashboard/student/apps/plum-academy-writer"
+        href="/dashboard/student/documents"
         class="btn"
       >
         My Documents
@@ -515,7 +550,12 @@
         Print Document
       </button>
 
-    </div>
+      <button
+        class="btn"
+        onclick="exportPawDocx()"
+      >
+        Export .pawdocx
+      </button>
 
   </div>
 
@@ -623,8 +663,6 @@
         .auth
         .getSession();
 
-      // NO SESSION
-
       if (!session) {
 
         window.location.href =
@@ -634,14 +672,10 @@
 
       }
 
-      // USER
-
       const user =
         session.user;
 
       currentStudent = user;
-
-      // UPDATE UI
 
       studentInfo.textContent =
         `${user.user_metadata.full_name} • ${user.email}`;
@@ -658,8 +692,6 @@
 
       headerDocumentDate.textContent =
         new Date().toLocaleString();
-
-      // LOAD DOCUMENT
 
       await loadDocument();
 
@@ -702,8 +734,6 @@
         return;
 
       }
-
-      // SECURITY CHECK
 
       if (
         data.student_id !==
@@ -759,7 +789,7 @@
 
       let saveError = null;
 
-      // UPDATE
+      // UPDATE DOCUMENT
 
       if (documentId) {
 
@@ -788,7 +818,7 @@
 
       }
 
-      // CREATE
+      // CREATE DOCUMENT
 
       else {
 
@@ -809,6 +839,10 @@
               currentStudent.user_metadata
               .full_name,
 
+            student_keystage:
+              currentStudent.user_metadata
+              .keystage,
+
             teacher_id:
               currentStudent.user_metadata
               .teacher_id,
@@ -828,8 +862,6 @@
 
         saveError = error;
 
-        // REDIRECT TO NEW URL
-
         if (!error && data) {
 
           window.history.replaceState(
@@ -841,8 +873,6 @@
         }
 
       }
-
-      // ERROR
 
       if (saveError) {
 
@@ -859,6 +889,164 @@
         "Document saved successfully!";
 
     }
+
+    // ==================================================
+    // EXPORT PAWDOCX
+    // ==================================================
+
+    function exportPawDocx() {
+
+      const title =
+        documentTitle.value.trim();
+
+      const content =
+        editor.innerHTML.trim();
+
+      if (!title || !content) {
+
+        saveStatus.textContent =
+          "Nothing to export.";
+
+        return;
+
+      }
+
+      const pawdocxData = {
+
+        title:
+          title,
+
+        content:
+          content,
+
+        student_name:
+          currentStudent.user_metadata
+          .full_name,
+
+        student_email:
+          currentStudent.email,
+
+        student_id:
+          currentStudent.id,
+
+        keystage:
+          currentStudent.user_metadata
+          .keystage,
+
+        updated_at:
+          new Date().toISOString()
+
+      };
+
+      const blob =
+        new Blob(
+          [
+            JSON.stringify(
+              pawdocxData,
+              null,
+              2
+            )
+          ],
+          {
+            type:
+              "application/pawdocx"
+          }
+        );
+
+      const url =
+        URL.createObjectURL(blob);
+
+      const a =
+        document.createElement("a");
+
+      a.href = url;
+
+      a.download =
+        `${title}.pawdocx`;
+
+      a.click();
+
+      URL.revokeObjectURL(url);
+
+      saveStatus.textContent =
+        ".pawdocx exported successfully!";
+
+    }
+
+    // ==================================================
+    // IMPORT PAWDOCX
+    // ==================================================
+
+    document.getElementById(
+      "pawdocxInput"
+    ).addEventListener(
+      "change",
+      async (event) => {
+
+        const file =
+          event.target.files[0];
+
+        if (!file) {
+          return;
+        }
+
+        if (
+          !file.name.endsWith(
+            ".pawdocx"
+          )
+        ) {
+
+          saveStatus.textContent =
+            "Invalid file type.";
+
+          return;
+
+        }
+
+        try {
+
+          const text =
+            await file.text();
+
+          const data =
+            JSON.parse(text);
+
+          documentTitle.value =
+            data.title || "";
+
+          editor.innerHTML =
+            data.content || "";
+
+          headerStudentId.textContent =
+            data.student_id || "-";
+
+          headerStudentName.textContent =
+            data.student_name || "-";
+
+          headerStudentEmail.textContent =
+            data.student_email || "-";
+
+          headerDocumentDate.textContent =
+            new Date(
+              data.updated_at
+            ).toLocaleString();
+
+          saveStatus.textContent =
+            ".pawdocx imported successfully!";
+
+        }
+
+        catch (error) {
+
+          console.error(error);
+
+          saveStatus.textContent =
+            "Failed to open .pawdocx file.";
+
+        }
+
+      }
+    );
 
     // ==================================================
     // FORMATTING
@@ -1000,8 +1188,6 @@
     window.addEventListener(
       "load",
       async () => {
-
-        // WAIT FOR SESSION RESTORE
 
         setTimeout(() => {
 
