@@ -7,7 +7,7 @@
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -149,8 +149,8 @@
 
           <div class="flex justify-center">
             <div
-              class="g-recaptcha"
-              data-sitekey="YOUR_RECAPTCHA_SITE_KEY"
+              class="cf-turnstile"
+              data-sitekey="0x4AAAAAADNnFr82houxfuum"
             ></div>
           </div>
 
@@ -199,18 +199,18 @@
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const recaptchaResponse = grecaptcha.getResponse();
+      const turnstileResponse = document.querySelector('[name="cf-turnstile-response"]')?.value;
       
-      if (!recaptchaResponse) {
-        message.innerHTML = 'Please complete the CAPTCHA verification.';
+      if (!turnstileResponse) {
+        message.innerHTML = 'Please complete the security verification.';
         message.className = 'mt-6 text-center font-semibold text-red-500';
         return;
       }
 
-      const recaptchaResponse = grecaptcha.getResponse();
-
-      if (!recaptchaResponse) {
-        message.innerHTML = 'Please complete the CAPTCHA verification.';
+      const turnstileResponse = document.querySelector('[name="cf-turnstile-response"]')?.value;
+      
+      if (!turnstileResponse) {
+        message.innerHTML = 'Please complete the security verification.';
         message.className = 'mt-6 text-center font-semibold text-red-500';
         return;
       }
@@ -232,7 +232,9 @@
         return;
       }
 
-      grecaptcha.reset();
+      if (window.turnstile) {
+        turnstile.reset();
+      }
 
       message.innerHTML = 'Successfully signed into your Magic Plum account!';
       message.className = 'mt-6 text-center font-semibold text-green-600';
@@ -267,7 +269,9 @@
         return;
       }
 
-      grecaptcha.reset();
+      if (window.turnstile) {
+        turnstile.reset();
+      }
 
       message.innerHTML = 'Magic Plum account created successfully!';
       message.className = 'mt-6 text-center font-semibold text-green-600';
