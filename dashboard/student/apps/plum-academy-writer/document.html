@@ -676,52 +676,82 @@
 
     let currentStudent = null;
 
-    // ==================================================
-    // CHECK LOGIN
-    // ==================================================
+// ==================================================
+// CHECK LOGIN
+// ==================================================
 
-    async function checkLogin() {
+async function checkLogin() {
 
-      const {
-        data,
-        error
-      } = await studentSupabase
-        .auth
-        .getUser();
+  // GET SESSION
 
-      const user =
-        data?.user;
+  const {
+    data: sessionData
+  } = await studentSupabase
+    .auth
+    .getSession();
 
-      if (!user || error) {
+  const session =
+    sessionData?.session;
 
-        window.location.href =
-          "/login/student";
+  // NO SESSION
 
-        return;
+  if (!session) {
 
-      }
+    window.location.href =
+      "/login/student";
 
-      currentStudent = user;
+    return;
 
-      studentInfo.textContent =
-        `${user.user_metadata.full_name} • ${user.email}`;
+  }
 
-      headerStudentId.textContent =
-        user.id;
+  // GET USER
 
-      headerStudentName.textContent =
-        user.user_metadata.full_name
-        || "Student";
+  const {
+    data,
+    error
+  } = await studentSupabase
+    .auth
+    .getUser();
 
-      headerStudentEmail.textContent =
-        user.email;
+  const user =
+    data?.user;
 
-      headerDocumentDate.textContent =
-        new Date().toLocaleString();
+  // INVALID USER
 
-      await loadDocument();
+  if (!user || error) {
 
-    }
+    window.location.href =
+      "/login/student";
+
+    return;
+
+  }
+
+  currentStudent = user;
+
+  // STUDENT INFO
+
+  studentInfo.textContent =
+    `${user.user_metadata.full_name} • ${user.email}`;
+
+  headerStudentId.textContent =
+    user.id;
+
+  headerStudentName.textContent =
+    user.user_metadata.full_name
+    || "Student";
+
+  headerStudentEmail.textContent =
+    user.email;
+
+  headerDocumentDate.textContent =
+    new Date().toLocaleString();
+
+  // LOAD DOCUMENT
+
+  await loadDocument();
+
+}
 
     // ==================================================
     // LOAD DOCUMENT
