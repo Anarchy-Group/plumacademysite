@@ -121,6 +121,22 @@
 
     }
 
+    .danger-btn {
+
+      background: #ef4444;
+
+      color: white;
+
+      border: none;
+
+    }
+
+    .danger-btn:hover {
+
+      background: #dc2626;
+
+    }
+
     .card {
 
       background: white;
@@ -180,6 +196,8 @@
       gap: 20px;
 
       margin-top: 25px;
+
+      margin-bottom: 25px;
 
     }
 
@@ -342,7 +360,7 @@
     <div>
 
       <h1>
-        📄 My Documents
+        📄 Plum Academy Writer
       </h1>
 
       <p id="studentInfo">
@@ -367,6 +385,13 @@
         Return To Dashboard
       </a>
 
+      <button
+        id="logoutBtn"
+        class="btn danger-btn"
+      >
+        Logout
+      </button>
+
     </div>
 
   </div>
@@ -382,10 +407,10 @@
       </h2>
 
       <p>
-        This is your Magic Academy workspace.
-        Create assignments, write coursework,
-        store revision notes and manage all
-        your saved documents securely in the cloud.
+        Access your saved coursework,
+        assignments, revision notes and
+        documents here. Everything is
+        securely stored in Magic Academy Cloud.
       </p>
 
     </div>
@@ -419,9 +444,7 @@
 
       <div
         class="number"
-        style="
-          font-size:18px;
-        "
+        style="font-size:18px;"
         id="latestActivity"
       >
         None
@@ -437,9 +460,7 @@
 
       <div
         class="number"
-        style="
-          font-size:20px;
-        "
+        style="font-size:20px;"
       >
         Connected
       </div>
@@ -614,7 +635,7 @@
 
       }
 
-      // EMPTY
+      // EMPTY STATE
 
       if (!data || data.length === 0) {
 
@@ -646,7 +667,7 @@
 
       }
 
-      // BUILD UI
+      // BUILD DOCUMENT GRID
 
       let html =
         `<div class="document-grid">`;
@@ -677,16 +698,19 @@
 
             <div class="document-actions">
 
+              <!-- OPEN EDITOR -->
+
               <button
-                class="btn"
-                onclick='openDocument(
-                  ${JSON.stringify(
-                    doc.content
-                  )}
-                )'
+                class="btn primary-btn"
+                onclick="
+                  window.location.href=
+                  '/writer/student?id=${doc.id}'
+                "
               >
                 Open
               </button>
+
+              <!-- DOWNLOAD -->
 
               <button
                 class="btn"
@@ -702,6 +726,17 @@
                 Download
               </button>
 
+              <!-- DELETE -->
+
+              <button
+                class="btn danger-btn"
+                onclick='deleteDocument(
+                  "${doc.id}"
+                )'
+              >
+                Delete
+              </button>
+
             </div>
 
           </div>
@@ -714,51 +749,6 @@
 
       documentsContainer.innerHTML =
         html;
-
-    }
-
-    // ==================================================
-    // OPEN DOCUMENT
-    // ==================================================
-
-    function openDocument(content) {
-
-      const newWindow =
-        window.open();
-
-      newWindow.document.write(`
-        <html>
-
-        <head>
-
-          <title>
-            Document Viewer
-          </title>
-
-          <style>
-
-            body {
-
-              font-family: Arial;
-
-              padding: 40px;
-
-              line-height: 1.8;
-
-            }
-
-          </style>
-
-        </head>
-
-        <body>
-
-          ${content}
-
-        </body>
-
-        </html>
-      `);
 
     }
 
@@ -809,6 +799,60 @@
       URL.revokeObjectURL(url);
 
     }
+
+    // ==================================================
+    // DELETE DOCUMENT
+    // ==================================================
+
+    async function deleteDocument(id) {
+
+      const confirmDelete =
+        confirm(
+          "Delete this document?"
+        );
+
+      if (!confirmDelete) {
+        return;
+      }
+
+      const {
+        error
+      } = await studentSupabase
+        .from("student_documents")
+        .delete()
+        .eq("id", id);
+
+      if (error) {
+
+        alert(error.message);
+
+        return;
+
+      }
+
+      loadDocuments();
+
+    }
+
+    // ==================================================
+    // LOGOUT
+    // ==================================================
+
+    document.getElementById(
+      "logoutBtn"
+    ).addEventListener(
+      "click",
+      async () => {
+
+        await studentSupabase
+          .auth
+          .signOut();
+
+        window.location.href =
+          "/login/student";
+
+      }
+    );
 
     // ==================================================
     // START
