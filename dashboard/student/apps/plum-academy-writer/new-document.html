@@ -9,7 +9,7 @@
   />
 
   <title>
-    Magic Academy Writer
+    Plum Academy Writer
   </title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -114,8 +114,10 @@
     .save-btn {
 
       background: #6366f1;
-      color: white;
+
       border: none;
+
+      color: white;
 
     }
 
@@ -322,24 +324,34 @@
     @media print {
 
       body {
+
         background: white;
+
         padding: 0;
+
       }
 
       .toolbar,
       .action-buttons,
       .topbar,
       .status {
+
         display: none;
+
       }
 
       .card {
+
         border: none;
+
         padding: 0;
+
       }
 
       #editorWrapper {
+
         border: none;
+
       }
 
     }
@@ -371,10 +383,17 @@
     >
 
       <a
+        href="/documents/student"
+        class="btn"
+      >
+        My Documents
+      </a>
+
+      <a
         href="/dashboard/student"
         class="btn"
       >
-        Back To Dashboard
+        Dashboard
       </a>
 
       <button
@@ -480,31 +499,51 @@
       <div id="documentHeader">
 
         <div class="header-row">
-          <strong>Student ID:</strong>
+
+          <strong>
+            Student ID:
+          </strong>
+
           <span id="headerStudentId">
             Loading...
           </span>
+
         </div>
 
         <div class="header-row">
-          <strong>Student Name:</strong>
+
+          <strong>
+            Student Name:
+          </strong>
+
           <span id="headerStudentName">
             Loading...
           </span>
+
         </div>
 
         <div class="header-row">
-          <strong>Email Address:</strong>
+
+          <strong>
+            Email Address:
+          </strong>
+
           <span id="headerStudentEmail">
             Loading...
           </span>
+
         </div>
 
         <div class="header-row">
-          <strong>Document Created:</strong>
+
+          <strong>
+            Last Updated:
+          </strong>
+
           <span id="headerDocumentDate">
             Loading...
           </span>
+
         </div>
 
       </div>
@@ -546,17 +585,17 @@
   <script>
 
     // ==================================================
-    // 🔑 STUDENT SUPABASE
+    // 🔑 SUPABASE
     // ==================================================
 
     const STUDENT_SUPABASE_URL =
       "https://ebzcflngssljyqieizws.supabase.co";
 
     const STUDENT_SUPABASE_ANON_KEY =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImViemNmbG5nc3NsanlxaWVpendzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MDQ3NDEsImV4cCI6MjA5Mzk4MDc0MX0.ZnPi4jKEtkr0iUN_ymVrhUI7A_OMkhWjRn3shA2D9yk";
+      "YOUR_STUDENT_SUPABASE_ANON_KEY";
 
     // ==================================================
-    // CREATE CLIENT
+    // CLIENT
     // ==================================================
 
     const studentSupabase =
@@ -565,12 +604,26 @@
         STUDENT_SUPABASE_ANON_KEY,
         {
           auth: {
+
             persistSession: true,
             autoRefreshToken: true,
             detectSessionInUrl: true
+
           }
         }
       );
+
+    // ==================================================
+    // URL PARAMETERS
+    // ==================================================
+
+    const params =
+      new URLSearchParams(
+        window.location.search
+      );
+
+    const documentId =
+      params.get("id");
 
     // ==================================================
     // ELEMENTS
@@ -666,10 +719,85 @@
       headerDocumentDate.textContent =
         new Date().toLocaleString();
 
+      await loadDocument();
+
     }
 
     // ==================================================
-    // SAVE DOCUMENT + STORAGE
+    // LOAD DOCUMENT
+    // ==================================================
+
+    async function loadDocument() {
+
+      if (!documentId) {
+
+        saveStatus.textContent =
+          "New document ready.";
+
+        return;
+
+      }
+
+      saveStatus.textContent =
+        "Loading document...";
+
+      const {
+        data,
+        error
+      } = await studentSupabase
+        .from("student_documents")
+        .select("*")
+        .eq(
+          "id",
+          documentId
+        )
+        .single();
+
+      if (error) {
+
+        console.error(error);
+
+        saveStatus.textContent =
+          error.message;
+
+        return;
+
+      }
+
+      // SECURITY CHECK
+
+      if (
+        data.student_id !==
+        currentStudent.id
+      ) {
+
+        saveStatus.textContent =
+          "Access denied.";
+
+        return;
+
+      }
+
+      // LOAD DOCUMENT
+
+      documentTitle.value =
+        data.title;
+
+      editor.innerHTML =
+        data.content;
+
+      headerDocumentDate.textContent =
+        new Date(
+          data.updated_at
+        ).toLocaleString();
+
+      saveStatus.textContent =
+        "Document loaded successfully.";
+
+    }
+
+    // ==================================================
+    // SAVE DOCUMENT
     // ==================================================
 
     async function saveDocument() {
@@ -696,62 +824,138 @@
       saveStatus.textContent =
         "Saving document...";
 
-      // DATABASE SAVE
+      let saveError = null;
 
-      const {
-        error
-      } = await studentSupabase
-        .from("student_documents")
-        .insert([{
+      // ==================================================
+      // UPDATE EXISTING DOCUMENT
+      // ==================================================
 
-          student_id:
-            currentStudent.id,
+      if (documentId) {
 
-          student_email:
-            currentStudent.email,
+        const {
+          error
+        } = await studentSupabase
+          .from("student_documents")
+          .update({
 
-          student_name:
-            currentStudent.user_metadata
-            .full_name,
+            title:
+              title,
 
-          teacher_id:
-            currentStudent.user_metadata
-            .teacher_id,
+            content:
+              content,
 
-          title:
-            title,
+            updated_at:
+              new Date().toISOString()
 
-          content:
-            content,
+          })
+          .eq(
+            "id",
+            documentId
+          );
 
-          updated_at:
-            new Date().toISOString()
+        saveError = error;
 
-        }]);
+      }
 
-      if (error) {
+      // ==================================================
+      // CREATE NEW DOCUMENT
+      // ==================================================
 
-        console.error(error);
+      else {
+
+        const {
+          data,
+          error
+        } = await studentSupabase
+          .from("student_documents")
+          .insert([{
+
+            student_id:
+              currentStudent.id,
+
+            student_email:
+              currentStudent.email,
+
+            student_name:
+              currentStudent.user_metadata
+              .full_name,
+
+            teacher_id:
+              currentStudent.user_metadata
+              .teacher_id,
+
+            title:
+              title,
+
+            content:
+              content,
+
+            updated_at:
+              new Date().toISOString()
+
+          }])
+          .select()
+          .single();
+
+        saveError = error;
+
+        // REDIRECT TO DOCUMENT URL
+
+        if (!error && data) {
+
+          window.history.replaceState(
+            {},
+            "",
+            `/writer/student?id=${data.id}`
+          );
+
+        }
+
+      }
+
+      // ==================================================
+      // SAVE ERROR
+      // ==================================================
+
+      if (saveError) {
+
+        console.error(saveError);
 
         saveStatus.textContent =
-          "Failed to save document.";
+          saveError.message;
 
         return;
 
       }
 
+      // ==================================================
       // STORAGE SAVE
+      // ==================================================
 
       const htmlDocument = `
+
         <html>
+
         <head>
-          <title>${title}</title>
+
+          <title>
+            ${title}
+          </title>
+
         </head>
+
         <body>
-          <h1>${title}</h1>
+
+          <h1>
+            ${title}
+          </h1>
+
           ${content}
+
         </body>
+
         </html>
+
       `;
 
       const file = new Blob(
@@ -761,16 +965,33 @@
         }
       );
 
-      await studentSupabase
+      const storagePath = `
+        ${currentStudent.id}/${title}.html
+      `.replace(/\s+/g, "-");
+
+      const {
+        error: storageError
+      } = await studentSupabase
         .storage
         .from("student-documents")
         .upload(
-          `${currentStudent.id}/${Date.now()}.html`,
+          storagePath,
           file,
           {
             upsert: true
           }
         );
+
+      if (storageError) {
+
+        console.error(storageError);
+
+        saveStatus.textContent =
+          storageError.message;
+
+        return;
+
+      }
 
       saveStatus.textContent =
         "Document saved successfully!";
@@ -1066,6 +1287,3 @@
 
 </body>
 </html>
-
-
-from the database table ✨
