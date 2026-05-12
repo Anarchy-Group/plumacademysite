@@ -183,7 +183,7 @@
       } = await supabaseClient.auth.getSession();
 
       if (!session) {
-        window.location.href = '/skills-logged-out.html';
+        window.location.href = '/skills.html';
         return;
       }
 
