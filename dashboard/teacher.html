@@ -15,6 +15,8 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <style>
 
     * {
@@ -106,6 +108,8 @@
 
       padding: 30px;
 
+      overflow-y: auto;
+
     }
 
     .topbar {
@@ -168,6 +172,54 @@
 
     }
 
+    /* STATS */
+
+    .stats {
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(
+          auto-fit,
+          minmax(180px, 1fr)
+        );
+
+      gap: 20px;
+
+      margin-bottom: 25px;
+
+    }
+
+    .stat-box {
+
+      background: white;
+
+      padding: 22px;
+
+      border-radius: 18px;
+
+      box-shadow:
+        0 5px 20px
+        rgba(0,0,0,0.06);
+
+    }
+
+    .stat-box h3 {
+
+      font-size: 32px;
+
+      margin-bottom: 5px;
+
+    }
+
+    .stat-box p {
+
+      color: #666;
+
+    }
+
+    /* CARDS */
+
     .dashboard-grid {
 
       display: grid;
@@ -179,6 +231,8 @@
         );
 
       gap: 25px;
+
+      margin-top: 25px;
 
     }
 
@@ -254,47 +308,19 @@
 
     }
 
-    .stats {
+    /* CHART */
 
-      display: grid;
+    .chart-card {
 
-      grid-template-columns:
-        repeat(
-          auto-fit,
-          minmax(180px, 1fr)
-        );
-
-      gap: 20px;
-
-      margin-bottom: 25px;
+      margin-top: 25px;
 
     }
 
-    .stat-box {
+    canvas {
 
-      background: white;
+      max-width: 500px;
 
-      padding: 22px;
-
-      border-radius: 18px;
-
-      box-shadow:
-        0 5px 20px
-        rgba(0,0,0,0.06);
-
-    }
-
-    .stat-box h3 {
-
-      font-size: 32px;
-
-      margin-bottom: 5px;
-
-    }
-
-    .stat-box p {
-
-      color: #666;
+      margin: auto;
 
     }
 
@@ -394,7 +420,7 @@
         </h3>
 
         <p>
-          Total Students
+          Your Students
         </p>
 
       </div>
@@ -406,7 +432,7 @@
         </h3>
 
         <p>
-          Classes
+          Your Classes
         </p>
 
       </div>
@@ -418,10 +444,25 @@
         </h3>
 
         <p>
-          Documents
+          Student Documents
         </p>
 
       </div>
+
+    </div>
+
+    <!-- PIE CHART -->
+
+    <div class="card chart-card">
+
+      <h2>
+        📊 Student Coverage
+      </h2>
+
+      <canvas
+        id="studentChart"
+        height="120"
+      ></canvas>
 
     </div>
 
@@ -432,19 +473,19 @@
       <div class="card">
 
         <h2>
-          👨‍🎓 Student Account Creator
+          👨‍🎓 Student Management
         </h2>
 
         <p>
           Create student accounts and
-          manage student access.
+          manage classroom access.
         </p>
 
         <a
           href="/dashboard/teacher/student-management"
           class="btn"
         >
-          Open Student Creator
+          Open Students
         </a>
 
       </div>
@@ -456,8 +497,8 @@
         </h2>
 
         <p>
-          Manage school classes,
-          students and assignments.
+          Manage classes, assignments
+          and enrolled students.
         </p>
 
         <a
@@ -476,7 +517,7 @@
         </h2>
 
         <p>
-          View and manage student
+          Access and review student
           coursework and writing.
         </p>
 
@@ -503,7 +544,7 @@
       "https://uzbhtvaorqqmzhivmlpx.supabase.co";
 
     const TEACHER_SUPABASE_ANON_KEY =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV6Ymh0dmFvcnFxbXpoaXZtbHB4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzOTYzMDEsImV4cCI6MjA5Mzk3MjMwMX0._BWxANGJgvvJZKxvuC_LWMpP4mgTh3Chr3WqIQuLRn0";
+      "YOUR_TEACHER_ANON_KEY";
 
     // ==================================================
     // STUDENT SUPABASE
@@ -513,7 +554,7 @@
       "https://ebzcflngssljyqieizws.supabase.co";
 
     const STUDENT_SUPABASE_ANON_KEY =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImViemNmbG5nc3NsanlxaWVpendzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MDQ3NDEsImV4cCI6MjA5Mzk4MDc0MX0.ZnPi4jKEtkr0iUN_ymVrhUI7A_OMkhWjRn3shA2D9yk";
+      "YOUR_STUDENT_ANON_KEY";
 
     // ==================================================
     // CLIENTS
@@ -620,7 +661,81 @@
         .school_name;
 
       // ==================================================
-      // STUDENTS
+      // LOAD TEACHER CLASSES
+      // ==================================================
+
+      const {
+        data: teacherClasses,
+        error: teacherClassesError
+      } = await teacherSupabase
+        .from("classes")
+        .select("*")
+        .eq(
+          "teacher_id",
+          currentTeacher.id
+        );
+
+      console.log(
+        "Teacher Classes:",
+        teacherClasses
+      );
+
+      console.error(
+        teacherClassesError
+      );
+
+      // ==================================================
+      // CLASS IDS
+      // ==================================================
+
+      const classIds =
+        teacherClasses
+        ? teacherClasses.map(
+            cls => cls.id
+          )
+        : [];
+
+      // ==================================================
+      // LOAD CLASS STUDENTS
+      // ==================================================
+
+      const {
+        data: classStudents,
+        error: classStudentsError
+      } = await teacherSupabase
+        .from("class_students")
+        .select("*")
+        .in(
+          "class_id",
+          classIds
+        );
+
+      console.log(
+        "Class Students:",
+        classStudents
+      );
+
+      console.error(
+        classStudentsError
+      );
+
+      // ==================================================
+      // UNIQUE STUDENT IDS
+      // ==================================================
+
+      const uniqueStudentIds =
+        classStudents
+        ? [
+            ...new Set(
+              classStudents.map(
+                s => s.student_id
+              )
+            )
+          ]
+        : [];
+
+      // ==================================================
+      // LOAD ACTUAL STUDENTS
       // ==================================================
 
       const {
@@ -629,13 +744,13 @@
       } = await studentSupabase
         .from("students")
         .select("*")
-        .eq(
-          "school_name",
-          schoolName
+        .in(
+          "id",
+          uniqueStudentIds
         );
 
       console.log(
-        "Students:",
+        "Teacher Students:",
         students
       );
 
@@ -644,31 +759,7 @@
       );
 
       // ==================================================
-      // CLASSES
-      // ==================================================
-
-      const {
-        data: classes,
-        error: classesError
-      } = await teacherSupabase
-        .from("classes")
-        .select("*")
-        .eq(
-          "school_name",
-          schoolName
-        );
-
-      console.log(
-        "Classes:",
-        classes
-      );
-
-      console.error(
-        classesError
-      );
-
-      // ==================================================
-      // DOCUMENTS
+      // LOAD DOCUMENTS
       // ==================================================
 
       const {
@@ -676,7 +767,11 @@
         error: documentsError
       } = await studentSupabase
         .from("student_documents")
-        .select("*");
+        .select("*")
+        .in(
+          "student_id",
+          uniqueStudentIds
+        );
 
       console.log(
         "Documents:",
@@ -701,8 +796,8 @@
       document.getElementById(
         "classCount"
       ).textContent =
-        classes
-        ? classes.length
+        teacherClasses
+        ? teacherClasses.length
         : 0;
 
       document.getElementById(
@@ -711,6 +806,71 @@
         documents
         ? documents.length
         : 0;
+
+      // ==================================================
+      // SCHOOL STUDENTS
+      // ==================================================
+
+      const {
+        data: schoolStudents
+      } = await studentSupabase
+        .from("students")
+        .select("*")
+        .eq(
+          "school_name",
+          schoolName
+        );
+
+      // ==================================================
+      // COUNTS
+      // ==================================================
+
+      const teacherStudentCount =
+        students
+        ? students.length
+        : 0;
+
+      const schoolStudentCount =
+        schoolStudents
+        ? schoolStudents.length
+        : 0;
+
+      // ==================================================
+      // PIE CHART
+      // ==================================================
+
+      const ctx =
+        document.getElementById(
+          "studentChart"
+        );
+
+      new Chart(ctx, {
+
+        type: "pie",
+
+        data: {
+
+          labels: [
+            "Your Students",
+            "Other Students"
+          ],
+
+          datasets: [{
+
+            data: [
+
+              teacherStudentCount,
+
+              schoolStudentCount
+              - teacherStudentCount
+
+            ]
+
+          }]
+
+        }
+
+      });
 
     }
 
