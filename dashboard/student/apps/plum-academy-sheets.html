@@ -13,6 +13,28 @@
     Plum Academy Sheets
   </title>
 
+  <!-- JSPREADSHEET -->
+
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/jspreadsheet-ce@4.15.0/dist/jspreadsheet.css"
+  />
+
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/jsuites@4.9.10/dist/jsuites.css"
+  />
+
+  <script src="https://cdn.jsdelivr.net/npm/jsuites@4.9.10/dist/jsuites.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/jspreadsheet-ce@4.15.0/dist/index.js"></script>
+
+  <!-- CHART.JS -->
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- SUPABASE -->
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
@@ -48,7 +70,7 @@
 
       border-bottom: 1px solid #e5e7eb;
 
-      padding: 18px 25px;
+      padding: 20px 25px;
 
       display: flex;
 
@@ -58,13 +80,13 @@
 
       flex-wrap: wrap;
 
-      gap: 15px;
+      gap: 20px;
 
     }
 
     .topbar h1 {
 
-      font-size: 30px;
+      font-size: 32px;
 
       margin-bottom: 5px;
 
@@ -138,9 +160,40 @@
 
     }
 
-    /* SHEET CONTAINER */
+    /* TOOLBAR */
 
-    .sheet-wrapper {
+    .toolbar {
+
+      background: white;
+
+      border-bottom: 1px solid #e5e7eb;
+
+      padding: 18px 25px;
+
+      display: flex;
+
+      gap: 12px;
+
+      flex-wrap: wrap;
+
+      align-items: center;
+
+    }
+
+    .toolbar input,
+    .toolbar select {
+
+      padding: 10px;
+
+      border-radius: 10px;
+
+      border: 1px solid #d1d5db;
+
+    }
+
+    /* SPREADSHEET */
+
+    .sheet-container {
 
       flex: 1;
 
@@ -150,85 +203,41 @@
 
     }
 
-    .sheet {
+    #spreadsheet {
 
       background: white;
 
       border-radius: 20px;
 
-      border: 1px solid #e5e7eb;
-
-      overflow: auto;
-
-      min-width: max-content;
-
-    }
-
-    table {
-
-      border-collapse: collapse;
-
-    }
-
-    th {
-
-      background: #f9fafb;
-
-      color: #6b7280;
-
-      font-weight: 600;
-
-      text-align: center;
-
-      min-width: 120px;
-
-      height: 45px;
+      overflow: hidden;
 
       border: 1px solid #e5e7eb;
 
     }
 
-    td {
+    /* CHART AREA */
+
+    .chart-area {
+
+      background: white;
+
+      margin: 25px;
+
+      border-radius: 20px;
 
       border: 1px solid #e5e7eb;
 
-      width: 120px;
-
-      height: 40px;
-
-      min-width: 120px;
-
-      padding: 8px;
-
-      outline: none;
-
-      cursor: text;
+      padding: 25px;
 
     }
 
-    td:focus {
+    .chart-area h2 {
 
-      background: #eff6ff;
-
-    }
-
-    .row-number {
-
-      background: #f9fafb;
-
-      text-align: center;
-
-      color: #6b7280;
-
-      width: 60px;
-
-      min-width: 60px;
-
-      font-weight: 600;
+      margin-bottom: 20px;
 
     }
 
-    /* STATUS */
+    /* STATUSBAR */
 
     .statusbar {
 
@@ -238,6 +247,8 @@
 
       padding: 15px 25px;
 
+      color: #6b7280;
+
       display: flex;
 
       justify-content: space-between;
@@ -245,30 +256,6 @@
       flex-wrap: wrap;
 
       gap: 10px;
-
-      color: #6b7280;
-
-      font-size: 14px;
-
-    }
-
-    /* INPUT */
-
-    #sheetTitle {
-
-      width: 400px;
-
-      max-width: 100%;
-
-      padding: 14px;
-
-      border-radius: 12px;
-
-      border: 1px solid #d1d5db;
-
-      margin-top: 15px;
-
-      font-size: 16px;
 
     }
 
@@ -297,12 +284,6 @@
         Loading...
       </p>
 
-      <input
-        type="text"
-        id="sheetTitle"
-        placeholder="Spreadsheet Title"
-      />
-
     </div>
 
     <div class="topbar-buttons">
@@ -316,13 +297,13 @@
         Dashboard
       </a>
 
-      <!-- EXPORT -->
+      <!-- NEW SHEET -->
 
       <button
         class="btn secondary-btn"
-        onclick="exportSheet()"
+        onclick="createNewWorksheet()"
       >
-        Export .pawsheets
+        + New Sheet
       </button>
 
       <!-- IMPORT -->
@@ -337,7 +318,16 @@
           .click()
         "
       >
-        Open .pawsheets
+        📂 Open .pawsheets
+      </button>
+
+      <!-- EXPORT -->
+
+      <button
+        class="btn secondary-btn"
+        onclick="exportSheet()"
+      >
+        Export .pawsheets
       </button>
 
       <!-- SAVE -->
@@ -353,19 +343,83 @@
 
   </div>
 
-  <!-- SHEET -->
+  <!-- TOOLBAR -->
 
-  <div class="sheet-wrapper">
+  <div class="toolbar">
 
-    <div class="sheet">
+    <!-- TITLE -->
 
-      <table id="spreadsheet"></table>
+    <input
+      type="text"
+      id="sheetTitle"
+      placeholder="Spreadsheet Title"
+    />
 
-    </div>
+    <!-- COLORS -->
+
+    <input
+      type="color"
+      id="backgroundColor"
+    />
+
+    <button
+      onclick="setCellBackground()"
+    >
+      Cell Colour
+    </button>
+
+    <!-- TEXT COLOR -->
+
+    <input
+      type="color"
+      id="textColor"
+    />
+
+    <button
+      onclick="setTextColor()"
+    >
+      Text Colour
+    </button>
+
+    <!-- MERGE -->
+
+    <button
+      onclick="mergeSelectedCells()"
+    >
+      Merge Cells
+    </button>
+
+    <!-- CHART -->
+
+    <button
+      onclick="generateChart()"
+    >
+      Generate Chart
+    </button>
 
   </div>
 
-  <!-- STATUS -->
+  <!-- SPREADSHEET -->
+
+  <div class="sheet-container">
+
+    <div id="spreadsheet"></div>
+
+  </div>
+
+  <!-- CHARTS -->
+
+  <div class="chart-area">
+
+    <h2>
+      📈 Charts & Graphs
+    </h2>
+
+    <canvas id="chartCanvas"></canvas>
+
+  </div>
+
+  <!-- STATUSBAR -->
 
   <div class="statusbar">
 
@@ -373,8 +427,8 @@
       Ready
     </div>
 
-    <div id="cellInfo">
-      Cell: None
+    <div id="selectedCell">
+      Selected Cell: None
     </div>
 
   </div>
@@ -391,7 +445,7 @@
   <script>
 
     // ==================================================
-    // STUDENT SUPABASE
+    // SUPABASE
     // ==================================================
 
     const STUDENT_SUPABASE_URL =
@@ -407,48 +461,18 @@
     const studentSupabase =
       supabase.createClient(
         STUDENT_SUPABASE_URL,
-        STUDENT_SUPABASE_ANON_KEY,
-        {
-          auth: {
-
-            persistSession: true,
-            autoRefreshToken: true,
-            detectSessionInUrl: true
-
-          }
-        }
+        STUDENT_SUPABASE_ANON_KEY
       );
 
     // ==================================================
-    // ELEMENTS
+    // GLOBALS
     // ==================================================
-
-    const spreadsheet =
-      document.getElementById(
-        "spreadsheet"
-      );
-
-    const saveStatus =
-      document.getElementById(
-        "saveStatus"
-      );
-
-    const sheetTitle =
-      document.getElementById(
-        "sheetTitle"
-      );
 
     let currentStudent = null;
 
-    let sheetData = [];
+    let spreadsheet = null;
 
-    // ==================================================
-    // CONFIG
-    // ==================================================
-
-    const ROWS = 50;
-
-    const COLS = 20;
+    let chart = null;
 
     // ==================================================
     // AUTH
@@ -464,7 +488,7 @@
         .auth
         .getSession();
 
-      // NO LOGIN
+      // NO SESSION
 
       if (!session) {
 
@@ -478,177 +502,328 @@
       currentStudent =
         session.user;
 
-      // INFO
+      // UI
 
       document.getElementById(
         "studentInfo"
       ).textContent =
         `${currentStudent.user_metadata.full_name} • ${currentStudent.email}`;
 
-      // CREATE SHEET
+      // LOAD
 
-      createSpreadsheet();
+      initializeSpreadsheet();
 
     }
 
     // ==================================================
-    // CREATE GRID
+    // SPREADSHEET
     // ==================================================
 
-    function createSpreadsheet() {
+    function initializeSpreadsheet() {
 
-      // HEADER ROW
+      spreadsheet =
+        jspreadsheet(
+          document.getElementById(
+            "spreadsheet"
+          ),
+          {
 
-      let headerRow =
-        "<tr><th></th>";
+            worksheets: [
 
-      for (
-        let col = 0;
-        col < COLS;
-        col++
-      ) {
+              {
 
-        const letter =
-          String.fromCharCode(
-            65 + col
-          );
+                worksheetName:
+                  "Sheet1",
 
-        headerRow += `
-          <th>${letter}</th>
-        `;
+                minDimensions:
+                  [20, 50],
 
+                tableOverflow: true,
+
+                tableWidth:
+                  "100%",
+
+                allowComments: true,
+
+                allowInsertColumn: true,
+
+                allowManualInsertColumn: true,
+
+                allowInsertRow: true,
+
+                allowManualInsertRow: true,
+
+                allowDeleteColumn: true,
+
+                allowDeleteRow: true,
+
+                allowRenameWorksheet: true,
+
+                allowMoveWorksheet: true,
+
+                allowCreateWorksheet: true,
+
+                allowDeleteWorksheet: true,
+
+                columns: [
+
+                  {
+                    type: "text",
+                    width: 140
+                  }
+
+                ]
+
+              }
+
+            ],
+
+            onselection:
+              function(
+                instance,
+                x1,
+                y1,
+                x2,
+                y2
+              ) {
+
+                document.getElementById(
+                  "selectedCell"
+                ).textContent =
+
+                  `Selected: (${x1}, ${y1}) → (${x2}, ${y2})`;
+
+              }
+
+          }
+        );
+
+    }
+
+    // ==================================================
+    // CREATE NEW SHEET
+    // ==================================================
+
+    function createNewWorksheet() {
+
+      spreadsheet[0]
+        .parent
+        .createWorksheet();
+
+    }
+
+    // ==================================================
+    // CELL BACKGROUND
+    // ==================================================
+
+    function setCellBackground() {
+
+      const color =
+        document.getElementById(
+          "backgroundColor"
+        ).value;
+
+      const selected =
+        spreadsheet[0]
+        .getSelected();
+
+      if (!selected) {
+        return;
       }
 
-      headerRow += "</tr>";
+      spreadsheet[0]
+        .setStyle(
 
-      spreadsheet.innerHTML =
-        headerRow;
+          selected.x1,
+          selected.y1,
 
-      // ROWS
+          "background-color",
+          color
+
+        );
+
+    }
+
+    // ==================================================
+    // TEXT COLOR
+    // ==================================================
+
+    function setTextColor() {
+
+      const color =
+        document.getElementById(
+          "textColor"
+        ).value;
+
+      const selected =
+        spreadsheet[0]
+        .getSelected();
+
+      if (!selected) {
+        return;
+      }
+
+      spreadsheet[0]
+        .setStyle(
+
+          selected.x1,
+          selected.y1,
+
+          "color",
+          color
+
+        );
+
+    }
+
+    // ==================================================
+    // MERGE CELLS
+    // ==================================================
+
+    function mergeSelectedCells() {
+
+      const selected =
+        spreadsheet[0]
+        .getSelected();
+
+      if (!selected) {
+        return;
+      }
+
+      spreadsheet[0]
+        .setMerge(
+
+          `${jspreadsheet.helpers.getColumnNameFromCoords(
+            selected.x1,
+            selected.y1
+          )}:${jspreadsheet.helpers.getColumnNameFromCoords(
+            selected.x2,
+            selected.y2
+          )}`
+
+        );
+
+    }
+
+    // ==================================================
+    // CHARTS
+    // ==================================================
+
+    function generateChart() {
+
+      const worksheet =
+        spreadsheet[0];
+
+      const data =
+        worksheet.getData();
+
+      const labels = [];
+
+      const values = [];
+
+      // USE COLUMN A/B
 
       for (
-        let row = 1;
-        row <= ROWS;
-        row++
+        let i = 0;
+        i < data.length;
+        i++
       ) {
 
-        const tr =
-          document.createElement(
-            "tr"
-          );
-
-        let html = `
-
-          <th class="row-number">
-            ${row}
-          </th>
-
-        `;
-
-        for (
-          let col = 0;
-          col < COLS;
-          col++
+        if (
+          data[i][0]
+          && data[i][1]
         ) {
 
-          const cellId =
-            `${row}-${col}`;
+          labels.push(
+            data[i][0]
+          );
 
-          html += `
-
-            <td
-              contenteditable="true"
-              data-cell="${cellId}"
-            ></td>
-
-          `;
+          values.push(
+            parseFloat(
+              data[i][1]
+            )
+          );
 
         }
 
-        tr.innerHTML = html;
+      }
 
-        spreadsheet.appendChild(tr);
+      // DESTROY OLD
+
+      if (chart) {
+
+        chart.destroy();
 
       }
 
-      // EVENTS
+      // CREATE
 
-      attachCellEvents();
+      chart =
+        new Chart(
+
+          document.getElementById(
+            "chartCanvas"
+          ),
+
+          {
+
+            type: "bar",
+
+            data: {
+
+              labels: labels,
+
+              datasets: [
+
+                {
+
+                  label:
+                    "Data",
+
+                  data: values
+
+                }
+
+              ]
+
+            }
+
+          }
+
+        );
 
     }
 
     // ==================================================
-    // CELL EVENTS
-    // ==================================================
-
-    function attachCellEvents() {
-
-      const cells =
-        document.querySelectorAll(
-          "td"
-        );
-
-      cells.forEach(cell => {
-
-        // INPUT
-
-        cell.addEventListener(
-          "input",
-          () => {
-
-            saveStatus.textContent =
-              "Typing...";
-
-          }
-        );
-
-        // FOCUS
-
-        cell.addEventListener(
-          "focus",
-          () => {
-
-            document.getElementById(
-              "cellInfo"
-            ).textContent =
-              `Cell: ${cell.dataset.cell}`;
-
-          }
-        );
-
-      });
-
-    }
-
-    // ==================================================
-    // SAVE SHEET
+    // SAVE
     // ==================================================
 
     async function saveSheet() {
 
-      saveStatus.textContent =
+      document.getElementById(
+        "saveStatus"
+      ).textContent =
         "Saving spreadsheet...";
 
-      const cells =
-        document.querySelectorAll(
-          "td"
+      const worksheets =
+        spreadsheet.map(
+          sheet => ({
+
+            name:
+              sheet.options
+              .worksheetName,
+
+            data:
+              sheet.getJson(),
+
+            styles:
+              sheet.getStyle(),
+
+            merges:
+              sheet.getMerge()
+
+          })
         );
-
-      const data = [];
-
-      cells.forEach(cell => {
-
-        data.push({
-
-          cell:
-            cell.dataset.cell,
-
-          value:
-            cell.innerHTML
-
-        });
-
-      });
 
       const {
         error
@@ -667,14 +842,13 @@
             currentStudent.email,
 
           title:
-            sheetTitle.value
+            document.getElementById(
+              "sheetTitle"
+            ).value
             || "Untitled Spreadsheet",
 
-          data:
-            data,
-
-          created_at:
-            new Date().toISOString(),
+          worksheets:
+            worksheets,
 
           updated_at:
             new Date().toISOString()
@@ -685,14 +859,18 @@
 
       if (error) {
 
-        saveStatus.textContent =
-          "Failed to save spreadsheet.";
+        document.getElementById(
+          "saveStatus"
+        ).textContent =
+          "Failed to save.";
 
         return;
 
       }
 
-      saveStatus.textContent =
+      document.getElementById(
+        "saveStatus"
+      ).textContent =
         "Spreadsheet saved successfully!";
 
     }
@@ -703,31 +881,32 @@
 
     function exportSheet() {
 
-      const cells =
-        document.querySelectorAll(
-          "td"
+      const worksheets =
+        spreadsheet.map(
+          sheet => ({
+
+            name:
+              sheet.options
+              .worksheetName,
+
+            data:
+              sheet.getJson(),
+
+            styles:
+              sheet.getStyle(),
+
+            merges:
+              sheet.getMerge()
+
+          })
         );
-
-      const data = [];
-
-      cells.forEach(cell => {
-
-        data.push({
-
-          cell:
-            cell.dataset.cell,
-
-          value:
-            cell.innerHTML
-
-        });
-
-      });
 
       const pawsheets = {
 
         title:
-          sheetTitle.value,
+          document.getElementById(
+            "sheetTitle"
+          ).value,
 
         student_name:
           currentStudent.user_metadata
@@ -736,8 +915,8 @@
         student_email:
           currentStudent.email,
 
-        data:
-          data,
+        worksheets:
+          worksheets,
 
         exported_at:
           new Date().toISOString()
@@ -772,7 +951,7 @@
       a.href = url;
 
       a.download =
-        `${sheetTitle.value || "spreadsheet"}.pawsheets`;
+        `${pawsheets.title || "spreadsheet"}.pawsheets`;
 
       a.click();
 
@@ -809,40 +988,35 @@
 
           // TITLE
 
-          sheetTitle.value =
+          document.getElementById(
+            "sheetTitle"
+          ).value =
             imported.title;
 
-          // RESET CELLS
+          // DESTROY
 
-          document
-            .querySelectorAll("td")
-            .forEach(cell => {
+          document.getElementById(
+            "spreadsheet"
+          ).innerHTML = "";
 
-              cell.innerHTML = "";
+          // RELOAD
 
-            });
+          spreadsheet =
+            jspreadsheet(
+              document.getElementById(
+                "spreadsheet"
+              ),
+              {
 
-          // LOAD DATA
-
-          imported.data.forEach(
-            item => {
-
-              const cell =
-                document.querySelector(
-                  `[data-cell="${item.cell}"]`
-                );
-
-              if (cell) {
-
-                cell.innerHTML =
-                  item.value;
+                worksheets:
+                  imported.worksheets
 
               }
+            );
 
-            }
-          );
-
-          saveStatus.textContent =
+          document.getElementById(
+            "saveStatus"
+          ).textContent =
             "Spreadsheet imported.";
 
         }
@@ -859,6 +1033,20 @@
 
       }
     );
+
+    // ==================================================
+    // AUTOSAVE
+    // ==================================================
+
+    setInterval(() => {
+
+      if (currentStudent) {
+
+        saveSheet();
+
+      }
+
+    }, 30000);
 
     // ==================================================
     // START
