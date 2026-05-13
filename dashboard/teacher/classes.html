@@ -1073,27 +1073,45 @@
 
               </div>
 
-              <div class="class-actions">
+<div class="class-actions">
 
-                <button
-                  class="btn primary-btn"
-                >
-                  Open
-                </button>
+  <!-- OPEN CLASS -->
 
-                <button
-                  class="btn"
-                >
-                  Students
-                </button>
+  <button
+    class="btn primary-btn"
+    onclick="
+      window.location.href=
+      '/dashboard/teacher/classes?id=${cls.id}'
+    "
+  >
+    Open
+  </button>
 
-                <button
-                  class="btn"
-                >
-                  Documents
-                </button>
+  <!-- CLASS STUDENTS -->
 
-              </div>
+  <button
+    class="btn"
+    onclick="
+      window.location.href=
+      '/dashboard/teacher/classes/students?id=${cls.id}'
+    "
+  >
+    Students
+  </button>
+
+  <!-- CLASS DOCUMENTS -->
+
+  <button
+    class="btn"
+    onclick="
+      window.location.href=
+      '/dashboard/teacher/classes/documents?id=${cls.id}'
+    "
+  >
+    Documents
+  </button>
+
+</div>
 
             </div>
 
