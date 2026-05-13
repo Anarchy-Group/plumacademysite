@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>
+    Plum Academy Writer
+  </title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+
+    * {
+
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Inter, Arial, sans-serif;
+
+    }
+
+    body {
+
+      background: #f5f7fb;
+
+      min-height: 100vh;
+
+      color: #111827;
+
+      display: flex;
+
+      flex-direction: column;
+
+    }
+
+    /* TOPBAR */
+
+    .topbar {
+
+      background: white;
+
+      border-bottom: 1px solid #e5e7eb;
+
+      padding: 20px 30px;
+
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+
+      flex-wrap: wrap;
+
+      gap: 15px;
+
+    }
+
+    .topbar-left h1 {
+
+      font-size: 28px;
+
+      margin-bottom: 5px;
+
+    }
+
+    .topbar-left p {
+
+      color: #6b7280;
+
+      font-size: 14px;
+
+    }
+
+    .topbar-buttons {
+
+      display: flex;
+
+      gap: 12px;
+
+      flex-wrap: wrap;
+
+    }
+
+    /* BUTTONS */
+
+    .btn {
+
+      padding: 13px 18px;
+
+      border-radius: 12px;
+
+      border: none;
+
+      cursor: pointer;
+
+      font-weight: 600;
+
+      transition: 0.15s;
+
+      text-decoration: none;
+
+      display: inline-flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+    }
+
+    .primary-btn {
+
+      background: #6366f1;
+
+      color: white;
+
+    }
+
+    .primary-btn:hover {
+
+      background: #4f46e5;
+
+    }
+
+    .secondary-btn {
+
+      background: white;
+
+      border: 1px solid #dbe1ea;
+
+      color: #111827;
+
+    }
+
+    .secondary-btn:hover {
+
+      background: #f3f4f6;
+
+    }
+
+    .danger-btn {
+
+      background: #ef4444;
+
+      color: white;
+
+    }
+
+    .danger-btn:hover {
+
+      background: #dc2626;
+
+    }
+
+    /* TOOLBAR */
+
+    .toolbar {
+
+      background: white;
+
+      border-bottom: 1px solid #e5e7eb;
+
+      padding: 18px 30px;
+
+      display: flex;
+
+      gap: 10px;
+
+      flex-wrap: wrap;
+
+      align-items: center;
+
+    }
+
+    .toolbar button,
+    .toolbar select {
+
+      padding: 11px 14px;
+
+      border-radius: 10px;
+
+      border: 1px solid #d1d5db;
+
+      background: white;
+
+      cursor: pointer;
+
+      font-weight: 600;
+
+    }
+
+    .toolbar button:hover {
+
+      background: #f3f4f6;
+
+    }
+
+    /* WRITER */
+
+    .writer-container {
+
+      flex: 1;
+
+      padding: 30px;
+
+      overflow-y: auto;
+
+    }
+
+    .document {
+
+      max-width: 1100px;
+
+      margin: auto;
+
+      background: white;
+
+      border-radius: 24px;
+
+      border: 1px solid #e5e7eb;
+
+      overflow: hidden;
+
+    }
+
+    /* HEADER */
+
+    .document-header {
+
+      padding: 30px;
+
+      border-bottom: 1px solid #e5e7eb;
+
+      background: #f9fafb;
+
+    }
+
+    #documentTitle {
+
+      width: 100%;
+
+      border: none;
+
+      outline: none;
+
+      background: transparent;
+
+      font-size: 40px;
+
+      font-weight: 700;
+
+      margin-bottom: 14px;
+
+    }
+
+    .document-meta {
+
+      color: #6b7280;
+
+      line-height: 1.8;
+
+      font-size: 14px;
+
+    }
+
+    /* EDITOR */
+
+    #editor {
+
+      min-height: 1000px;
+
+      padding: 40px;
+
+      outline: none;
+
+      line-height: 1.9;
+
+      font-size: 16px;
+
+    }
+
+    /* STATUS */
+
+    .statusbar {
+
+      background: white;
+
+      border-top: 1px solid #e5e7eb;
+
+      padding: 15px 30px;
+
+      color: #6b7280;
+
+      font-size: 14px;
+
+      display: flex;
+
+      justify-content: space-between;
+
+      flex-wrap: wrap;
+
+      gap: 10px;
+
+    }
+
+    .hidden {
+
+      display: none;
+
+    }
+
+    @media print {
+
+      .topbar,
+      .toolbar,
+      .statusbar {
+
+        display: none;
+
+      }
+
+      body {
+
+        background: white;
+
+      }
+
+      .document {
+
+        border: none;
+
+      }
+
+    }
+
+  </style>
+
+</head>
+<body>
+
+  <!-- TOPBAR -->
+
+  <div class="topbar">
+
+    <div class="topbar-left">
+
+      <h1>
+        ✨ Plum Academy Writer
+      </h1>
+
+      <p id="teacherInfo">
+        Loading...
+      </p>
+
+    </div>
+
+    <div class="topbar-buttons">
+
+      <!-- BACK -->
+
+      <a
+        href="/dashboard/teacher/documents"
+        class="btn secondary-btn"
+      >
+        Back To Documents
+      </a>
+
+      <!-- OPEN -->
+
+      <button
+        class="btn secondary-btn"
+        onclick="
+          document
+          .getElementById(
+            'pawdocxInput'
+          )
+          .click()
+        "
+      >
+        📂 Open .pawdocx
+      </button>
+
+      <!-- EXPORT -->
+
+      <button
+        class="btn secondary-btn"
+        onclick="exportDocument()"
+      >
+        Export .pawdocx
+      </button>
+
+      <!-- PRINT -->
+
+      <button
+        class="btn secondary-btn"
+        onclick="window.print()"
+      >
+        Print
+      </button>
+
+      <!-- SAVE -->
+
+      <button
+        class="btn primary-btn"
+        onclick="saveDocument()"
+      >
+        Save
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- TOOLBAR -->
+
+  <div class="toolbar">
+
+    <button onclick="format('bold')">
+      Bold
+    </button>
+
+    <button onclick="format('italic')">
+      Italic
+    </button>
+
+    <button onclick="format('underline')">
+      Underline
+    </button>
+
+    <button onclick="toggleHeading()">
+      Heading
+    </button>
+
+    <button onclick="format('insertUnorderedList')">
+      Bullet List
+    </button>
+
+    <button onclick="format('justifyLeft')">
+      Left
+    </button>
+
+    <button onclick="format('justifyCenter')">
+      Center
+    </button>
+
+    <button onclick="format('justifyRight')">
+      Right
+    </button>
+
+    <!-- FONT -->
+
+    <select
+      id="fontSelector"
+      onchange="changeFont()"
+    >
+
+      <option value="Arial">
+        Arial
+      </option>
+
+      <option value="Georgia">
+        Georgia
+      </option>
+
+      <option value="Verdana">
+        Verdana
+      </option>
+
+      <option value="Courier New">
+        Courier New
+      </option>
+
+      <option value="Times New Roman">
+        Times New Roman
+      </option>
+
+    </select>
+
+    <!-- HIGHLIGHT -->
+
+    <select
+      id="highlightColor"
+    >
+
+      <option value="yellow">
+        Yellow
+      </option>
+
+      <option value="#90ee90">
+        Green
+      </option>
+
+      <option value="#87cefa">
+        Blue
+      </option>
+
+      <option value="#ffb6c1">
+        Pink
+      </option>
+
+    </select>
+
+    <button onclick="highlightText()">
+      Highlight
+    </button>
+
+  </div>
+
+  <!-- WRITER -->
+
+  <div class="writer-container">
+
+    <div class="document">
+
+      <!-- HEADER -->
+
+      <div class="document-header">
+
+        <input
+          type="text"
+          id="documentTitle"
+          placeholder="Untitled Document"
+        />
+
+        <div
+          class="document-meta"
+          id="documentMeta"
+        >
+          Loading metadata...
+        </div>
+
+      </div>
+
+      <!-- EDITOR -->
+
+      <div
+        id="editor"
+        contenteditable="true"
+      ></div>
+
+    </div>
+
+  </div>
+
+  <!-- STATUS -->
+
+  <div class="statusbar">
+
+    <div id="saveStatus">
+      Ready
+    </div>
+
+    <div id="wordCount">
+      0 Words
+    </div>
+
+  </div>
+
+  <!-- FILE INPUT -->
+
+  <input
+    type="file"
+    id="pawdocxInput"
+    class="hidden"
+    accept=".pawdocx"
+  />
+
+  <script>
+
+    // ==================================================
+    // TEACHER SUPABASE
+    // ==================================================
+
+    const TEACHER_SUPABASE_URL =
+      "https://uzbhtvaorqqmzhivmlpx.supabase.co";
+
+    const TEACHER_SUPABASE_ANON_KEY =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV6Ymh0dmFvcnFxbXpoaXZtbHB4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzOTYzMDEsImV4cCI6MjA5Mzk3MjMwMX0._BWxANGJgvvJZKxvuC_LWMpP4mgTh3Chr3WqIQuLRn0";
+
+    // ==================================================
+    // CLIENT
+    // ==================================================
+
+    const teacherSupabase =
+      supabase.createClient(
+        TEACHER_SUPABASE_URL,
+        TEACHER_SUPABASE_ANON_KEY,
+        {
+          auth: {
+
+            persistSession: true,
+            autoRefreshToken: true,
+            detectSessionInUrl: true
+
+          }
+        }
+      );
+
+    // ==================================================
+    // URL PARAMS
+    // ==================================================
+
+    const params =
+      new URLSearchParams(
+        window.location.search
+      );
+
+    const documentId =
+      params.get("id");
+
+    // ==================================================
+    // ELEMENTS
+    // ==================================================
+
+    const editor =
+      document.getElementById(
+        "editor"
+      );
+
+    const documentTitle =
+      document.getElementById(
+        "documentTitle"
+      );
+
+    const saveStatus =
+      document.getElementById(
+        "saveStatus"
+      );
+
+    const wordCount =
+      document.getElementById(
+        "wordCount"
+      );
+
+    const pawdocxInput =
+      document.getElementById(
+        "pawdocxInput"
+      );
+
+    let currentTeacher = null;
+
+    let currentDocument = null;
+
+    // ==================================================
+    // AUTH
+    // ==================================================
+
+    async function initializeAuth() {
+
+      const {
+        data: {
+          session
+        }
+      } = await teacherSupabase
+        .auth
+        .getSession();
+
+      // NO SESSION
+
+      if (!session) {
+
+        window.location.href =
+          "/login/teacher";
+
+        return;
+
+      }
+
+      currentTeacher =
+        session.user;
+
+      // UI
+
+      document.getElementById(
+        "teacherInfo"
+      ).textContent =
+        `${currentTeacher.user_metadata.full_name} • ${currentTeacher.email}`;
+
+      // LOAD DOC
+
+      if (documentId) {
+
+        await loadDocument();
+
+      }
+
+      updateWordCount();
+
+    }
+
+    // ==================================================
+    // LOAD DOCUMENT
+    // ==================================================
+
+    async function loadDocument() {
+
+      const {
+        data,
+        error
+      } = await teacherSupabase
+        .from("teacher_documents")
+        .select("*")
+        .eq(
+          "id",
+          documentId
+        )
+        .maybeSingle();
+
+      console.log(data);
+
+      console.error(error);
+
+      // ERROR
+
+      if (error || !data) {
+
+        alert(
+          "Document not found."
+        );
+
+        return;
+
+      }
+
+      currentDocument =
+        data;
+
+      // LOAD
+
+      documentTitle.value =
+        currentDocument.title;
+
+      editor.innerHTML =
+        currentDocument.content;
+
+      // META
+
+      document.getElementById(
+        "documentMeta"
+      ).innerHTML = `
+
+        👨‍🏫 ${currentDocument.teacher_name}
+
+        •
+
+        🏫 ${currentDocument.school_name}
+
+        <br>
+
+        📅 Last Updated:
+        ${new Date(
+          currentDocument.updated_at
+        ).toLocaleString()}
+
+      `;
+
+      updateWordCount();
+
+    }
+
+    // ==================================================
+    // SAVE
+    // ==================================================
+
+    async function saveDocument() {
+
+      if (!currentDocument) {
+        return;
+      }
+
+      saveStatus.textContent =
+        "Saving document...";
+
+      const {
+        error
+      } = await teacherSupabase
+        .from("teacher_documents")
+        .update({
+
+          title:
+            documentTitle.value,
+
+          content:
+            editor.innerHTML,
+
+          updated_at:
+            new Date().toISOString()
+
+        })
+        .eq(
+          "id",
+          documentId
+        );
+
+      console.error(error);
+
+      // ERROR
+
+      if (error) {
+
+        saveStatus.textContent =
+          "Failed to save.";
+
+        return;
+
+      }
+
+      saveStatus.textContent =
+        "Document saved.";
+
+    }
+
+    // ==================================================
+    // EXPORT
+    // ==================================================
+
+    function exportDocument() {
+
+      const pawdocx = {
+
+        title:
+          documentTitle.value,
+
+        content:
+          editor.innerHTML,
+
+        teacher_name:
+          currentTeacher.user_metadata
+          .full_name,
+
+        teacher_email:
+          currentTeacher.email,
+
+        exported_at:
+          new Date().toISOString()
+
+      };
+
+      const blob =
+        new Blob(
+          [
+            JSON.stringify(
+              pawdocx,
+              null,
+              2
+            )
+          ],
+          {
+            type:
+              "application/pawdocx"
+          }
+        );
+
+      const url =
+        URL.createObjectURL(
+          blob
+        );
+
+      const a =
+        document.createElement(
+          "a"
+        );
+
+      a.href = url;
+
+      a.download =
+        `${documentTitle.value}.pawdocx`;
+
+      a.click();
+
+      URL.revokeObjectURL(
+        url
+      );
+
+    }
+
+    // ==================================================
+    // IMPORT
+    // ==================================================
+
+    pawdocxInput.addEventListener(
+      "change",
+      async (event) => {
+
+        const file =
+          event.target.files[0];
+
+        if (!file) {
+          return;
+        }
+
+        try {
+
+          const text =
+            await file.text();
+
+          const pawdocx =
+            JSON.parse(text);
+
+          documentTitle.value =
+            pawdocx.title
+            || "Imported Document";
+
+          editor.innerHTML =
+            pawdocx.content
+            || "";
+
+          updateWordCount();
+
+          saveStatus.textContent =
+            "Imported .pawdocx file.";
+
+        }
+
+        catch (err) {
+
+          console.error(err);
+
+          alert(
+            "Invalid .pawdocx file."
+          );
+
+        }
+
+      }
+    );
+
+    // ==================================================
+    // FORMATTING
+    // ==================================================
+
+    function format(
+      command,
+      value = null
+    ) {
+
+      document.execCommand(
+        command,
+        false,
+        value
+      );
+
+      editor.focus();
+
+    }
+
+    // ==================================================
+    // HEADING TOGGLE
+    // ==================================================
+
+    function toggleHeading() {
+
+      const selection =
+        window.getSelection();
+
+      if (
+        selection.rangeCount === 0
+      ) {
+        return;
+      }
+
+      const range =
+        selection.getRangeAt(0);
+
+      const parent =
+        range.commonAncestorContainer
+        .parentElement;
+
+      if (
+        parent &&
+        parent.tagName === "H1"
+      ) {
+
+        const paragraph =
+          document.createElement("p");
+
+        paragraph.innerHTML =
+          parent.innerHTML;
+
+        parent.replaceWith(
+          paragraph
+        );
+
+        editor.focus();
+
+        return;
+
+      }
+
+      format(
+        "formatBlock",
+        "<h1>"
+      );
+
+    }
+
+    // ==================================================
+    // FONT
+    // ==================================================
+
+    function changeFont() {
+
+      const font =
+        document.getElementById(
+          "fontSelector"
+        ).value;
+
+      document.execCommand(
+        "fontName",
+        false,
+        font
+      );
+
+      editor.focus();
+
+    }
+
+    // ==================================================
+    // HIGHLIGHT
+    // ==================================================
+
+    function highlightText() {
+
+      const color =
+        document.getElementById(
+          "highlightColor"
+        ).value;
+
+      document.execCommand(
+        "hiliteColor",
+        false,
+        color
+      );
+
+      editor.focus();
+
+    }
+
+    // ==================================================
+    // WORD COUNT
+    // ==================================================
+
+    function updateWordCount() {
+
+      const text =
+        editor.innerText.trim();
+
+      const words =
+        text.length > 0
+        ? text.split(/\s+/).length
+        : 0;
+
+      wordCount.textContent =
+        `${words} Words`;
+
+    }
+
+    // ==================================================
+    // AUTOSAVE
+    // ==================================================
+
+    let autosaveTimeout;
+
+    editor.addEventListener(
+      "input",
+      () => {
+
+        updateWordCount();
+
+        clearTimeout(
+          autosaveTimeout
+        );
+
+        saveStatus.textContent =
+          "Typing...";
+
+        autosaveTimeout =
+          setTimeout(() => {
+
+            saveDocument();
+
+          }, 4000);
+
+      }
+    );
+
+    // ==================================================
+    // START
+    // ==================================================
+
+    window.addEventListener(
+      "load",
+      () => {
+
+        initializeAuth();
+
+      }
+    );
+
+  </script>
+
+</body>
+</html>
