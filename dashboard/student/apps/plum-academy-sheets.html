@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>
+    Plum Academy Sheets
+  </title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+
+    * {
+
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Inter, Arial, sans-serif;
+
+    }
+
+    body {
+
+      background: #f5f7fb;
+
+      min-height: 100vh;
+
+      display: flex;
+
+      flex-direction: column;
+
+      color: #111827;
+
+    }
+
+    /* TOPBAR */
+
+    .topbar {
+
+      background: white;
+
+      border-bottom: 1px solid #e5e7eb;
+
+      padding: 18px 25px;
+
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+
+      flex-wrap: wrap;
+
+      gap: 15px;
+
+    }
+
+    .topbar h1 {
+
+      font-size: 30px;
+
+      margin-bottom: 5px;
+
+    }
+
+    .topbar p {
+
+      color: #6b7280;
+
+      font-size: 14px;
+
+    }
+
+    .topbar-buttons {
+
+      display: flex;
+
+      gap: 12px;
+
+      flex-wrap: wrap;
+
+    }
+
+    /* BUTTONS */
+
+    .btn {
+
+      padding: 13px 18px;
+
+      border-radius: 12px;
+
+      border: none;
+
+      cursor: pointer;
+
+      font-weight: 600;
+
+      transition: 0.15s;
+
+      text-decoration: none;
+
+    }
+
+    .primary-btn {
+
+      background: #22c55e;
+
+      color: white;
+
+    }
+
+    .primary-btn:hover {
+
+      background: #16a34a;
+
+    }
+
+    .secondary-btn {
+
+      background: white;
+
+      border: 1px solid #d1d5db;
+
+      color: #111827;
+
+    }
+
+    .secondary-btn:hover {
+
+      background: #f3f4f6;
+
+    }
+
+    /* SHEET CONTAINER */
+
+    .sheet-wrapper {
+
+      flex: 1;
+
+      overflow: auto;
+
+      padding: 25px;
+
+    }
+
+    .sheet {
+
+      background: white;
+
+      border-radius: 20px;
+
+      border: 1px solid #e5e7eb;
+
+      overflow: auto;
+
+      min-width: max-content;
+
+    }
+
+    table {
+
+      border-collapse: collapse;
+
+    }
+
+    th {
+
+      background: #f9fafb;
+
+      color: #6b7280;
+
+      font-weight: 600;
+
+      text-align: center;
+
+      min-width: 120px;
+
+      height: 45px;
+
+      border: 1px solid #e5e7eb;
+
+    }
+
+    td {
+
+      border: 1px solid #e5e7eb;
+
+      width: 120px;
+
+      height: 40px;
+
+      min-width: 120px;
+
+      padding: 8px;
+
+      outline: none;
+
+      cursor: text;
+
+    }
+
+    td:focus {
+
+      background: #eff6ff;
+
+    }
+
+    .row-number {
+
+      background: #f9fafb;
+
+      text-align: center;
+
+      color: #6b7280;
+
+      width: 60px;
+
+      min-width: 60px;
+
+      font-weight: 600;
+
+    }
+
+    /* STATUS */
+
+    .statusbar {
+
+      background: white;
+
+      border-top: 1px solid #e5e7eb;
+
+      padding: 15px 25px;
+
+      display: flex;
+
+      justify-content: space-between;
+
+      flex-wrap: wrap;
+
+      gap: 10px;
+
+      color: #6b7280;
+
+      font-size: 14px;
+
+    }
+
+    /* INPUT */
+
+    #sheetTitle {
+
+      width: 400px;
+
+      max-width: 100%;
+
+      padding: 14px;
+
+      border-radius: 12px;
+
+      border: 1px solid #d1d5db;
+
+      margin-top: 15px;
+
+      font-size: 16px;
+
+    }
+
+    .hidden {
+
+      display: none;
+
+    }
+
+  </style>
+
+</head>
+<body>
+
+  <!-- TOPBAR -->
+
+  <div class="topbar">
+
+    <div>
+
+      <h1>
+        📊 Plum Academy Sheets
+      </h1>
+
+      <p id="studentInfo">
+        Loading...
+      </p>
+
+      <input
+        type="text"
+        id="sheetTitle"
+        placeholder="Spreadsheet Title"
+      />
+
+    </div>
+
+    <div class="topbar-buttons">
+
+      <!-- DASHBOARD -->
+
+      <a
+        href="/dashboard/student"
+        class="btn secondary-btn"
+      >
+        Dashboard
+      </a>
+
+      <!-- EXPORT -->
+
+      <button
+        class="btn secondary-btn"
+        onclick="exportSheet()"
+      >
+        Export .pawsheets
+      </button>
+
+      <!-- IMPORT -->
+
+      <button
+        class="btn secondary-btn"
+        onclick="
+          document
+          .getElementById(
+            'sheetImport'
+          )
+          .click()
+        "
+      >
+        Open .pawsheets
+      </button>
+
+      <!-- SAVE -->
+
+      <button
+        class="btn primary-btn"
+        onclick="saveSheet()"
+      >
+        Save Spreadsheet
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- SHEET -->
+
+  <div class="sheet-wrapper">
+
+    <div class="sheet">
+
+      <table id="spreadsheet"></table>
+
+    </div>
+
+  </div>
+
+  <!-- STATUS -->
+
+  <div class="statusbar">
+
+    <div id="saveStatus">
+      Ready
+    </div>
+
+    <div id="cellInfo">
+      Cell: None
+    </div>
+
+  </div>
+
+  <!-- IMPORT -->
+
+  <input
+    type="file"
+    id="sheetImport"
+    class="hidden"
+    accept=".pawsheets"
+  />
+
+  <script>
+
+    // ==================================================
+    // STUDENT SUPABASE
+    // ==================================================
+
+    const STUDENT_SUPABASE_URL =
+      "https://ebzcflngssljyqieizws.supabase.co";
+
+    const STUDENT_SUPABASE_ANON_KEY =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImViemNmbG5nc3NsanlxaWVpendzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MDQ3NDEsImV4cCI6MjA5Mzk4MDc0MX0.ZnPi4jKEtkr0iUN_ymVrhUI7A_OMkhWjRn3shA2D9yk";
+
+    // ==================================================
+    // CLIENT
+    // ==================================================
+
+    const studentSupabase =
+      supabase.createClient(
+        STUDENT_SUPABASE_URL,
+        STUDENT_SUPABASE_ANON_KEY,
+        {
+          auth: {
+
+            persistSession: true,
+            autoRefreshToken: true,
+            detectSessionInUrl: true
+
+          }
+        }
+      );
+
+    // ==================================================
+    // ELEMENTS
+    // ==================================================
+
+    const spreadsheet =
+      document.getElementById(
+        "spreadsheet"
+      );
+
+    const saveStatus =
+      document.getElementById(
+        "saveStatus"
+      );
+
+    const sheetTitle =
+      document.getElementById(
+        "sheetTitle"
+      );
+
+    let currentStudent = null;
+
+    let sheetData = [];
+
+    // ==================================================
+    // CONFIG
+    // ==================================================
+
+    const ROWS = 50;
+
+    const COLS = 20;
+
+    // ==================================================
+    // AUTH
+    // ==================================================
+
+    async function initializeAuth() {
+
+      const {
+        data: {
+          session
+        }
+      } = await studentSupabase
+        .auth
+        .getSession();
+
+      // NO LOGIN
+
+      if (!session) {
+
+        window.location.href =
+          "/login/student";
+
+        return;
+
+      }
+
+      currentStudent =
+        session.user;
+
+      // INFO
+
+      document.getElementById(
+        "studentInfo"
+      ).textContent =
+        `${currentStudent.user_metadata.full_name} • ${currentStudent.email}`;
+
+      // CREATE SHEET
+
+      createSpreadsheet();
+
+    }
+
+    // ==================================================
+    // CREATE GRID
+    // ==================================================
+
+    function createSpreadsheet() {
+
+      // HEADER ROW
+
+      let headerRow =
+        "<tr><th></th>";
+
+      for (
+        let col = 0;
+        col < COLS;
+        col++
+      ) {
+
+        const letter =
+          String.fromCharCode(
+            65 + col
+          );
+
+        headerRow += `
+          <th>${letter}</th>
+        `;
+
+      }
+
+      headerRow += "</tr>";
+
+      spreadsheet.innerHTML =
+        headerRow;
+
+      // ROWS
+
+      for (
+        let row = 1;
+        row <= ROWS;
+        row++
+      ) {
+
+        const tr =
+          document.createElement(
+            "tr"
+          );
+
+        let html = `
+
+          <th class="row-number">
+            ${row}
+          </th>
+
+        `;
+
+        for (
+          let col = 0;
+          col < COLS;
+          col++
+        ) {
+
+          const cellId =
+            `${row}-${col}`;
+
+          html += `
+
+            <td
+              contenteditable="true"
+              data-cell="${cellId}"
+            ></td>
+
+          `;
+
+        }
+
+        tr.innerHTML = html;
+
+        spreadsheet.appendChild(tr);
+
+      }
+
+      // EVENTS
+
+      attachCellEvents();
+
+    }
+
+    // ==================================================
+    // CELL EVENTS
+    // ==================================================
+
+    function attachCellEvents() {
+
+      const cells =
+        document.querySelectorAll(
+          "td"
+        );
+
+      cells.forEach(cell => {
+
+        // INPUT
+
+        cell.addEventListener(
+          "input",
+          () => {
+
+            saveStatus.textContent =
+              "Typing...";
+
+          }
+        );
+
+        // FOCUS
+
+        cell.addEventListener(
+          "focus",
+          () => {
+
+            document.getElementById(
+              "cellInfo"
+            ).textContent =
+              `Cell: ${cell.dataset.cell}`;
+
+          }
+        );
+
+      });
+
+    }
+
+    // ==================================================
+    // SAVE SHEET
+    // ==================================================
+
+    async function saveSheet() {
+
+      saveStatus.textContent =
+        "Saving spreadsheet...";
+
+      const cells =
+        document.querySelectorAll(
+          "td"
+        );
+
+      const data = [];
+
+      cells.forEach(cell => {
+
+        data.push({
+
+          cell:
+            cell.dataset.cell,
+
+          value:
+            cell.innerHTML
+
+        });
+
+      });
+
+      const {
+        error
+      } = await studentSupabase
+        .from("student_sheets")
+        .insert([{
+
+          student_id:
+            currentStudent.id,
+
+          student_name:
+            currentStudent.user_metadata
+            .full_name,
+
+          student_email:
+            currentStudent.email,
+
+          title:
+            sheetTitle.value
+            || "Untitled Spreadsheet",
+
+          data:
+            data,
+
+          created_at:
+            new Date().toISOString(),
+
+          updated_at:
+            new Date().toISOString()
+
+        }]);
+
+      console.error(error);
+
+      if (error) {
+
+        saveStatus.textContent =
+          "Failed to save spreadsheet.";
+
+        return;
+
+      }
+
+      saveStatus.textContent =
+        "Spreadsheet saved successfully!";
+
+    }
+
+    // ==================================================
+    // EXPORT
+    // ==================================================
+
+    function exportSheet() {
+
+      const cells =
+        document.querySelectorAll(
+          "td"
+        );
+
+      const data = [];
+
+      cells.forEach(cell => {
+
+        data.push({
+
+          cell:
+            cell.dataset.cell,
+
+          value:
+            cell.innerHTML
+
+        });
+
+      });
+
+      const pawsheets = {
+
+        title:
+          sheetTitle.value,
+
+        student_name:
+          currentStudent.user_metadata
+          .full_name,
+
+        student_email:
+          currentStudent.email,
+
+        data:
+          data,
+
+        exported_at:
+          new Date().toISOString()
+
+      };
+
+      const blob =
+        new Blob(
+          [
+            JSON.stringify(
+              pawsheets,
+              null,
+              2
+            )
+          ],
+          {
+            type:
+              "application/pawsheets"
+          }
+        );
+
+      const url =
+        URL.createObjectURL(
+          blob
+        );
+
+      const a =
+        document.createElement(
+          "a"
+        );
+
+      a.href = url;
+
+      a.download =
+        `${sheetTitle.value || "spreadsheet"}.pawsheets`;
+
+      a.click();
+
+      URL.revokeObjectURL(
+        url
+      );
+
+    }
+
+    // ==================================================
+    // IMPORT
+    // ==================================================
+
+    document.getElementById(
+      "sheetImport"
+    ).addEventListener(
+      "change",
+      async (event) => {
+
+        const file =
+          event.target.files[0];
+
+        if (!file) {
+          return;
+        }
+
+        try {
+
+          const text =
+            await file.text();
+
+          const imported =
+            JSON.parse(text);
+
+          // TITLE
+
+          sheetTitle.value =
+            imported.title;
+
+          // RESET CELLS
+
+          document
+            .querySelectorAll("td")
+            .forEach(cell => {
+
+              cell.innerHTML = "";
+
+            });
+
+          // LOAD DATA
+
+          imported.data.forEach(
+            item => {
+
+              const cell =
+                document.querySelector(
+                  `[data-cell="${item.cell}"]`
+                );
+
+              if (cell) {
+
+                cell.innerHTML =
+                  item.value;
+
+              }
+
+            }
+          );
+
+          saveStatus.textContent =
+            "Spreadsheet imported.";
+
+        }
+
+        catch (err) {
+
+          console.error(err);
+
+          alert(
+            "Invalid .pawsheets file."
+          );
+
+        }
+
+      }
+    );
+
+    // ==================================================
+    // START
+    // ==================================================
+
+    window.addEventListener(
+      "load",
+      () => {
+
+        initializeAuth();
+
+      }
+    );
+
+  </script>
+
+</body>
+</html>
