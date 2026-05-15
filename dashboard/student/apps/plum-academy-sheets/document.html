@@ -593,6 +593,19 @@
 
     let chart = null;
 
+
+    // ==================================================
+    // URL PARAMS
+    // ==================================================
+
+    const urlParams =
+      new URLSearchParams(
+        window.location.search
+      );
+
+    const spreadsheetId =
+      urlParams.get("id");
+    
     // ==================================================
     // AUTH
     // ==================================================
@@ -614,16 +627,28 @@
 
         return;
 
-      }
+        }
 
       currentStudent =
-        session.user;
+      session.user;
 
       document.getElementById(
         "studentInfo"
       ).textContent =
 
         `${currentStudent.user_metadata.full_name} • ${currentStudent.email}`;
+
+      // ============================================
+      // LOAD EXISTING SPREADSHEET
+      // ============================================
+
+      if (spreadsheetId) {
+
+        await loadSpreadsheet(
+          spreadsheetId
+        );
+
+      }
 
       updateCurrentSheetFooter();
 
@@ -632,7 +657,80 @@
       renderSheet();
 
     }
+    // ==================================================
+    // LOAD SPREADSHEET
+    // ==================================================
 
+    async function loadSpreadsheet(id) {
+
+      try {
+
+        const {
+
+          data,
+          error
+
+        } = await studentSupabase
+
+          .from("student_sheets")
+
+          .select("*")
+
+          .eq(
+            "id",
+            id
+          )
+
+          .single();
+
+        if (error) {
+
+          console.error(error);
+
+          alert(
+            "Failed to load spreadsheet."
+          );
+  
+          return;
+
+        }
+
+        if (!data) {
+          return;
+        }
+
+        // LOAD WORKBOOK
+
+        workbook =
+          data.workbook;
+
+        // LOAD TITLE
+
+        document.getElementById(
+           "sheetTitle"
+        ).value =
+          data.title || "";
+
+        // SET FIRST SHEET
+
+        currentSheet =
+          Object.keys(
+            workbook.sheets
+          )[0];
+
+      }
+
+      catch (err) {
+
+        console.error(err);
+
+        alert(
+          "Failed to load spreadsheet."
+        );
+
+      }
+
+    }
     // ==================================================
     // FOOTER
     // ==================================================
