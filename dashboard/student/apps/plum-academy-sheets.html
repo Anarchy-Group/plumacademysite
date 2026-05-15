@@ -449,7 +449,7 @@
     </button>
 
     <button onclick="mergeCells()">
-      Merge
+      Merge / Unmerge
     </button>
 
     <button onclick="generateChart()">
@@ -732,8 +732,6 @@
       const sheet =
         getSheet();
 
-      // HEADER
-
       const header =
         document.createElement("tr");
 
@@ -863,9 +861,7 @@
 
               if (
                 !isSelecting
-              ) {
-                return;
-              }
+              ) return;
 
               endCell = td;
 
@@ -1223,10 +1219,70 @@
     }
 
     // ==================================================
-    // MERGE
+    // MERGE / UNMERGE
     // ==================================================
 
     function mergeCells() {
+
+      // ============================================
+      // UNMERGE
+      // ============================================
+
+      if (selectedCells.length === 1) {
+
+        const cell =
+          selectedCells[0];
+
+        const cellId =
+          cell.dataset.cell;
+
+        const merge =
+          getSheet().merges[
+            cellId
+          ];
+
+        if (merge) {
+
+          cell.rowSpan = 1;
+
+          cell.colSpan = 1;
+
+          merge.hidden.forEach(
+            hiddenId => {
+
+              const hiddenCell =
+                document.querySelector(
+                  `[data-cell="${hiddenId}"]`
+                );
+
+              if (hiddenCell) {
+
+                hiddenCell.style.display =
+                  "";
+
+              }
+
+            }
+          );
+
+          delete getSheet().merges[
+            cellId
+          ];
+
+          document.getElementById(
+            "saveStatus"
+          ).textContent =
+            "Cells unmerged";
+
+          return;
+
+        }
+
+      }
+
+      // ============================================
+      // MERGE
+      // ============================================
 
       if (
         selectedCells.length < 2
@@ -1334,6 +1390,11 @@
 
       };
 
+      document.getElementById(
+        "saveStatus"
+      ).textContent =
+        "Cells merged";
+
     }
 
     // ==================================================
@@ -1363,9 +1424,7 @@
 
       if (
         !currentResize
-      ) {
-        return;
-      }
+      ) return;
 
       const width =
         e.pageX
