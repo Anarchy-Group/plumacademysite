@@ -1,0 +1,2000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>
+    Plum Academy Sheets
+  </title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Inter, Arial, sans-serif;
+    }
+
+    body {
+      background: #f3f6fb;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      color: #111827;
+      padding-bottom: 140px;
+    }
+
+    /* TOPBAR */
+
+    .topbar {
+      background: white;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 18px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+
+    .topbar h1 {
+      font-size: 30px;
+      color: #15803d;
+      margin-bottom: 4px;
+    }
+
+    .topbar p {
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    .topbar-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* BUTTONS */
+
+    .btn {
+      padding: 10px 16px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.15s;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .primary-btn {
+      background: #22c55e;
+      color: white;
+    }
+
+    .primary-btn:hover {
+      background: #16a34a;
+    }
+
+    .secondary-btn {
+      background: white;
+      border: 1px solid #d1d5db;
+      color: #111827;
+    }
+
+    .secondary-btn:hover {
+      background: #f3f4f6;
+    }
+
+    /* TOOLBAR */
+
+    .toolbar {
+      background: white;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 16px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      position: sticky;
+      top: 76px;
+      z-index: 998;
+    }
+
+    .toolbar button,
+    .toolbar input {
+      padding: 9px 12px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      background: white;
+      font-size: 13px;
+    }
+
+    .toolbar button {
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .toolbar button:hover {
+      background: #f3f4f6;
+    }
+
+    /* SHEET */
+
+    .sheet-wrapper {
+      flex: 1;
+      overflow: auto;
+      padding: 24px;
+    }
+
+    .sheet {
+      background: white;
+      border-radius: 20px;
+      border: 1px solid #e5e7eb;
+      overflow: auto;
+      box-shadow:
+        0 6px 24px rgba(0,0,0,0.05);
+    }
+
+    table {
+      border-collapse: collapse;
+      width: max-content;
+    }
+
+    th {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      min-width: 90px;
+      width: 90px;
+      height: 32px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      user-select: none;
+    }
+
+    td {
+      border: 1px solid #e5e7eb;
+      min-width: 90px;
+      width: 90px;
+      height: 28px;
+      min-height: 28px;
+      padding: 4px 6px;
+      outline: none;
+      cursor: text;
+      position: relative;
+      font-size: 13px;
+      overflow: hidden;
+      background: white;
+    }
+
+    td.selected {
+      background: #dbeafe;
+      outline: 2px solid #3b82f6;
+      z-index: 1;
+    }
+
+    td:focus {
+      outline: 2px solid #3b82f6;
+    }
+
+    .row-number {
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      background: #f9fafb;
+      min-width: 45px;
+      width: 45px;
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    /* RESIZE */
+
+    .resize-handle {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 5px;
+      height: 100%;
+      cursor: col-resize;
+      z-index: 10;
+    }
+
+    /* SHEET TABS */
+
+    .sheet-tabs {
+
+      position: fixed;
+
+      bottom: 52px;
+
+      left: 0;
+
+      width: 100%;
+
+      display: flex;
+
+      gap: 10px;
+
+      padding: 12px 24px;
+
+      background: white;
+
+      border-top: 1px solid #e5e7eb;
+
+      overflow-x: auto;
+
+      z-index: 9998;
+
+      box-shadow:
+        0 -2px 8px rgba(0,0,0,0.04);
+
+    }
+
+    .sheet-tab {
+      padding: 9px 14px;
+      border-radius: 10px;
+      background: #f3f4f6;
+      cursor: pointer;
+      font-weight: 600;
+      white-space: nowrap;
+      font-size: 13px;
+      transition: 0.15s;
+    }
+
+    .sheet-tab:hover {
+      background: #e5e7eb;
+    }
+
+    .sheet-tab.active {
+      background: #22c55e;
+      color: white;
+    }
+
+    /* FOOTER */
+
+    .statusbar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: white;
+      border-top: 1px solid #e5e7eb;
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      color: #6b7280;
+      font-size: 13px;
+      z-index: 9999;
+      box-shadow:
+        0 -4px 12px rgba(0,0,0,0.04);
+    }
+
+    .status-section {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    /* POPUP */
+
+    .chart-popup {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      padding: 25px;
+    }
+
+    .chart-popup-content {
+      background: white;
+      width: 100%;
+      max-width: 900px;
+      border-radius: 24px;
+      padding: 25px;
+      box-shadow:
+        0 12px 40px rgba(0,0,0,0.18);
+      position: relative;
+    }
+
+    .chart-popup-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .chart-popup-header h2 {
+      font-size: 28px;
+    }
+
+    .close-popup {
+      border: none;
+      background: #ef4444;
+      color: white;
+      padding: 10px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .close-popup:hover {
+      background: #dc2626;
+    }
+
+    .chart-popup canvas {
+      width: 100% !important;
+      max-height: 500px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+  </style>
+
+</head>
+<body>
+
+  <!-- TOPBAR -->
+
+  <div class="topbar">
+
+    <div>
+
+      <h1>
+        📊 Plum Academy Sheets
+      </h1>
+
+      <p id="studentInfo">
+        Loading...
+      </p>
+
+    </div>
+
+    <div class="topbar-buttons">
+
+      <button
+        class="btn secondary-btn"
+        onclick="newSheet()"
+      >
+        + New Sheet
+      </button>
+
+      <button
+        class="btn secondary-btn"
+        onclick="
+          document
+          .getElementById(
+            'importFile'
+          )
+          .click()
+        "
+      >
+        Open .pasxlsx
+      </button>
+
+      <button
+        class="btn secondary-btn"
+        onclick="exportSheet()"
+      >
+        Export
+      </button>
+
+      <button
+        class="btn primary-btn"
+        onclick="saveWorkbook()"
+      >
+        Save Workbook
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- TOOLBAR -->
+
+  <div class="toolbar">
+
+    <input
+      type="text"
+      id="sheetTitle"
+      placeholder="Spreadsheet Title"
+    />
+
+    <input
+      type="color"
+      id="bgColor"
+    />
+
+    <button onclick="applyBackground()">
+      Fill
+    </button>
+
+    <input
+      type="color"
+      id="textColor"
+    />
+
+    <button onclick="applyTextColor()">
+      Text
+    </button>
+
+    <button onclick="toggleBold()">
+      Bold
+    </button>
+
+    <button onclick="mergeCells()">
+      Merge / Unmerge
+    </button>
+
+    <button onclick="generateChart()">
+      Chart
+    </button>
+
+  </div>
+
+  <!-- SHEET -->
+
+  <div class="sheet-wrapper">
+
+    <div class="sheet">
+
+      <table id="spreadsheet"></table>
+
+    </div>
+
+  </div>
+
+  <!-- SHEET TABS -->
+
+  <div
+    class="sheet-tabs"
+    id="sheetTabs"
+  ></div>
+
+  <!-- FOOTER -->
+
+  <div class="statusbar">
+
+    <div class="status-section">
+
+      <div id="saveStatus">
+        Ready
+      </div>
+
+      <div id="selectedInfo">
+        No Cell Selected
+      </div>
+
+    </div>
+
+    <div class="status-section">
+
+      <div id="currentSheetInfo">
+        Current Sheet: Sheet1
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- CHART POPUP -->
+
+  <div
+    class="chart-popup"
+    id="chartPopup"
+  >
+
+    <div class="chart-popup-content">
+
+      <div class="chart-popup-header">
+
+        <h2>
+          📈 Spreadsheet Chart
+        </h2>
+
+        <button
+          class="close-popup"
+          onclick="closeChartPopup()"
+        >
+          Close
+        </button>
+
+      </div>
+
+      <canvas id="chartCanvas"></canvas>
+
+    </div>
+
+  </div>
+
+  <!-- IMPORT -->
+
+  <input
+    type="file"
+    id="importFile"
+    class="hidden"
+    accept=".pasxlsx"
+  />
+
+  <script>
+
+    // ==================================================
+    // SUPABASE
+    // ==================================================
+
+    const STUDENT_SUPABASE_URL =
+      "https://ebzcflngssljyqieizws.supabase.co";
+
+    const STUDENT_SUPABASE_ANON_KEY =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImViemNmbG5nc3NsanlxaWVpendzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MDQ3NDEsImV4cCI6MjA5Mzk4MDc0MX0.ZnPi4jKEtkr0iUN_ymVrhUI7A_OMkhWjRn3shA2D9yk";
+
+    const studentSupabase =
+      supabase.createClient(
+        STUDENT_SUPABASE_URL,
+        STUDENT_SUPABASE_ANON_KEY
+      );
+
+    // ==================================================
+    // GLOBALS
+    // ==================================================
+
+    let currentStudent = null;
+
+    let workbook = {
+
+      sheets: {
+
+        Sheet1: {
+
+          cells: {},
+          merges: {}
+
+        }
+
+      }
+
+    };
+
+    let currentSheet = "Sheet1";
+
+    let selectedCells = [];
+
+    let isSelecting = false;
+
+    let startCell = null;
+
+    let endCell = null;
+
+    let chart = null;
+
+
+    // ==================================================
+    // URL PARAMS
+    // ==================================================
+
+    const urlParams =
+      new URLSearchParams(
+        window.location.search
+      );
+
+    const spreadsheetId =
+      urlParams.get("id");
+    
+    // ==================================================
+    // AUTH
+    // ==================================================
+
+    async function initializeAuth() {
+
+      const {
+        data: {
+          session
+        }
+      } = await studentSupabase
+        .auth
+        .getSession();
+
+      if (!session) {
+
+        window.location.href =
+          "/login/student";
+
+        return;
+
+        }
+
+      currentStudent =
+      session.user;
+
+      document.getElementById(
+        "studentInfo"
+      ).textContent =
+
+        `${currentStudent.user_metadata.full_name} • ${currentStudent.email}`;
+
+      // ============================================
+      // LOAD EXISTING SPREADSHEET
+      // ============================================
+
+      if (spreadsheetId) {
+
+        await loadSpreadsheet(
+          spreadsheetId
+        );
+
+      }
+
+      updateCurrentSheetFooter();
+
+      renderTabs();
+
+      renderSheet();
+
+    }
+    // ==================================================
+    // LOAD SPREADSHEET
+    // ==================================================
+
+    async function loadSpreadsheet(id) {
+
+      try {
+
+        const {
+
+          data,
+          error
+
+        } = await studentSupabase
+
+          .from("student_sheets")
+
+          .select("*")
+
+          .eq(
+            "id",
+            id
+          )
+
+          .single();
+
+        if (error) {
+
+          console.error(error);
+
+          alert(
+            "Failed to load spreadsheet."
+          );
+  
+          return;
+
+        }
+
+        if (!data) {
+          return;
+        }
+
+        // LOAD WORKBOOK
+
+        workbook =
+          data.workbook;
+
+        // LOAD TITLE
+
+        document.getElementById(
+           "sheetTitle"
+        ).value =
+          data.title || "";
+
+        // SET FIRST SHEET
+
+        currentSheet =
+          Object.keys(
+            workbook.sheets
+          )[0];
+
+      }
+
+      catch (err) {
+
+        console.error(err);
+
+        alert(
+          "Failed to load spreadsheet."
+        );
+
+      }
+
+    }
+    // ==================================================
+    // FOOTER
+    // ==================================================
+
+    function updateCurrentSheetFooter() {
+
+      document.getElementById(
+        "currentSheetInfo"
+      ).textContent =
+        `Current Sheet: ${currentSheet}`;
+
+    }
+
+    // ==================================================
+    // GET SHEET
+    // ==================================================
+
+    function getSheet() {
+
+      return workbook.sheets[
+        currentSheet
+      ];
+
+    }
+
+    // ==================================================
+    // RENDER TABS
+    // ==================================================
+
+    function renderTabs() {
+
+      const tabs =
+        document.getElementById(
+          "sheetTabs"
+        );
+
+      tabs.innerHTML = "";
+
+      Object.keys(
+        workbook.sheets
+      ).forEach(name => {
+
+        const tab =
+          document.createElement(
+            "div"
+          );
+
+        tab.className =
+          "sheet-tab";
+
+        if (
+          name === currentSheet
+        ) {
+
+          tab.classList.add(
+            "active"
+          );
+
+        }
+
+        tab.textContent =
+          name;
+
+        tab.onclick =
+          () => {
+
+            currentSheet =
+              name;
+
+            updateCurrentSheetFooter();
+
+            renderTabs();
+
+            renderSheet();
+
+          };
+
+        tabs.appendChild(tab);
+
+      });
+
+    }
+
+    // ==================================================
+    // RENDER SHEET
+    // ==================================================
+
+    function renderSheet() {
+
+      const table =
+        document.getElementById(
+          "spreadsheet"
+        );
+
+      table.innerHTML = "";
+
+      const sheet =
+        getSheet();
+
+      const header =
+        document.createElement("tr");
+
+      header.innerHTML =
+        `<th></th>`;
+
+      for (
+        let col = 0;
+        col < 26;
+        col++
+      ) {
+
+        const letter =
+          String.fromCharCode(
+            65 + col
+          );
+
+        const th =
+          document.createElement(
+            "th"
+          );
+
+        th.innerHTML =
+          letter;
+
+        const resize =
+          document.createElement(
+            "div"
+          );
+
+        resize.className =
+          "resize-handle";
+
+        resize.addEventListener(
+          "mousedown",
+          initResize
+        );
+
+        th.appendChild(resize);
+
+        header.appendChild(th);
+
+      }
+
+      table.appendChild(header);
+
+      // ROWS
+
+      for (
+        let row = 1;
+        row <= 100;
+        row++
+      ) {
+
+        const tr =
+          document.createElement(
+            "tr"
+          );
+
+        tr.innerHTML =
+          `<th class="row-number">${row}</th>`;
+
+        for (
+          let col = 0;
+          col < 26;
+          col++
+        ) {
+
+          const letter =
+            String.fromCharCode(
+              65 + col
+            );
+
+          const cellId =
+            `${letter}${row}`;
+
+          const cellData =
+            sheet.cells[
+              cellId
+            ] || {};
+
+          const td =
+            document.createElement(
+              "td"
+            );
+
+          td.dataset.cell =
+            cellId;
+
+          td.innerHTML =
+            cellData.value || "";
+
+          if (
+            cellData.style
+          ) {
+
+            Object.assign(
+              td.style,
+              cellData.style
+            );
+
+          }
+
+          td.addEventListener(
+            "mousedown",
+            (e) => {
+
+              e.preventDefault();
+
+              isSelecting = true;
+
+              startCell = td;
+
+              endCell = td;
+
+              selectRange(
+                startCell,
+                endCell
+              );
+
+            }
+          );
+
+          td.addEventListener(
+            "mouseover",
+            () => {
+
+              if (
+                !isSelecting
+              ) return;
+
+              endCell = td;
+
+              selectRange(
+                startCell,
+                endCell
+              );
+
+            }
+          );
+
+          td.addEventListener(
+            "dblclick",
+            () => {
+
+              td.contentEditable =
+                true;
+
+              td.focus();
+
+            }
+          );
+
+          td.addEventListener(
+            "blur",
+            () => {
+
+              td.contentEditable =
+                false;
+
+              updateCell(
+                cellId,
+                td.innerHTML
+              );
+
+            }
+          );
+
+          tr.appendChild(td);
+
+        }
+
+        table.appendChild(tr);
+
+      }
+
+      restoreMerges();
+
+    }
+
+    // ==================================================
+    // RESTORE MERGES
+    // ==================================================
+
+    function restoreMerges() {
+
+      const merges =
+        getSheet().merges;
+
+      Object.entries(
+        merges
+      ).forEach(
+        ([cellId, merge]) => {
+
+          const topLeft =
+            document.querySelector(
+              `[data-cell="${cellId}"]`
+            );
+
+          if (!topLeft) {
+            return;
+          }
+
+          topLeft.rowSpan =
+            merge.rowSpan;
+
+          topLeft.colSpan =
+            merge.colSpan;
+
+          merge.hidden.forEach(
+            hiddenId => {
+
+              const hiddenCell =
+                document.querySelector(
+                  `[data-cell="${hiddenId}"]`
+                );
+
+              if (hiddenCell) {
+
+                hiddenCell.style.display =
+                  "none";
+
+              }
+
+            }
+          );
+
+        }
+      );
+
+    }
+
+    // ==================================================
+    // SELECTION
+    // ==================================================
+
+    document.addEventListener(
+      "mouseup",
+      () => {
+
+        isSelecting = false;
+
+      }
+    );
+
+    function getCellPosition(td) {
+
+      const id =
+        td.dataset.cell;
+
+      return {
+
+        col:
+          id.charCodeAt(0) - 65,
+
+        row:
+          parseInt(
+            id.slice(1)
+          )
+
+      };
+
+    }
+
+    function clearSelection() {
+
+      document
+        .querySelectorAll("td")
+        .forEach(td => {
+
+          td.classList.remove(
+            "selected"
+          );
+
+        });
+
+      selectedCells = [];
+
+    }
+
+    function selectRange(
+      start,
+      end
+    ) {
+
+      clearSelection();
+
+      const s =
+        getCellPosition(start);
+
+      const e =
+        getCellPosition(end);
+
+      const minRow =
+        Math.min(
+          s.row,
+          e.row
+        );
+
+      const maxRow =
+        Math.max(
+          s.row,
+          e.row
+        );
+
+      const minCol =
+        Math.min(
+          s.col,
+          e.col
+        );
+
+      const maxCol =
+        Math.max(
+          s.col,
+          e.col
+        );
+
+      document
+        .querySelectorAll("td")
+        .forEach(td => {
+
+          const p =
+            getCellPosition(td);
+
+          if (
+
+            p.row >= minRow
+            &&
+            p.row <= maxRow
+
+            &&
+
+            p.col >= minCol
+            &&
+            p.col <= maxCol
+
+          ) {
+
+            td.classList.add(
+              "selected"
+            );
+
+            selectedCells.push(td);
+
+          }
+
+        });
+
+      document.getElementById(
+        "selectedInfo"
+      ).textContent =
+
+        `${selectedCells.length} cells selected`;
+
+    }
+
+    // ==================================================
+    // UPDATE CELL
+    // ==================================================
+
+    function updateCell(
+      cellId,
+      value
+    ) {
+
+      getSheet().cells[
+        cellId
+      ] = {
+
+        ...getSheet().cells[
+          cellId
+        ],
+
+        value
+
+      };
+
+      document.getElementById(
+        "saveStatus"
+      ).textContent =
+        "Unsaved changes";
+
+    }
+
+    // ==================================================
+    // STYLES
+    // ==================================================
+
+    function saveStyle(
+      cellId,
+      style
+    ) {
+
+      getSheet().cells[
+        cellId
+      ] = {
+
+        ...getSheet().cells[
+          cellId
+        ],
+
+        style: {
+
+          ...getSheet().cells[
+            cellId
+          ]?.style,
+
+          ...style
+
+        }
+
+      };
+
+    }
+
+    function applyBackground() {
+
+      const color =
+        document.getElementById(
+          "bgColor"
+        ).value;
+
+      selectedCells.forEach(td => {
+
+        td.style.background =
+          color;
+
+        saveStyle(
+          td.dataset.cell,
+          {
+            background: color
+          }
+        );
+
+      });
+
+    }
+
+    function applyTextColor() {
+
+      const color =
+        document.getElementById(
+          "textColor"
+        ).value;
+
+      selectedCells.forEach(td => {
+
+        td.style.color =
+          color;
+
+        saveStyle(
+          td.dataset.cell,
+          {
+            color
+          }
+        );
+
+      });
+
+    }
+
+    function toggleBold() {
+
+      selectedCells.forEach(td => {
+
+        const isBold =
+          td.style.fontWeight
+          === "bold";
+
+        td.style.fontWeight =
+          isBold
+          ? "normal"
+          : "bold";
+
+        saveStyle(
+          td.dataset.cell,
+          {
+            fontWeight:
+              td.style.fontWeight
+          }
+        );
+
+      });
+
+    }
+
+    // ==================================================
+    // MERGE / UNMERGE
+    // ==================================================
+
+    function mergeCells() {
+
+      // ============================================
+      // UNMERGE
+      // ============================================
+
+      if (selectedCells.length === 1) {
+
+        const cell =
+          selectedCells[0];
+
+        const cellId =
+          cell.dataset.cell;
+
+        const merge =
+          getSheet().merges[
+            cellId
+          ];
+
+        if (merge) {
+
+          cell.rowSpan = 1;
+
+          cell.colSpan = 1;
+
+          merge.hidden.forEach(
+            hiddenId => {
+
+              const hiddenCell =
+                document.querySelector(
+                  `[data-cell="${hiddenId}"]`
+                );
+
+              if (hiddenCell) {
+
+                hiddenCell.style.display =
+                  "";
+
+              }
+
+            }
+          );
+
+          delete getSheet().merges[
+            cellId
+          ];
+
+          document.getElementById(
+            "saveStatus"
+          ).textContent =
+            "Cells unmerged";
+
+          return;
+
+        }
+
+      }
+
+      // ============================================
+      // MERGE
+      // ============================================
+
+      if (
+        selectedCells.length < 2
+      ) {
+
+        alert(
+          "Select multiple cells first."
+        );
+
+        return;
+
+      }
+
+      const positions =
+        selectedCells.map(td =>
+          getCellPosition(td)
+        );
+
+      const minRow =
+        Math.min(
+          ...positions.map(
+            p => p.row
+          )
+        );
+
+      const maxRow =
+        Math.max(
+          ...positions.map(
+            p => p.row
+          )
+        );
+
+      const minCol =
+        Math.min(
+          ...positions.map(
+            p => p.col
+          )
+        );
+
+      const maxCol =
+        Math.max(
+          ...positions.map(
+            p => p.col
+          )
+        );
+
+      const rowSpan =
+        maxRow - minRow + 1;
+
+      const colSpan =
+        maxCol - minCol + 1;
+
+      const topLeft =
+        selectedCells.find(td => {
+
+          const pos =
+            getCellPosition(td);
+
+          return (
+
+            pos.row === minRow
+            &&
+            pos.col === minCol
+
+          );
+
+        });
+
+      if (!topLeft) {
+        return;
+      }
+
+      topLeft.rowSpan =
+        rowSpan;
+
+      topLeft.colSpan =
+        colSpan;
+
+      selectedCells.forEach(td => {
+
+        if (td !== topLeft) {
+
+          td.style.display =
+            "none";
+
+        }
+
+      });
+
+      getSheet().merges[
+        topLeft.dataset.cell
+      ] = {
+
+        rowSpan,
+        colSpan,
+
+        hidden:
+          selectedCells
+          .filter(td =>
+            td !== topLeft
+          )
+          .map(td =>
+            td.dataset.cell
+          )
+
+      };
+
+      document.getElementById(
+        "saveStatus"
+      ).textContent =
+        "Cells merged";
+
+    }
+
+    // ==================================================
+    // RESIZE
+    // ==================================================
+
+    let currentResize = null;
+
+    function initResize(e) {
+
+      currentResize =
+        e.target.parentElement;
+
+      document.addEventListener(
+        "mousemove",
+        resizeColumn
+      );
+
+      document.addEventListener(
+        "mouseup",
+        stopResize
+      );
+
+    }
+
+    function resizeColumn(e) {
+
+      if (
+        !currentResize
+      ) return;
+
+      const width =
+        e.pageX
+        - currentResize.offsetLeft;
+
+      currentResize.style.width =
+        width + "px";
+
+      const index =
+        Array.from(
+          currentResize.parentElement.children
+        ).indexOf(
+          currentResize
+        );
+
+      document
+        .querySelectorAll(
+          `tr td:nth-child(${index + 1})`
+        )
+        .forEach(td => {
+
+          td.style.width =
+            width + "px";
+
+          td.style.minWidth =
+            width + "px";
+
+        });
+
+    }
+
+    function stopResize() {
+
+      currentResize = null;
+
+      document.removeEventListener(
+        "mousemove",
+        resizeColumn
+      );
+
+      document.removeEventListener(
+        "mouseup",
+        stopResize
+      );
+
+    }
+
+    // ==================================================
+    // NEW SHEET
+    // ==================================================
+
+    function newSheet() {
+
+      const name =
+        prompt(
+          "Sheet name?"
+        );
+
+      if (!name) {
+        return;
+      }
+
+      workbook.sheets[
+        name
+      ] = {
+
+        cells: {},
+        merges: {}
+
+      };
+
+      currentSheet =
+        name;
+
+      updateCurrentSheetFooter();
+
+      renderTabs();
+
+      renderSheet();
+
+    }
+
+    // ==================================================
+    // CHARTS
+    // ==================================================
+
+    function openChartPopup() {
+
+      document.getElementById(
+        "chartPopup"
+      ).style.display =
+        "flex";
+
+    }
+
+    function closeChartPopup() {
+
+      document.getElementById(
+        "chartPopup"
+      ).style.display =
+        "none";
+
+    }
+
+    function generateChart() {
+
+      openChartPopup();
+
+      const labels = [];
+      const values = [];
+
+      Object.entries(
+        getSheet().cells
+      ).forEach(
+        ([key, value]) => {
+
+          if (
+            !isNaN(
+              parseFloat(
+                value.value
+              )
+            )
+          ) {
+
+            labels.push(key);
+
+            values.push(
+              parseFloat(
+                value.value
+              )
+            );
+
+          }
+
+        }
+      );
+
+      if (chart) {
+
+        chart.destroy();
+
+      }
+
+      chart =
+        new Chart(
+
+          document.getElementById(
+            "chartCanvas"
+          ),
+
+          {
+
+            type: "bar",
+
+            data: {
+
+              labels,
+
+              datasets: [
+
+                {
+
+                  label:
+                    "Spreadsheet Data",
+
+                  data: values
+
+                }
+
+              ]
+
+            }
+
+          }
+
+        );
+
+    }
+
+    // ==================================================
+    // SAVE
+    // ==================================================
+
+    async function saveWorkbook() {
+
+      try {
+
+        document.getElementById(
+          "saveStatus"
+        ).textContent =
+          "Saving workbook...";
+
+        const title =
+          document.getElementById(
+            "sheetTitle"
+          ).value
+          || "Untitled Workbook";
+
+        const {
+          data: existingDoc
+        } = await studentSupabase
+
+          .from("student_sheets")
+
+          .select("*")
+
+          .eq(
+            "student_id",
+            currentStudent.id
+          )
+
+          .eq(
+            "title",
+            title
+          )
+
+          .maybeSingle();
+
+        if (existingDoc) {
+
+          const {
+            error
+          } = await studentSupabase
+
+            .from("student_sheets")
+
+            .update({
+
+              workbook,
+
+              updated_at:
+                new Date()
+                .toISOString()
+
+            })
+
+            .eq(
+              "id",
+              existingDoc.id
+            );
+
+          if (error) {
+
+            console.error(error);
+
+            document.getElementById(
+              "saveStatus"
+            ).textContent =
+              "Failed to save.";
+
+            return;
+
+          }
+
+        }
+
+        else {
+
+          const {
+            error
+          } = await studentSupabase
+
+            .from("student_sheets")
+
+            .insert([{
+
+              student_id:
+                currentStudent.id,
+
+              student_name:
+                currentStudent
+                .user_metadata
+                .full_name,
+
+              student_email:
+                currentStudent.email,
+
+              title,
+
+              workbook,
+
+              updated_at:
+                new Date()
+                .toISOString()
+
+            }]);
+
+          if (error) {
+
+            console.error(error);
+
+            document.getElementById(
+              "saveStatus"
+            ).textContent =
+              "Failed to save.";
+
+            return;
+
+          }
+
+        }
+
+        document.getElementById(
+          "saveStatus"
+        ).textContent =
+          "Workbook saved successfully!";
+
+      }
+
+      catch (err) {
+
+        console.error(err);
+
+        document.getElementById(
+          "saveStatus"
+        ).textContent =
+          "Failed to save.";
+
+      }
+
+    }
+
+    // ==================================================
+    // EXPORT
+    // ==================================================
+
+    function exportSheet() {
+
+      const exportData = {
+
+        workbook,
+
+        title:
+          document.getElementById(
+            "sheetTitle"
+          ).value,
+
+        exported_at:
+          new Date().toISOString()
+
+      };
+
+      const blob =
+        new Blob(
+
+          [
+            JSON.stringify(
+              exportData,
+              null,
+              2
+            )
+          ],
+
+          {
+            type:
+              "application/pasxlsx"
+          }
+
+        );
+
+      const url =
+        URL.createObjectURL(blob);
+
+      const a =
+        document.createElement("a");
+
+      a.href = url;
+
+      a.download =
+        `${exportData.title || "spreadsheet"}.pasxlsx`;
+
+      a.click();
+
+      URL.revokeObjectURL(url);
+
+    }
+
+    // ==================================================
+    // IMPORT
+    // ==================================================
+
+    document.getElementById(
+      "importFile"
+    ).addEventListener(
+      "change",
+      async (event) => {
+
+        const file =
+          event.target.files[0];
+
+        if (!file) {
+          return;
+        }
+
+        try {
+
+          const text =
+            await file.text();
+
+          const imported =
+            JSON.parse(text);
+
+          workbook =
+            imported.workbook;
+
+          document.getElementById(
+            "sheetTitle"
+          ).value =
+            imported.title;
+
+          currentSheet =
+            Object.keys(
+              workbook.sheets
+            )[0];
+
+          updateCurrentSheetFooter();
+
+          renderTabs();
+
+          renderSheet();
+
+          document.getElementById(
+            "saveStatus"
+          ).textContent =
+            "Spreadsheet imported.";
+
+        }
+
+        catch {
+
+          alert(
+            "Invalid .pasxlsx file."
+          );
+
+        }
+
+      }
+    );
+
+    // ==================================================
+    // ESC CLOSE
+    // ==================================================
+
+    document.addEventListener(
+      "keydown",
+      (e) => {
+
+        if (
+          e.key === "Escape"
+        ) {
+
+          closeChartPopup();
+
+        }
+
+      }
+    );
+
+    // ==================================================
+    // START
+    // ==================================================
+
+    window.addEventListener(
+      "load",
+      () => {
+
+        initializeAuth();
+
+      }
+    );
+
+  </script>
+
+</body>
+</html>
