@@ -1889,27 +1889,27 @@
 
       }
     );
-// ==================================================
-// PRINT
-// ==================================================
+    // ==================================================
+    // PRINT
+    // ==================================================
 
-function printSheet() {
+    function printSheet() {
 
-  const title =
+      const title =
 
-    document.getElementById(
-      "sheetTitle"
-    ).value
+        document.getElementById(
+          "sheetTitle"
+        ).value
 
-    ||
+        ||
 
-    "Plum Academy Sheets";
+        "Plum Academy Sheets";
 
-  document.title = title;
+      document.title = title;
 
-  window.print();
+      window.print();
 
-}
+    }
     
     // ==================================================
     // START
@@ -1926,62 +1926,62 @@ function printSheet() {
 
     /* PRINT SUPPORT */
 
-@media print {
+    @media print {
 
-  body {
+      body {
 
-    background: white !important;
+        background: white !important;
 
-    padding-bottom: 0 !important;
+        padding-bottom: 0 !important;
 
-  }
+      }
 
-  .topbar,
-  .toolbar,
-  .sheet-tabs,
-  .statusbar,
-  .chart-popup {
+      .topbar,
+      .toolbar,
+      .sheet-tabs,
+      .statusbar,
+      .chart-popup {
 
-    display: none !important;
+        display: none !important;
 
-  }
+      }
 
-  .sheet-wrapper {
+      .sheet-wrapper {
 
-    padding: 0 !important;
+        padding: 0 !important;
 
-    overflow: visible !important;
+        overflow: visible !important;
 
-  }
+      }
 
-  .sheet {
+      .sheet {
 
-    border: none !important;
+        border: none !important;
 
-    box-shadow: none !important;
+        box-shadow: none !important;
 
-    overflow: visible !important;
+        overflow: visible !important;
 
-  }
+      }
 
-  table {
+      table {
 
-    width: 100% !important;
+        width: 100% !important;
 
-  }
+      }
 
-  td,
-  th {
+      td,
+      th {
 
-    border:
-      1px solid #000 !important;
+        border:
+          1px solid #000 !important;
 
-    color:
-      #000 !important;
+        color:
+          #000 !important;
+  
+      }
 
-  }
-
-}
+    }
   </script>
 
 </body>
