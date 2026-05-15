@@ -13,29 +13,13 @@
     Plum Academy Sheets
   </title>
 
-  <!-- JSPREADSHEET -->
+  <!-- SUPABASE -->
 
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/jspreadsheet-ce@4.15.0/dist/jspreadsheet.css"
-  />
-
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/jsuites@4.9.10/dist/jsuites.css"
-  />
-
-  <script src="https://cdn.jsdelivr.net/npm/jsuites@4.9.10/dist/jsuites.js"></script>
-
-  <script src="https://cdn.jsdelivr.net/npm/jspreadsheet-ce@4.15.0/dist/index.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <!-- CHART.JS -->
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-  <!-- SUPABASE -->
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
 
@@ -82,26 +66,21 @@
 
       gap: 20px;
 
-      box-shadow:
-        0 4px 12px rgba(0,0,0,0.04);
-
     }
 
-    .topbar-left h1 {
+    .topbar h1 {
 
       font-size: 34px;
 
-      margin-bottom: 5px;
-
       color: #15803d;
+
+      margin-bottom: 5px;
 
     }
 
-    .topbar-left p {
+    .topbar p {
 
       color: #6b7280;
-
-      font-size: 14px;
 
     }
 
@@ -119,7 +98,7 @@
 
     .btn {
 
-      padding: 13px 18px;
+      padding: 12px 18px;
 
       border-radius: 12px;
 
@@ -132,8 +111,6 @@
       transition: 0.15s;
 
       text-decoration: none;
-
-      font-size: 14px;
 
     }
 
@@ -187,36 +164,24 @@
 
     }
 
-    .toolbar input,
-    .toolbar select {
+    .toolbar button,
+    .toolbar input {
 
-      padding: 12px;
+      padding: 10px 14px;
 
       border-radius: 12px;
 
       border: 1px solid #d1d5db;
 
       background: white;
-
-      font-size: 14px;
 
     }
 
     .toolbar button {
 
-      padding: 12px 16px;
-
-      border-radius: 12px;
-
-      border: 1px solid #d1d5db;
-
-      background: white;
-
       cursor: pointer;
 
       font-weight: 600;
-
-      transition: 0.15s;
 
     }
 
@@ -226,65 +191,158 @@
 
     }
 
-    /* SHEET */
+    /* SHEET AREA */
 
     .sheet-wrapper {
 
       flex: 1;
 
+      overflow: auto;
+
       padding: 25px;
+
+    }
+
+    .sheet {
+
+      background: white;
+
+      border-radius: 24px;
+
+      border: 1px solid #e5e7eb;
 
       overflow: auto;
 
-    }
-
-    .sheet-card {
-
-      background: white;
-
-      border-radius: 24px;
-
-      border: 1px solid #e5e7eb;
-
-      overflow: hidden;
-
       box-shadow:
         0 6px 24px rgba(0,0,0,0.05);
 
     }
 
-    #spreadsheet {
+    table {
 
-      width: 100%;
+      border-collapse: collapse;
 
-      min-height: 700px;
+      width: max-content;
 
     }
 
-    /* CHARTS */
+    th {
 
-    .chart-card {
-
-      margin: 25px;
-
-      background: white;
-
-      border-radius: 24px;
+      background: #f9fafb;
 
       border: 1px solid #e5e7eb;
 
-      padding: 25px;
+      min-width: 120px;
 
-      box-shadow:
-        0 6px 24px rgba(0,0,0,0.05);
+      height: 42px;
+
+      text-align: center;
+
+      color: #6b7280;
+
+      font-weight: 600;
+
+      position: sticky;
+
+      top: 0;
+
+      z-index: 2;
 
     }
 
-    .chart-card h2 {
+    td {
 
-      margin-bottom: 20px;
+      border: 1px solid #e5e7eb;
 
-      font-size: 26px;
+      min-width: 120px;
+
+      width: 120px;
+
+      height: 40px;
+
+      padding: 8px;
+
+      outline: none;
+
+      cursor: text;
+
+      position: relative;
+
+    }
+
+    td.selected {
+
+      background: #dbeafe;
+
+      outline: 2px solid #3b82f6;
+
+    }
+
+    td:focus {
+
+      outline: 2px solid #3b82f6;
+
+    }
+
+    .row-number {
+
+      position: sticky;
+
+      left: 0;
+
+      z-index: 1;
+
+      background: #f9fafb;
+
+      color: #6b7280;
+
+      font-weight: 600;
+
+      min-width: 60px;
+
+      width: 60px;
+
+    }
+
+    /* TABS */
+
+    .sheet-tabs {
+
+      display: flex;
+
+      gap: 10px;
+
+      padding: 15px 25px;
+
+      background: white;
+
+      border-top: 1px solid #e5e7eb;
+
+      overflow-x: auto;
+
+    }
+
+    .sheet-tab {
+
+      padding: 10px 16px;
+
+      border-radius: 12px;
+
+      background: #f3f4f6;
+
+      cursor: pointer;
+
+      white-space: nowrap;
+
+      font-weight: 600;
+
+    }
+
+    .sheet-tab.active {
+
+      background: #22c55e;
+
+      color: white;
 
     }
 
@@ -302,49 +360,44 @@
 
       justify-content: space-between;
 
-      flex-wrap: wrap;
-
-      gap: 12px;
-
       color: #6b7280;
 
       font-size: 14px;
 
+      flex-wrap: wrap;
+
+      gap: 10px;
+
     }
 
-    /* INPUT */
+    /* CHART */
 
-    #sheetTitle {
+    .chart-card {
 
-      min-width: 260px;
+      background: white;
+
+      border-radius: 24px;
+
+      border: 1px solid #e5e7eb;
+
+      margin: 25px;
+
+      padding: 25px;
+
+      box-shadow:
+        0 6px 24px rgba(0,0,0,0.05);
+
+    }
+
+    .chart-card h2 {
+
+      margin-bottom: 20px;
 
     }
 
     .hidden {
 
       display: none;
-
-    }
-
-    /* JSPREADSHEET FIXES */
-
-    .jexcel_container {
-
-      width: 100% !important;
-
-    }
-
-    .jexcel {
-
-      min-height: 700px !important;
-
-    }
-
-    .jexcel > tbody > tr > td {
-
-      min-width: 120px;
-
-      height: 36px;
 
     }
 
@@ -357,7 +410,7 @@
 
   <div class="topbar">
 
-    <div class="topbar-left">
+    <div>
 
       <h1>
         📊 Plum Academy Sheets
@@ -380,7 +433,7 @@
 
       <button
         class="btn secondary-btn"
-        onclick="createWorksheet()"
+        onclick="newSheet()"
       >
         + New Sheet
       </button>
@@ -390,12 +443,12 @@
         onclick="
           document
           .getElementById(
-            'sheetImport'
+            'importFile'
           )
           .click()
         "
       >
-        📂 Open .pawsheets
+        Open .pawsheets
       </button>
 
       <button
@@ -407,9 +460,9 @@
 
       <button
         class="btn primary-btn"
-        onclick="saveSheet()"
+        onclick="saveWorkbook()"
       >
-        Save Spreadsheet
+        Save Workbook
       </button>
 
     </div>
@@ -430,10 +483,10 @@
 
     <input
       type="color"
-      id="backgroundColor"
+      id="bgColor"
     />
 
-    <button onclick="setBackground()">
+    <button onclick="applyBackground()">
       Cell Colour
     </button>
 
@@ -444,8 +497,14 @@
       id="textColor"
     />
 
-    <button onclick="setTextColor()">
+    <button onclick="applyTextColor()">
       Text Colour
+    </button>
+
+    <!-- BOLD -->
+
+    <button onclick="toggleBold()">
+      Bold
     </button>
 
     <!-- MERGE -->
@@ -466,20 +525,27 @@
 
   <div class="sheet-wrapper">
 
-    <div class="sheet-card">
+    <div class="sheet">
 
-      <div id="spreadsheet"></div>
+      <table id="spreadsheet"></table>
 
     </div>
 
   </div>
 
-  <!-- CHARTS -->
+  <!-- TABS -->
+
+  <div
+    class="sheet-tabs"
+    id="sheetTabs"
+  ></div>
+
+  <!-- CHART -->
 
   <div class="chart-card">
 
     <h2>
-      📈 Charts & Graphs
+      📈 Charts
     </h2>
 
     <canvas id="chartCanvas"></canvas>
@@ -494,7 +560,7 @@
       Ready
     </div>
 
-    <div id="selectedCell">
+    <div id="selectedInfo">
       No Cell Selected
     </div>
 
@@ -504,7 +570,7 @@
 
   <input
     type="file"
-    id="sheetImport"
+    id="importFile"
     class="hidden"
     accept=".pawsheets"
   />
@@ -522,8 +588,6 @@
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImViemNmbG5nc3NsanlxaWVpendzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MDQ3NDEsImV4cCI6MjA5Mzk4MDc0MX0.ZnPi4jKEtkr0iUN_ymVrhUI7A_OMkhWjRn3shA2D9yk";
 
     // ==================================================
-    // CLIENT
-    // ==================================================
 
     const studentSupabase =
       supabase.createClient(
@@ -537,7 +601,20 @@
 
     let currentStudent = null;
 
-    let spreadsheet = null;
+    let workbook = {
+
+      sheets: {
+
+        Sheet1: {}
+
+      }
+
+    };
+
+    let currentSheet =
+      "Sheet1";
+
+    let selectedCells = [];
 
     let chart = null;
 
@@ -555,8 +632,6 @@
         .auth
         .getSession();
 
-      // NOT LOGGED IN
-
       if (!session) {
 
         window.location.href =
@@ -572,108 +647,324 @@
       document.getElementById(
         "studentInfo"
       ).textContent =
+
         `${currentStudent.user_metadata.full_name} • ${currentStudent.email}`;
 
-      initializeSpreadsheet();
+      renderSheet();
+
+      renderTabs();
 
     }
 
     // ==================================================
-    // INITIALIZE
+    // RENDER SHEET
     // ==================================================
 
-    function initializeSpreadsheet() {
+    function renderSheet() {
 
-      spreadsheet =
-        jspreadsheet(
-          document.getElementById(
-            "spreadsheet"
-          ),
-          {
-
-            data: Array.from(
-              {
-                length: 50
-              },
-              () => Array(20).fill("")
-            ),
-
-            minDimensions:
-              [20, 50],
-
-            tableOverflow: true,
-
-            tableWidth:
-              "100%",
-
-            allowComments: true,
-
-            allowInsertColumn: true,
-
-            allowInsertRow: true,
-
-            allowDeleteColumn: true,
-
-            allowDeleteRow: true,
-
-            columnResize: true,
-
-            rowResize: true,
-
-            tabs: true,
-
-            toolbar: true,
-
-            worksheets: [
-
-              {
-
-                worksheetName:
-                  "Sheet1"
-
-              }
-
-            ],
-
-            onchange:
-              function() {
-
-                document.getElementById(
-                  "saveStatus"
-                ).textContent =
-                  "Unsaved changes";
-
-              },
-
-            onselection:
-              function(
-                instance,
-                x1,
-                y1,
-                x2,
-                y2
-              ) {
-
-                document.getElementById(
-                  "selectedCell"
-                ).textContent =
-
-                  `Selected: (${x1}, ${y1}) → (${x2}, ${y2})`;
-
-              }
-
-          }
+      const table =
+        document.getElementById(
+          "spreadsheet"
         );
 
+      table.innerHTML = "";
+
+      // HEADER
+
+      const header =
+        document.createElement(
+          "tr"
+        );
+
+      header.innerHTML =
+        `<th></th>`;
+
+      for (
+        let col = 0;
+        col < 20;
+        col++
+      ) {
+
+        const letter =
+          String.fromCharCode(
+            65 + col
+          );
+
+        header.innerHTML +=
+
+          `<th>${letter}</th>`;
+
+      }
+
+      table.appendChild(
+        header
+      );
+
+      // ROWS
+
+      for (
+        let row = 1;
+        row <= 50;
+        row++
+      ) {
+
+        const tr =
+          document.createElement(
+            "tr"
+          );
+
+        tr.innerHTML =
+
+          `<th class="row-number">${row}</th>`;
+
+        for (
+          let col = 0;
+          col < 20;
+          col++
+        ) {
+
+          const letter =
+            String.fromCharCode(
+              65 + col
+            );
+
+          const cellId =
+            `${letter}${row}`;
+
+          const cellData =
+            workbook.sheets[
+              currentSheet
+            ][cellId] || {};
+
+          const td =
+            document.createElement(
+              "td"
+            );
+
+          td.contentEditable =
+            true;
+
+          td.dataset.cell =
+            cellId;
+
+          td.innerHTML =
+            cellData.value || "";
+
+          // STYLES
+
+          if (
+            cellData.style
+          ) {
+
+            Object.assign(
+              td.style,
+              cellData.style
+            );
+
+          }
+
+          // EVENTS
+
+          td.addEventListener(
+            "focus",
+            () => {
+
+              selectedCells = [
+                td
+              ];
+
+              updateSelection();
+
+            }
+          );
+
+          td.addEventListener(
+            "input",
+            () => {
+
+              updateCell(
+                cellId,
+                td.innerHTML
+              );
+
+            }
+          );
+
+          tr.appendChild(td);
+
+        }
+
+        table.appendChild(
+          tr
+        );
+
+      }
+
     }
 
     // ==================================================
-    // CREATE WORKSHEET
+    // UPDATE CELL
     // ==================================================
 
-    function createWorksheet() {
+    function updateCell(
+      cellId,
+      value
+    ) {
 
-      spreadsheet.insertWorksheet();
+      // FORMULAS
+
+      if (
+        value.startsWith("=")
+      ) {
+
+        value =
+          calculateFormula(
+            value
+          );
+
+      }
+
+      workbook.sheets[
+        currentSheet
+      ][cellId] = {
+
+        ...workbook.sheets[
+          currentSheet
+        ][cellId],
+
+        value: value
+
+      };
+
+      document.getElementById(
+        "saveStatus"
+      ).textContent =
+        "Unsaved changes";
+
+    }
+
+    // ==================================================
+    // FORMULAS
+    // ==================================================
+
+    function calculateFormula(
+      formula
+    ) {
+
+      try {
+
+        // SUM
+
+        if (
+          formula.startsWith(
+            "=SUM("
+          )
+        ) {
+
+          const range =
+            formula
+            .replace(
+              "=SUM(",
+              ""
+            )
+            .replace(
+              ")",
+              ""
+            );
+
+          const [
+            start,
+            end
+          ] = range.split(":");
+
+          let total = 0;
+
+          const startRow =
+            parseInt(
+              start.slice(1)
+            );
+
+          const endRow =
+            parseInt(
+              end.slice(1)
+            );
+
+          const col =
+            start[0];
+
+          for (
+            let i = startRow;
+            i <= endRow;
+            i++
+          ) {
+
+            const value =
+              parseFloat(
+
+                workbook.sheets[
+                  currentSheet
+                ][`${col}${i}`]
+                ?.value || 0
+
+              );
+
+            total += value;
+
+          }
+
+          return total;
+
+        }
+
+      }
+
+      catch {
+
+        return "ERROR";
+
+      }
+
+      return formula;
+
+    }
+
+    // ==================================================
+    // SELECTION
+    // ==================================================
+
+    function updateSelection() {
+
+      document
+        .querySelectorAll("td")
+        .forEach(td => {
+
+          td.classList.remove(
+            "selected"
+          );
+
+        });
+
+      selectedCells.forEach(
+        td => {
+
+          td.classList.add(
+            "selected"
+          );
+
+        }
+      );
+
+      if (
+        selectedCells[0]
+      ) {
+
+        document.getElementById(
+          "selectedInfo"
+        ).textContent =
+
+          `Selected: ${selectedCells[0].dataset.cell}`;
+
+      }
 
     }
 
@@ -681,28 +972,27 @@
     // BACKGROUND
     // ==================================================
 
-    function setBackground() {
+    function applyBackground() {
 
       const color =
         document.getElementById(
-          "backgroundColor"
+          "bgColor"
         ).value;
 
-      const selected =
-        spreadsheet.getSelected();
+      selectedCells.forEach(
+        td => {
 
-      if (!selected) {
-        return;
-      }
+          td.style.background =
+            color;
 
-      spreadsheet.setStyle(
+          saveStyle(
+            td.dataset.cell,
+            {
+              background: color
+            }
+          );
 
-        selected[0],
-        selected[1],
-
-        "background-color",
-        color
-
+        }
       );
 
     }
@@ -711,29 +1001,91 @@
     // TEXT COLOR
     // ==================================================
 
-    function setTextColor() {
+    function applyTextColor() {
 
       const color =
         document.getElementById(
           "textColor"
         ).value;
 
-      const selected =
-        spreadsheet.getSelected();
+      selectedCells.forEach(
+        td => {
 
-      if (!selected) {
-        return;
-      }
+          td.style.color =
+            color;
 
-      spreadsheet.setStyle(
+          saveStyle(
+            td.dataset.cell,
+            {
+              color: color
+            }
+          );
 
-        selected[0],
-        selected[1],
-
-        "color",
-        color
-
+        }
       );
+
+    }
+
+    // ==================================================
+    // BOLD
+    // ==================================================
+
+    function toggleBold() {
+
+      selectedCells.forEach(
+        td => {
+
+          const isBold =
+            td.style.fontWeight
+            === "bold";
+
+          td.style.fontWeight =
+            isBold
+            ? "normal"
+            : "bold";
+
+          saveStyle(
+            td.dataset.cell,
+            {
+              fontWeight:
+                td.style.fontWeight
+            }
+          );
+
+        }
+      );
+
+    }
+
+    // ==================================================
+    // SAVE STYLE
+    // ==================================================
+
+    function saveStyle(
+      cellId,
+      style
+    ) {
+
+      workbook.sheets[
+        currentSheet
+      ][cellId] = {
+
+        ...workbook.sheets[
+          currentSheet
+        ][cellId],
+
+        style: {
+
+          ...workbook.sheets[
+            currentSheet
+          ][cellId]
+          ?.style,
+
+          ...style
+
+        }
+
+      };
 
     }
 
@@ -743,30 +1095,122 @@
 
     function mergeCells() {
 
-      const selected =
-        spreadsheet.getSelected();
+      if (
+        selectedCells.length < 2
+      ) {
 
-      if (!selected) {
+        alert(
+          "Select multiple cells first."
+        );
+
+        return;
+
+      }
+
+      const first =
+        selectedCells[0];
+
+      first.colSpan =
+        selectedCells.length;
+
+      for (
+        let i = 1;
+        i < selectedCells.length;
+        i++
+      ) {
+
+        selectedCells[
+          i
+        ].style.display =
+          "none";
+
+      }
+
+    }
+
+    // ==================================================
+    // NEW SHEET
+    // ==================================================
+
+    function newSheet() {
+
+      const name =
+        prompt(
+          "Sheet name?"
+        );
+
+      if (!name) {
         return;
       }
 
-      const start =
-        jspreadsheet.helpers
-        .getColumnNameFromCoords(
-          selected[0],
-          selected[1]
+      workbook.sheets[
+        name
+      ] = {};
+
+      currentSheet =
+        name;
+
+      renderTabs();
+
+      renderSheet();
+
+    }
+
+    // ==================================================
+    // TABS
+    // ==================================================
+
+    function renderTabs() {
+
+      const tabs =
+        document.getElementById(
+          "sheetTabs"
         );
 
-      const end =
-        jspreadsheet.helpers
-        .getColumnNameFromCoords(
-          selected[2],
-          selected[3]
+      tabs.innerHTML = "";
+
+      Object.keys(
+        workbook.sheets
+      ).forEach(name => {
+
+        const tab =
+          document.createElement(
+            "div"
+          );
+
+        tab.className =
+          "sheet-tab";
+
+        if (
+          name === currentSheet
+        ) {
+
+          tab.classList.add(
+            "active"
+          );
+
+        }
+
+        tab.textContent =
+          name;
+
+        tab.onclick =
+          () => {
+
+            currentSheet =
+              name;
+
+            renderTabs();
+
+            renderSheet();
+
+          };
+
+        tabs.appendChild(
+          tab
         );
 
-      spreadsheet.setMerge(
-        `${start}:${end}`
-      );
+      });
 
     }
 
@@ -776,47 +1220,43 @@
 
     function generateChart() {
 
-      const data =
-        spreadsheet.getData();
-
       const labels = [];
 
       const values = [];
 
-      for (
-        let i = 0;
-        i < data.length;
-        i++
-      ) {
+      Object.entries(
+        workbook.sheets[
+          currentSheet
+        ]
+      ).forEach(
+        ([key, value]) => {
 
-        if (
-          data[i][0]
-          && data[i][1]
-        ) {
+          if (
+            !isNaN(
+              parseFloat(
+                value.value
+              )
+            )
+          ) {
 
-          labels.push(
-            data[i][0]
-          );
+            labels.push(key);
 
-          values.push(
-            parseFloat(
-              data[i][1]
-            ) || 0
-          );
+            values.push(
+              parseFloat(
+                value.value
+              )
+            );
+
+          }
 
         }
-
-      }
-
-      // REMOVE OLD
+      );
 
       if (chart) {
 
         chart.destroy();
 
       }
-
-      // CREATE
 
       chart =
         new Chart(
@@ -831,7 +1271,7 @@
 
             data: {
 
-              labels: labels,
+              labels,
 
               datasets: [
 
@@ -846,14 +1286,6 @@
 
               ]
 
-            },
-
-            options: {
-
-              responsive: true,
-
-              maintainAspectRatio: false
-
             }
 
           }
@@ -866,33 +1298,12 @@
     // SAVE
     // ==================================================
 
-    async function saveSheet() {
+    async function saveWorkbook() {
 
       document.getElementById(
         "saveStatus"
       ).textContent =
-        "Saving spreadsheet...";
-
-      const sheetData = {
-
-        title:
-          document.getElementById(
-            "sheetTitle"
-          ).value,
-
-        data:
-          spreadsheet.getJson(),
-
-        styles:
-          spreadsheet.getStyle(),
-
-        merges:
-          spreadsheet.getMerge(),
-
-        exported_at:
-          new Date().toISOString()
-
-      };
+        "Saving workbook...";
 
       const {
         error
@@ -911,11 +1322,16 @@
             currentStudent.email,
 
           title:
-            sheetData.title
-            || "Untitled Spreadsheet",
+            document.getElementById(
+              "sheetTitle"
+            ).value
+            || "Untitled Workbook",
 
-          data:
-            sheetData
+          workbook:
+            workbook,
+
+          updated_at:
+            new Date().toISOString()
 
         }]);
 
@@ -935,7 +1351,7 @@
       document.getElementById(
         "saveStatus"
       ).textContent =
-        "Spreadsheet saved successfully!";
+        "Workbook saved successfully!";
 
     }
 
@@ -945,21 +1361,14 @@
 
     function exportSheet() {
 
-      const sheetData = {
+      const exportData = {
+
+        workbook,
 
         title:
           document.getElementById(
             "sheetTitle"
           ).value,
-
-        data:
-          spreadsheet.getJson(),
-
-        styles:
-          spreadsheet.getStyle(),
-
-        merges:
-          spreadsheet.getMerge(),
 
         exported_at:
           new Date().toISOString()
@@ -968,17 +1377,20 @@
 
       const blob =
         new Blob(
+
           [
             JSON.stringify(
-              sheetData,
+              exportData,
               null,
               2
             )
           ],
+
           {
             type:
               "application/pawsheets"
           }
+
         );
 
       const url =
@@ -994,7 +1406,7 @@
       a.href = url;
 
       a.download =
-        `${sheetData.title || "spreadsheet"}.pawsheets`;
+        `${exportData.title || "spreadsheet"}.pawsheets`;
 
       a.click();
 
@@ -1009,7 +1421,7 @@
     // ==================================================
 
     document.getElementById(
-      "sheetImport"
+      "importFile"
     ).addEventListener(
       "change",
       async (event) => {
@@ -1029,83 +1441,22 @@
           const imported =
             JSON.parse(text);
 
-          // TITLE
+          workbook =
+            imported.workbook;
 
           document.getElementById(
             "sheetTitle"
           ).value =
             imported.title;
 
-          // DESTROY
-
-          document.getElementById(
-            "spreadsheet"
-          ).innerHTML = "";
-
-          // RECREATE
-
-          spreadsheet =
-            jspreadsheet(
-
-              document.getElementById(
-                "spreadsheet"
-              ),
-
-              {
-
-                data:
-                  imported.data,
-
-                minDimensions:
-                  [20, 50],
-
-                columnResize: true,
-
-                rowResize: true,
-
-                tabs: true,
-
-                toolbar: true
-
-              }
-
-            );
-
-          // STYLES
-
-          if (
-            imported.styles
-          ) {
-
-            spreadsheet.setStyle(
-              imported.styles
-            );
-
-          }
-
-          // MERGES
-
-          if (
-            imported.merges
-          ) {
-
+          currentSheet =
             Object.keys(
-              imported.merges
-            ).forEach(key => {
+              workbook.sheets
+            )[0];
 
-              spreadsheet.setMerge(
-                key,
-                imported.merges[
-                  key
-                ][0],
-                imported.merges[
-                  key
-                ][1]
-              );
+          renderTabs();
 
-            });
-
-          }
+          renderSheet();
 
           document.getElementById(
             "saveStatus"
@@ -1114,9 +1465,7 @@
 
         }
 
-        catch (err) {
-
-          console.error(err);
+        catch {
 
           alert(
             "Invalid .pawsheets file."
@@ -1126,20 +1475,6 @@
 
       }
     );
-
-    // ==================================================
-    // AUTOSAVE
-    // ==================================================
-
-    setInterval(() => {
-
-      if (currentStudent) {
-
-        saveSheet();
-
-      }
-
-    }, 30000);
 
     // ==================================================
     // START
