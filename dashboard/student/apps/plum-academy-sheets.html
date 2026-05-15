@@ -404,13 +404,6 @@
       >
         Export
       </button>
-      
-      <button
-        class="btn secondary-btn"
-        onclick="printSheet()"
-      >
-        🖨️ Print
-      </button>
 
       <button
         class="btn primary-btn"
@@ -1889,28 +1882,7 @@
 
       }
     );
-    // ==================================================
-    // PRINT
-    // ==================================================
 
-    function printSheet() {
-
-      const title =
-
-        document.getElementById(
-          "sheetTitle"
-        ).value
-
-        ||
-
-        "Plum Academy Sheets";
-
-      document.title = title;
-
-      window.print();
-
-    }
-    
     // ==================================================
     // START
     // ==================================================
@@ -1924,64 +1896,6 @@
       }
     );
 
-    /* PRINT SUPPORT */
-
-    @media print {
-
-      body {
-
-        background: white !important;
-
-        padding-bottom: 0 !important;
-
-      }
-
-      .topbar,
-      .toolbar,
-      .sheet-tabs,
-      .statusbar,
-      .chart-popup {
-
-        display: none !important;
-
-      }
-
-      .sheet-wrapper {
-
-        padding: 0 !important;
-
-        overflow: visible !important;
-
-      }
-
-      .sheet {
-
-        border: none !important;
-
-        box-shadow: none !important;
-
-        overflow: visible !important;
-
-      }
-
-      table {
-
-        width: 100% !important;
-
-      }
-
-      td,
-      th {
-
-        border:
-          1px solid #000 !important;
-
-        color:
-          #000 !important;
-  
-      }
-
-    }
   </script>
 
 </body>
