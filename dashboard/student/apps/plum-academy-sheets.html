@@ -54,7 +54,7 @@
 
       border-bottom: 1px solid #e5e7eb;
 
-      padding: 20px 30px;
+      padding: 18px 24px;
 
       display: flex;
 
@@ -64,17 +64,17 @@
 
       flex-wrap: wrap;
 
-      gap: 20px;
+      gap: 16px;
 
     }
 
     .topbar h1 {
 
-      font-size: 34px;
+      font-size: 30px;
 
       color: #15803d;
 
-      margin-bottom: 5px;
+      margin-bottom: 4px;
 
     }
 
@@ -82,13 +82,15 @@
 
       color: #6b7280;
 
+      font-size: 14px;
+
     }
 
     .topbar-buttons {
 
       display: flex;
 
-      gap: 12px;
+      gap: 10px;
 
       flex-wrap: wrap;
 
@@ -98,7 +100,7 @@
 
     .btn {
 
-      padding: 12px 18px;
+      padding: 10px 16px;
 
       border-radius: 12px;
 
@@ -111,6 +113,8 @@
       transition: 0.15s;
 
       text-decoration: none;
+
+      font-size: 14px;
 
     }
 
@@ -150,15 +154,15 @@
 
       background: white;
 
-      padding: 18px 25px;
-
       border-bottom: 1px solid #e5e7eb;
+
+      padding: 16px 24px;
 
       display: flex;
 
-      gap: 12px;
-
       flex-wrap: wrap;
+
+      gap: 10px;
 
       align-items: center;
 
@@ -167,13 +171,15 @@
     .toolbar button,
     .toolbar input {
 
-      padding: 10px 14px;
+      padding: 9px 12px;
 
-      border-radius: 12px;
+      border-radius: 10px;
 
       border: 1px solid #d1d5db;
 
       background: white;
+
+      font-size: 13px;
 
     }
 
@@ -191,7 +197,7 @@
 
     }
 
-    /* SHEET AREA */
+    /* SHEET */
 
     .sheet-wrapper {
 
@@ -199,7 +205,7 @@
 
       overflow: auto;
 
-      padding: 25px;
+      padding: 24px;
 
     }
 
@@ -207,7 +213,7 @@
 
       background: white;
 
-      border-radius: 24px;
+      border-radius: 20px;
 
       border: 1px solid #e5e7eb;
 
@@ -232,15 +238,17 @@
 
       border: 1px solid #e5e7eb;
 
-      min-width: 120px;
+      min-width: 90px;
 
-      height: 42px;
+      width: 90px;
+
+      height: 32px;
 
       text-align: center;
 
       color: #6b7280;
 
-      font-weight: 600;
+      font-size: 12px;
 
       position: sticky;
 
@@ -248,25 +256,33 @@
 
       z-index: 2;
 
+      user-select: none;
+
     }
 
     td {
 
       border: 1px solid #e5e7eb;
 
-      min-width: 120px;
+      min-width: 90px;
 
-      width: 120px;
+      width: 90px;
 
-      height: 40px;
+      height: 28px;
 
-      padding: 8px;
+      min-height: 28px;
+
+      padding: 4px 6px;
 
       outline: none;
 
       cursor: text;
 
       position: relative;
+
+      font-size: 13px;
+
+      overflow: hidden;
 
     }
 
@@ -275,6 +291,8 @@
       background: #dbeafe;
 
       outline: 2px solid #3b82f6;
+
+      z-index: 1;
 
     }
 
@@ -294,13 +312,33 @@
 
       background: #f9fafb;
 
+      min-width: 45px;
+
+      width: 45px;
+
+      font-size: 12px;
+
       color: #6b7280;
 
-      font-weight: 600;
+    }
 
-      min-width: 60px;
+    /* RESIZE HANDLE */
 
-      width: 60px;
+    .resize-handle {
+
+      position: absolute;
+
+      right: 0;
+
+      top: 0;
+
+      width: 5px;
+
+      height: 100%;
+
+      cursor: col-resize;
+
+      z-index: 10;
 
     }
 
@@ -312,7 +350,7 @@
 
       gap: 10px;
 
-      padding: 15px 25px;
+      padding: 14px 24px;
 
       background: white;
 
@@ -324,17 +362,19 @@
 
     .sheet-tab {
 
-      padding: 10px 16px;
+      padding: 9px 14px;
 
-      border-radius: 12px;
+      border-radius: 10px;
 
       background: #f3f4f6;
 
       cursor: pointer;
 
+      font-weight: 600;
+
       white-space: nowrap;
 
-      font-weight: 600;
+      font-size: 13px;
 
     }
 
@@ -354,19 +394,19 @@
 
       border-top: 1px solid #e5e7eb;
 
-      padding: 15px 25px;
+      padding: 12px 24px;
 
       display: flex;
 
       justify-content: space-between;
 
-      color: #6b7280;
-
-      font-size: 14px;
-
       flex-wrap: wrap;
 
       gap: 10px;
+
+      color: #6b7280;
+
+      font-size: 13px;
 
     }
 
@@ -376,13 +416,13 @@
 
       background: white;
 
-      border-radius: 24px;
+      border-radius: 20px;
 
       border: 1px solid #e5e7eb;
 
-      margin: 25px;
+      margin: 24px;
 
-      padding: 25px;
+      padding: 24px;
 
       box-shadow:
         0 6px 24px rgba(0,0,0,0.05);
@@ -391,7 +431,7 @@
 
     .chart-card h2 {
 
-      margin-bottom: 20px;
+      margin-bottom: 16px;
 
     }
 
@@ -479,18 +519,14 @@
       placeholder="Spreadsheet Title"
     />
 
-    <!-- BACKGROUND -->
-
     <input
       type="color"
       id="bgColor"
     />
 
     <button onclick="applyBackground()">
-      Cell Colour
+      Fill
     </button>
-
-    <!-- TEXT -->
 
     <input
       type="color"
@@ -498,25 +534,19 @@
     />
 
     <button onclick="applyTextColor()">
-      Text Colour
+      Text
     </button>
-
-    <!-- BOLD -->
 
     <button onclick="toggleBold()">
       Bold
     </button>
 
-    <!-- MERGE -->
-
     <button onclick="mergeCells()">
-      Merge Cells
+      Merge
     </button>
 
-    <!-- CHART -->
-
     <button onclick="generateChart()">
-      Generate Chart
+      Chart
     </button>
 
   </div>
@@ -587,8 +617,6 @@
     const STUDENT_SUPABASE_ANON_KEY =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImViemNmbG5nc3NsanlxaWVpendzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MDQ3NDEsImV4cCI6MjA5Mzk4MDc0MX0.ZnPi4jKEtkr0iUN_ymVrhUI7A_OMkhWjRn3shA2D9yk";
 
-    // ==================================================
-
     const studentSupabase =
       supabase.createClient(
         STUDENT_SUPABASE_URL,
@@ -615,6 +643,12 @@
       "Sheet1";
 
     let selectedCells = [];
+
+    let isSelecting = false;
+
+    let startCell = null;
+
+    let endCell = null;
 
     let chart = null;
 
@@ -650,9 +684,9 @@
 
         `${currentStudent.user_metadata.full_name} • ${currentStudent.email}`;
 
-      renderSheet();
-
       renderTabs();
+
+      renderSheet();
 
     }
 
@@ -690,9 +724,36 @@
             65 + col
           );
 
-        header.innerHTML +=
+        const th =
+          document.createElement(
+            "th"
+          );
 
-          `<th>${letter}</th>`;
+        th.innerHTML =
+          letter;
+
+        // RESIZE HANDLE
+
+        const resize =
+          document.createElement(
+            "div"
+          );
+
+        resize.className =
+          "resize-handle";
+
+        resize.addEventListener(
+          "mousedown",
+          initResize
+        );
+
+        th.appendChild(
+          resize
+        );
+
+        header.appendChild(
+          th
+        );
 
       }
 
@@ -714,7 +775,6 @@
           );
 
         tr.innerHTML =
-
           `<th class="row-number">${row}</th>`;
 
         for (
@@ -741,11 +801,11 @@
               "td"
             );
 
-          td.contentEditable =
-            true;
-
           td.dataset.cell =
             cellId;
+
+          td.contentEditable =
+            false;
 
           td.innerHTML =
             cellData.value || "";
@@ -766,21 +826,63 @@
           // EVENTS
 
           td.addEventListener(
-            "focus",
-            () => {
+            "mousedown",
+            (e) => {
 
-              selectedCells = [
-                td
-              ];
+              e.preventDefault();
 
-              updateSelection();
+              isSelecting = true;
+
+              startCell = td;
+
+              endCell = td;
+
+              selectRange(
+                startCell,
+                endCell
+              );
 
             }
           );
 
           td.addEventListener(
-            "input",
+            "mouseover",
             () => {
+
+              if (
+                !isSelecting
+              ) {
+                return;
+              }
+
+              endCell = td;
+
+              selectRange(
+                startCell,
+                endCell
+              );
+
+            }
+          );
+
+          td.addEventListener(
+            "dblclick",
+            () => {
+
+              td.contentEditable =
+                true;
+
+              td.focus();
+
+            }
+          );
+
+          td.addEventListener(
+            "blur",
+            () => {
+
+              td.contentEditable =
+                false;
 
               updateCell(
                 cellId,
@@ -799,6 +901,151 @@
         );
 
       }
+
+    }
+
+    // ==================================================
+    // MOUSE UP
+    // ==================================================
+
+    document.addEventListener(
+      "mouseup",
+      () => {
+
+        isSelecting = false;
+
+      }
+    );
+
+    // ==================================================
+    // GET POSITION
+    // ==================================================
+
+    function getCellPosition(
+      td
+    ) {
+
+      const id =
+        td.dataset.cell;
+
+      const col =
+        id.charCodeAt(0) - 65;
+
+      const row =
+        parseInt(
+          id.slice(1)
+        );
+
+      return {
+        row,
+        col
+      };
+
+    }
+
+    // ==================================================
+    // SELECT RANGE
+    // ==================================================
+
+    function selectRange(
+      start,
+      end
+    ) {
+
+      clearSelection();
+
+      const s =
+        getCellPosition(
+          start
+        );
+
+      const e =
+        getCellPosition(
+          end
+        );
+
+      const minRow =
+        Math.min(
+          s.row,
+          e.row
+        );
+
+      const maxRow =
+        Math.max(
+          s.row,
+          e.row
+        );
+
+      const minCol =
+        Math.min(
+          s.col,
+          e.col
+        );
+
+      const maxCol =
+        Math.max(
+          s.col,
+          e.col
+        );
+
+      document
+        .querySelectorAll("td")
+        .forEach(td => {
+
+          const p =
+            getCellPosition(
+              td
+            );
+
+          if (
+
+            p.row >= minRow
+            && p.row <= maxRow
+
+            &&
+
+            p.col >= minCol
+            && p.col <= maxCol
+
+          ) {
+
+            td.classList.add(
+              "selected"
+            );
+
+            selectedCells.push(
+              td
+            );
+
+          }
+
+        });
+
+      document.getElementById(
+        "selectedInfo"
+      ).textContent =
+
+        `${selectedCells.length} cells selected`;
+
+    }
+
+    // ==================================================
+    // CLEAR
+    // ==================================================
+
+    function clearSelection() {
+
+      document
+        .querySelectorAll("td")
+        .forEach(td => {
+
+          td.classList.remove(
+            "selected"
+          );
+
+        });
+
+      selectedCells = [];
 
     }
 
@@ -832,7 +1079,7 @@
           currentSheet
         ][cellId],
 
-        value: value
+        value
 
       };
 
@@ -877,7 +1124,8 @@
             end
           ] = range.split(":");
 
-          let total = 0;
+          const col =
+            start[0];
 
           const startRow =
             parseInt(
@@ -889,8 +1137,7 @@
               end.slice(1)
             );
 
-          const col =
-            start[0];
+          let total = 0;
 
           for (
             let i = startRow;
@@ -898,17 +1145,14 @@
             i++
           ) {
 
-            const value =
-              parseFloat(
+            total += parseFloat(
 
-                workbook.sheets[
-                  currentSheet
-                ][`${col}${i}`]
-                ?.value || 0
+              workbook.sheets[
+                currentSheet
+              ][`${col}${i}`]
+              ?.value || 0
 
-              );
-
-            total += value;
+            );
 
           }
 
@@ -929,42 +1173,34 @@
     }
 
     // ==================================================
-    // SELECTION
+    // STYLE HELPERS
     // ==================================================
 
-    function updateSelection() {
+    function saveStyle(
+      cellId,
+      style
+    ) {
 
-      document
-        .querySelectorAll("td")
-        .forEach(td => {
+      workbook.sheets[
+        currentSheet
+      ][cellId] = {
 
-          td.classList.remove(
-            "selected"
-          );
+        ...workbook.sheets[
+          currentSheet
+        ][cellId],
 
-        });
+        style: {
 
-      selectedCells.forEach(
-        td => {
+          ...workbook.sheets[
+            currentSheet
+          ][cellId]
+          ?.style,
 
-          td.classList.add(
-            "selected"
-          );
+          ...style
 
         }
-      );
 
-      if (
-        selectedCells[0]
-      ) {
-
-        document.getElementById(
-          "selectedInfo"
-        ).textContent =
-
-          `Selected: ${selectedCells[0].dataset.cell}`;
-
-      }
+      };
 
     }
 
@@ -998,7 +1234,7 @@
     }
 
     // ==================================================
-    // TEXT COLOR
+    // TEXT
     // ==================================================
 
     function applyTextColor() {
@@ -1017,7 +1253,7 @@
           saveStyle(
             td.dataset.cell,
             {
-              color: color
+              color
             }
           );
 
@@ -1058,38 +1294,6 @@
     }
 
     // ==================================================
-    // SAVE STYLE
-    // ==================================================
-
-    function saveStyle(
-      cellId,
-      style
-    ) {
-
-      workbook.sheets[
-        currentSheet
-      ][cellId] = {
-
-        ...workbook.sheets[
-          currentSheet
-        ][cellId],
-
-        style: {
-
-          ...workbook.sheets[
-            currentSheet
-          ][cellId]
-          ?.style,
-
-          ...style
-
-        }
-
-      };
-
-    }
-
-    // ==================================================
     // MERGE
     // ==================================================
 
@@ -1125,6 +1329,87 @@
           "none";
 
       }
+
+    }
+
+    // ==================================================
+    // RESIZE
+    // ==================================================
+
+    let currentResize = null;
+
+    function initResize(
+      e
+    ) {
+
+      currentResize =
+        e.target.parentElement;
+
+      document.addEventListener(
+        "mousemove",
+        resizeColumn
+      );
+
+      document.addEventListener(
+        "mouseup",
+        stopResize
+      );
+
+    }
+
+    function resizeColumn(
+      e
+    ) {
+
+      if (
+        !currentResize
+      ) {
+        return;
+      }
+
+      const width =
+        e.pageX
+        - currentResize.offsetLeft;
+
+      currentResize.style.width =
+        width + "px";
+
+      const index =
+        Array.from(
+          currentResize.parentElement.children
+        ).indexOf(
+          currentResize
+        );
+
+      document
+        .querySelectorAll(
+          `tr td:nth-child(${index + 1})`
+        )
+        .forEach(td => {
+
+          td.style.width =
+            width + "px";
+
+          td.style.minWidth =
+            width + "px";
+
+        });
+
+    }
+
+    function stopResize() {
+
+      currentResize = null;
+
+      document.removeEventListener(
+        "mousemove",
+        resizeColumn
+      );
+
+      document.removeEventListener(
+        "mouseup",
+        stopResize
+      );
 
     }
 
@@ -1327,8 +1612,7 @@
             ).value
             || "Untitled Workbook",
 
-          workbook:
-            workbook,
+          workbook,
 
           updated_at:
             new Date().toISOString()
