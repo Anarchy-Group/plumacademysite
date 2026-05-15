@@ -13,541 +13,321 @@
     Plum Academy Sheets
   </title>
 
-  <!-- SUPABASE -->
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <!-- CHARTS -->
-
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
 
     * {
-
       margin: 0;
       padding: 0;
       box-sizing: border-box;
       font-family: Inter, Arial, sans-serif;
-
     }
 
     body {
-
       background: #f3f6fb;
-
       min-height: 100vh;
-
       display: flex;
-
       flex-direction: column;
-
       color: #111827;
-
       padding-bottom: 85px;
-
     }
 
     /* TOPBAR */
 
     .topbar {
-
       background: white;
-
       border-bottom: 1px solid #e5e7eb;
-
       padding: 18px 24px;
-
       display: flex;
-
       justify-content: space-between;
-
       align-items: center;
-
       flex-wrap: wrap;
-
       gap: 16px;
-
       position: sticky;
-
       top: 0;
-
       z-index: 999;
-
     }
 
     .topbar h1 {
-
       font-size: 30px;
-
       color: #15803d;
-
       margin-bottom: 4px;
-
     }
 
     .topbar p {
-
       color: #6b7280;
-
       font-size: 14px;
-
     }
 
     .topbar-buttons {
-
       display: flex;
-
       gap: 10px;
-
       flex-wrap: wrap;
-
     }
 
     /* BUTTONS */
 
     .btn {
-
       padding: 10px 16px;
-
       border-radius: 12px;
-
       border: none;
-
       cursor: pointer;
-
       font-weight: 600;
-
       transition: 0.15s;
-
       text-decoration: none;
-
       font-size: 14px;
-
     }
 
     .primary-btn {
-
       background: #22c55e;
-
       color: white;
-
     }
 
     .primary-btn:hover {
-
       background: #16a34a;
-
     }
 
     .secondary-btn {
-
       background: white;
-
       border: 1px solid #d1d5db;
-
       color: #111827;
-
     }
 
     .secondary-btn:hover {
-
       background: #f3f4f6;
-
     }
 
     /* TOOLBAR */
 
     .toolbar {
-
       background: white;
-
       border-bottom: 1px solid #e5e7eb;
-
       padding: 16px 24px;
-
       display: flex;
-
       flex-wrap: wrap;
-
       gap: 10px;
-
       align-items: center;
-
       position: sticky;
-
       top: 76px;
-
       z-index: 998;
-
     }
 
     .toolbar button,
     .toolbar input {
-
       padding: 9px 12px;
-
       border-radius: 10px;
-
       border: 1px solid #d1d5db;
-
       background: white;
-
       font-size: 13px;
-
     }
 
     .toolbar button {
-
       cursor: pointer;
-
       font-weight: 600;
-
     }
 
     .toolbar button:hover {
-
       background: #f3f4f6;
-
     }
 
     /* SHEET */
 
     .sheet-wrapper {
-
       flex: 1;
-
       overflow: auto;
-
       padding: 24px;
-
     }
 
     .sheet {
-
       background: white;
-
       border-radius: 20px;
-
       border: 1px solid #e5e7eb;
-
       overflow: auto;
-
       box-shadow:
         0 6px 24px rgba(0,0,0,0.05);
-
     }
 
     table {
-
       border-collapse: collapse;
-
       width: max-content;
-
     }
 
     th {
-
       background: #f9fafb;
-
       border: 1px solid #e5e7eb;
-
       min-width: 90px;
-
       width: 90px;
-
       height: 32px;
-
       text-align: center;
-
       color: #6b7280;
-
       font-size: 12px;
-
       position: sticky;
-
       top: 0;
-
       z-index: 2;
-
       user-select: none;
-
     }
 
     td {
-
       border: 1px solid #e5e7eb;
-
       min-width: 90px;
-
       width: 90px;
-
       height: 28px;
-
       min-height: 28px;
-
       padding: 4px 6px;
-
       outline: none;
-
       cursor: text;
-
       position: relative;
-
       font-size: 13px;
-
       overflow: hidden;
-
       background: white;
-
     }
 
     td.selected {
-
       background: #dbeafe;
-
       outline: 2px solid #3b82f6;
-
       z-index: 1;
-
     }
 
     td:focus {
-
       outline: 2px solid #3b82f6;
-
     }
 
     .row-number {
-
       position: sticky;
-
       left: 0;
-
       z-index: 1;
-
       background: #f9fafb;
-
       min-width: 45px;
-
       width: 45px;
-
       font-size: 12px;
-
       color: #6b7280;
-
     }
 
     /* RESIZE */
 
     .resize-handle {
-
       position: absolute;
-
       right: 0;
-
       top: 0;
-
       width: 5px;
-
       height: 100%;
-
       cursor: col-resize;
-
       z-index: 10;
-
     }
 
     /* TABS */
 
     .sheet-tabs {
-
       display: flex;
-
       gap: 10px;
-
       padding: 14px 24px;
-
       background: white;
-
       border-top: 1px solid #e5e7eb;
-
       overflow-x: auto;
-
     }
 
     .sheet-tab {
-
       padding: 9px 14px;
-
       border-radius: 10px;
-
       background: #f3f4f6;
-
       cursor: pointer;
-
       font-weight: 600;
-
       white-space: nowrap;
-
       font-size: 13px;
-
     }
 
     .sheet-tab.active {
-
       background: #22c55e;
-
       color: white;
-
     }
 
-    /* STATUSBAR */
+    /* FOOTER */
 
     .statusbar {
-
       position: fixed;
-
       bottom: 0;
-
       left: 0;
-
       width: 100%;
-
       background: white;
-
       border-top: 1px solid #e5e7eb;
-
       padding: 12px 24px;
-
       display: flex;
-
       justify-content: space-between;
-
       align-items: center;
-
       flex-wrap: wrap;
-
       gap: 10px;
-
       color: #6b7280;
-
       font-size: 13px;
-
       z-index: 9999;
-
       box-shadow:
         0 -4px 12px rgba(0,0,0,0.04);
-
     }
 
     .status-section {
-
       display: flex;
-
       align-items: center;
-
       gap: 18px;
-
       flex-wrap: wrap;
-
     }
 
     /* POPUP */
 
     .chart-popup {
-
       position: fixed;
-
       inset: 0;
-
       background: rgba(0,0,0,0.45);
-
       display: none;
-
       justify-content: center;
-
       align-items: center;
-
       z-index: 10000;
-
       padding: 25px;
-
     }
 
     .chart-popup-content {
-
       background: white;
-
       width: 100%;
-
       max-width: 900px;
-
       border-radius: 24px;
-
       padding: 25px;
-
       box-shadow:
         0 12px 40px rgba(0,0,0,0.18);
-
       position: relative;
-
     }
 
     .chart-popup-header {
-
       display: flex;
-
       justify-content: space-between;
-
       align-items: center;
-
       margin-bottom: 20px;
-
     }
 
     .chart-popup-header h2 {
-
       font-size: 28px;
-
     }
 
     .close-popup {
-
       border: none;
-
       background: #ef4444;
-
       color: white;
-
       padding: 10px 14px;
-
       border-radius: 12px;
-
       cursor: pointer;
-
       font-weight: 600;
-
     }
 
     .close-popup:hover {
-
       background: #dc2626;
-
     }
 
     .chart-popup canvas {
-
       width: 100% !important;
-
       max-height: 500px;
-
     }
 
     .hidden {
-
       display: none;
-
     }
 
   </style>
@@ -672,7 +452,7 @@
 
   </div>
 
-  <!-- TABS -->
+  <!-- SHEET TABS -->
 
   <div
     class="sheet-tabs"
@@ -788,12 +568,6 @@
 
     let selectedCells = [];
 
-    let isSelecting = false;
-
-    let startCell = null;
-
-    let endCell = null;
-
     let chart = null;
 
     // ==================================================
@@ -863,861 +637,157 @@
     }
 
     // ==================================================
-    // RENDER SHEET
+    // SAVE WORKBOOK
     // ==================================================
 
-    function renderSheet() {
-
-      const table =
-        document.getElementById(
-          "spreadsheet"
-        );
-
-      table.innerHTML = "";
-
-      const sheet =
-        getSheet();
-
-      // HEADER
-
-      const header =
-        document.createElement(
-          "tr"
-        );
-
-      header.innerHTML =
-        `<th></th>`;
-
-      for (
-        let col = 0;
-        col < 20;
-        col++
-      ) {
-
-        const letter =
-          String.fromCharCode(
-            65 + col
-          );
-
-        const th =
-          document.createElement(
-            "th"
-          );
-
-        th.innerHTML =
-          letter;
-
-        const resize =
-          document.createElement(
-            "div"
-          );
-
-        resize.className =
-          "resize-handle";
-
-        resize.addEventListener(
-          "mousedown",
-          initResize
-        );
-
-        th.appendChild(
-          resize
-        );
-
-        header.appendChild(
-          th
-        );
-
-      }
-
-      table.appendChild(
-        header
-      );
-
-      // ROWS
-
-      for (
-        let row = 1;
-        row <= 50;
-        row++
-      ) {
-
-        const tr =
-          document.createElement(
-            "tr"
-          );
-
-        tr.innerHTML =
-          `<th class="row-number">${row}</th>`;
-
-        for (
-          let col = 0;
-          col < 20;
-          col++
-        ) {
-
-          const letter =
-            String.fromCharCode(
-              65 + col
-            );
-
-          const cellId =
-            `${letter}${row}`;
-
-          const cellData =
-            sheet.cells[
-              cellId
-            ] || {};
-
-          const td =
-            document.createElement(
-              "td"
-            );
-
-          td.dataset.cell =
-            cellId;
-
-          td.innerHTML =
-            cellData.value || "";
-
-          // STYLES
-
-          if (
-            cellData.style
-          ) {
-
-            Object.assign(
-              td.style,
-              cellData.style
-            );
-
-          }
-
-          // EVENTS
-
-          td.addEventListener(
-            "mousedown",
-            (e) => {
-
-              e.preventDefault();
-
-              isSelecting = true;
-
-              startCell = td;
-
-              endCell = td;
-
-              selectRange(
-                startCell,
-                endCell
-              );
-
-            }
-          );
-
-          td.addEventListener(
-            "mouseover",
-            () => {
-
-              if (
-                !isSelecting
-              ) {
-                return;
-              }
-
-              endCell = td;
-
-              selectRange(
-                startCell,
-                endCell
-              );
-
-            }
-          );
-
-          td.addEventListener(
-            "dblclick",
-            () => {
-
-              td.contentEditable =
-                true;
-
-              td.focus();
-
-            }
-          );
-
-          td.addEventListener(
-            "blur",
-            () => {
-
-              td.contentEditable =
-                false;
-
-              updateCell(
-                cellId,
-                td.innerHTML
-              );
-
-            }
-          );
-
-          tr.appendChild(
-            td
-          );
-
-        }
-
-        table.appendChild(
-          tr
-        );
-
-      }
-
-      restoreMerges();
-
-    }
-
-    // ==================================================
-    // RESTORE MERGES
-    // ==================================================
-
-    function restoreMerges() {
-
-      const merges =
-        getSheet().merges;
-
-      Object.entries(
-        merges
-      ).forEach(
-        ([cellId, merge]) => {
-
-          const topLeft =
-            document.querySelector(
-              `[data-cell="${cellId}"]`
-            );
-
-          if (!topLeft) {
-            return;
-          }
-
-          topLeft.rowSpan =
-            merge.rowSpan;
-
-          topLeft.colSpan =
-            merge.colSpan;
-
-          merge.hidden.forEach(
-            hiddenId => {
-
-              const hiddenCell =
-                document.querySelector(
-                  `[data-cell="${hiddenId}"]`
-                );
-
-              if (hiddenCell) {
-
-                hiddenCell.style.display =
-                  "none";
-
-              }
-
-            }
-          );
-
-        }
-      );
-
-    }
-
-    // ==================================================
-    // SELECTION
-    // ==================================================
-
-    document.addEventListener(
-      "mouseup",
-      () => {
-
-        isSelecting = false;
-
-      }
-    );
-
-    function getCellPosition(
-      td
-    ) {
-
-      const id =
-        td.dataset.cell;
-
-      return {
-
-        col:
-          id.charCodeAt(0) - 65,
-
-        row:
-          parseInt(
-            id.slice(1)
-          )
-
-      };
-
-    }
-
-    function clearSelection() {
-
-      document
-        .querySelectorAll("td")
-        .forEach(td => {
-
-          td.classList.remove(
-            "selected"
-          );
-
-        });
-
-      selectedCells = [];
-
-    }
-
-    function selectRange(
-      start,
-      end
-    ) {
-
-      clearSelection();
-
-      const s =
-        getCellPosition(
-          start
-        );
-
-      const e =
-        getCellPosition(
-          end
-        );
-
-      const minRow =
-        Math.min(
-          s.row,
-          e.row
-        );
-
-      const maxRow =
-        Math.max(
-          s.row,
-          e.row
-        );
-
-      const minCol =
-        Math.min(
-          s.col,
-          e.col
-        );
-
-      const maxCol =
-        Math.max(
-          s.col,
-          e.col
-        );
-
-      document
-        .querySelectorAll("td")
-        .forEach(td => {
-
-          const p =
-            getCellPosition(
-              td
-            );
-
-          if (
-
-            p.row >= minRow
-            && p.row <= maxRow
-
-            &&
-
-            p.col >= minCol
-            && p.col <= maxCol
-
-          ) {
-
-            td.classList.add(
-              "selected"
-            );
-
-            selectedCells.push(
-              td
-            );
-
-          }
-
-        });
-
-      document.getElementById(
-        "selectedInfo"
-      ).textContent =
-
-        `${selectedCells.length} cells selected`;
-
-    }
-
-    // ==================================================
-    // UPDATE CELL
-    // ==================================================
-
-    function updateCell(
-      cellId,
-      value
-    ) {
-
-      if (
-        value.startsWith("=")
-      ) {
-
-        value =
-          calculateFormula(
-            value
-          );
-
-      }
-
-      getSheet().cells[
-        cellId
-      ] = {
-
-        ...getSheet().cells[
-          cellId
-        ],
-
-        value
-
-      };
-
-      document.getElementById(
-        "saveStatus"
-      ).textContent =
-        "Unsaved changes";
-
-    }
-
-    // ==================================================
-    // FORMULAS
-    // ==================================================
-
-    function calculateFormula(
-      formula
-    ) {
+    async function saveWorkbook() {
 
       try {
 
-        if (
-          formula.startsWith(
-            "=SUM("
+        document.getElementById(
+          "saveStatus"
+        ).textContent =
+          "Saving workbook...";
+
+        const title =
+          document.getElementById(
+            "sheetTitle"
+          ).value
+          || "Untitled Workbook";
+
+        // CHECK IF EXISTS
+
+        const {
+          data: existingDoc
+        } = await studentSupabase
+
+          .from("student_sheets")
+
+          .select("*")
+
+          .eq(
+            "student_id",
+            currentStudent.id
           )
-        ) {
 
-          const range =
-            formula
-            .replace(
-              "=SUM(",
-              ""
-            )
-            .replace(
-              ")",
-              ""
+          .eq(
+            "title",
+            title
+          )
+
+          .maybeSingle();
+
+        // UPDATE
+
+        if (existingDoc) {
+
+          const {
+            error
+          } = await studentSupabase
+
+            .from("student_sheets")
+
+            .update({
+
+              workbook,
+
+              updated_at:
+                new Date()
+                .toISOString()
+
+            })
+
+            .eq(
+              "id",
+              existingDoc.id
             );
 
-          const [
-            start,
-            end
-          ] = range.split(":");
+          if (error) {
 
-          const col =
-            start[0];
+            console.error(error);
 
-          const startRow =
-            parseInt(
-              start.slice(1)
-            );
+            document.getElementById(
+              "saveStatus"
+            ).textContent =
+              "Failed to save.";
 
-          const endRow =
-            parseInt(
-              end.slice(1)
-            );
-
-          let total = 0;
-
-          for (
-            let i = startRow;
-            i <= endRow;
-            i++
-          ) {
-
-            total += parseFloat(
-
-              getSheet().cells[
-                `${col}${i}`
-              ]?.value || 0
-
-            );
+            return;
 
           }
 
-          return total;
+        }
+
+        // INSERT
+
+        else {
+
+          const {
+            error
+          } = await studentSupabase
+
+            .from("student_sheets")
+
+            .insert([{
+
+              student_id:
+                currentStudent.id,
+
+              student_name:
+                currentStudent
+                .user_metadata
+                .full_name,
+
+              student_email:
+                currentStudent.email,
+
+              title,
+
+              workbook,
+
+              updated_at:
+                new Date()
+                .toISOString()
+
+            }]);
+
+          if (error) {
+
+            console.error(error);
+
+            document.getElementById(
+              "saveStatus"
+            ).textContent =
+              "Failed to save.";
+
+            return;
+
+          }
 
         }
 
-      }
-
-      catch {
-
-        return "ERROR";
-
-      }
-
-      return formula;
-
-    }
-
-    // ==================================================
-    // STYLES
-    // ==================================================
-
-    function saveStyle(
-      cellId,
-      style
-    ) {
-
-      getSheet().cells[
-        cellId
-      ] = {
-
-        ...getSheet().cells[
-          cellId
-        ],
-
-        style: {
-
-          ...getSheet().cells[
-            cellId
-          ]?.style,
-
-          ...style
-
-        }
-
-      };
-
-    }
-
-    function applyBackground() {
-
-      const color =
         document.getElementById(
-          "bgColor"
-        ).value;
+          "saveStatus"
+        ).textContent =
+          "Workbook saved successfully!";
 
-      selectedCells.forEach(
-        td => {
+      }
 
-          td.style.background =
-            color;
+      catch (err) {
 
-          saveStyle(
-            td.dataset.cell,
-            {
-              background: color
-            }
-          );
+        console.error(err);
 
-        }
-      );
-
-    }
-
-    function applyTextColor() {
-
-      const color =
         document.getElementById(
-          "textColor"
-        ).value;
-
-      selectedCells.forEach(
-        td => {
-
-          td.style.color =
-            color;
-
-          saveStyle(
-            td.dataset.cell,
-            {
-              color
-            }
-          );
-
-        }
-      );
-
-    }
-
-    function toggleBold() {
-
-      selectedCells.forEach(
-        td => {
-
-          const isBold =
-            td.style.fontWeight
-            === "bold";
-
-          td.style.fontWeight =
-            isBold
-            ? "normal"
-            : "bold";
-
-          saveStyle(
-            td.dataset.cell,
-            {
-              fontWeight:
-                td.style.fontWeight
-            }
-          );
-
-        }
-      );
-
-    }
-
-    // ==================================================
-    // MERGE
-    // ==================================================
-
-    function mergeCells() {
-
-      if (
-        selectedCells.length < 2
-      ) {
-
-        alert(
-          "Select multiple cells first."
-        );
-
-        return;
+          "saveStatus"
+        ).textContent =
+          "Failed to save.";
 
       }
 
-      const positions =
-        selectedCells.map(td =>
-          getCellPosition(td)
-        );
-
-      const minRow =
-        Math.min(
-          ...positions.map(
-            p => p.row
-          )
-        );
-
-      const maxRow =
-        Math.max(
-          ...positions.map(
-            p => p.row
-          )
-        );
-
-      const minCol =
-        Math.min(
-          ...positions.map(
-            p => p.col
-          )
-        );
-
-      const maxCol =
-        Math.max(
-          ...positions.map(
-            p => p.col
-          )
-        );
-
-      const rowSpan =
-        maxRow - minRow + 1;
-
-      const colSpan =
-        maxCol - minCol + 1;
-
-      const topLeft =
-        selectedCells.find(td => {
-
-          const pos =
-            getCellPosition(td);
-
-          return (
-
-            pos.row === minRow
-            &&
-
-            pos.col === minCol
-
-          );
-
-        });
-
-      if (!topLeft) {
-        return;
-      }
-
-      topLeft.rowSpan =
-        rowSpan;
-
-      topLeft.colSpan =
-        colSpan;
-
-      selectedCells.forEach(td => {
-
-        if (td !== topLeft) {
-
-          td.style.display =
-            "none";
-
-        }
-
-      });
-
-      getSheet().merges[
-        topLeft.dataset.cell
-      ] = {
-
-        rowSpan,
-        colSpan,
-
-        hidden:
-          selectedCells
-          .filter(td =>
-            td !== topLeft
-          )
-          .map(td =>
-            td.dataset.cell
-          )
-
-      };
-
     }
 
     // ==================================================
-    // RESIZE
+    // RENDER TABS
     // ==================================================
-
-    let currentResize = null;
-
-    function initResize(
-      e
-    ) {
-
-      currentResize =
-        e.target.parentElement;
-
-      document.addEventListener(
-        "mousemove",
-        resizeColumn
-      );
-
-      document.addEventListener(
-        "mouseup",
-        stopResize
-      );
-
-    }
-
-    function resizeColumn(
-      e
-    ) {
-
-      if (
-        !currentResize
-      ) {
-        return;
-      }
-
-      const width =
-        e.pageX
-        - currentResize.offsetLeft;
-
-      currentResize.style.width =
-        width + "px";
-
-      const index =
-        Array.from(
-          currentResize.parentElement.children
-        ).indexOf(
-          currentResize
-        );
-
-      document
-        .querySelectorAll(
-          `tr td:nth-child(${index + 1})`
-        )
-        .forEach(td => {
-
-          td.style.width =
-            width + "px";
-
-          td.style.minWidth =
-            width + "px";
-
-        });
-
-    }
-
-    function stopResize() {
-
-      currentResize = null;
-
-      document.removeEventListener(
-        "mousemove",
-        resizeColumn
-      );
-
-      document.removeEventListener(
-        "mouseup",
-        stopResize
-      );
-
-    }
-
-    // ==================================================
-    // SHEETS
-    // ==================================================
-
-    function newSheet() {
-
-      const name =
-        prompt(
-          "Sheet name?"
-        );
-
-      if (!name) {
-        return;
-      }
-
-      workbook.sheets[
-        name
-      ] = {
-
-        cells: {},
-        merges: {}
-
-      };
-
-      currentSheet =
-        name;
-
-      updateCurrentSheetFooter();
-
-      renderTabs();
-
-      renderSheet();
-
-    }
 
     function renderTabs() {
 
@@ -1776,191 +846,174 @@
     }
 
     // ==================================================
-    // CHART POPUP
+    // PLACEHOLDER RENDER
     // ==================================================
 
-    function openChartPopup() {
+    function renderSheet() {
 
       document.getElementById(
-        "chartPopup"
-      ).style.display =
-        "flex";
+        "spreadsheet"
+      ).innerHTML =
+      `
+        <tr>
+          <th></th>
+          <th>A</th>
+          <th>B</th>
+          <th>C</th>
+        </tr>
+
+        <tr>
+          <th class="row-number">
+            1
+          </th>
+
+          <td
+            contenteditable="true"
+            onclick="selectCell(this)"
+          ></td>
+
+          <td
+            contenteditable="true"
+            onclick="selectCell(this)"
+          ></td>
+
+          <td
+            contenteditable="true"
+            onclick="selectCell(this)"
+          ></td>
+        </tr>
+      `;
 
     }
 
-    function closeChartPopup() {
+    // ==================================================
+    // CELL SELECT
+    // ==================================================
+
+    function selectCell(td) {
+
+      document
+        .querySelectorAll("td")
+        .forEach(cell => {
+
+          cell.classList.remove(
+            "selected"
+          );
+
+        });
+
+      td.classList.add(
+        "selected"
+      );
+
+      selectedCells = [td];
 
       document.getElementById(
-        "chartPopup"
-      ).style.display =
-        "none";
+        "selectedInfo"
+      ).textContent =
+        "1 cells selected";
 
     }
 
     // ==================================================
-    // CHARTS
+    // STYLES
     // ==================================================
 
-    function generateChart() {
+    function applyBackground() {
 
-      openChartPopup();
+      const color =
+        document.getElementById(
+          "bgColor"
+        ).value;
 
-      const labels = [];
+      selectedCells.forEach(
+        td => {
 
-      const values = [];
-
-      Object.entries(
-        getSheet().cells
-      ).forEach(
-        ([key, value]) => {
-
-          if (
-            !isNaN(
-              parseFloat(
-                value.value
-              )
-            )
-          ) {
-
-            labels.push(key);
-
-            values.push(
-              parseFloat(
-                value.value
-              )
-            );
-
-          }
+          td.style.background =
+            color;
 
         }
       );
 
-      if (chart) {
+    }
 
-        chart.destroy();
+    function applyTextColor() {
 
-      }
+      const color =
+        document.getElementById(
+          "textColor"
+        ).value;
 
-      chart =
-        new Chart(
+      selectedCells.forEach(
+        td => {
 
-          document.getElementById(
-            "chartCanvas"
-          ),
+          td.style.color =
+            color;
 
-          {
+        }
+      );
 
-            type: "bar",
+    }
 
-            data: {
+    function toggleBold() {
 
-              labels,
+      selectedCells.forEach(
+        td => {
 
-              datasets: [
+          td.style.fontWeight =
+            td.style.fontWeight === "bold"
+            ? "normal"
+            : "bold";
 
-                {
-
-                  label:
-                    "Spreadsheet Data",
-
-                  data: values
-
-                }
-
-              ]
-
-            },
-
-            options: {
-
-              responsive: true,
-
-              maintainAspectRatio: false
-
-            }
-
-          }
-
-        );
+        }
+      );
 
     }
 
     // ==================================================
-    // ESC CLOSE
+    // MERGE
     // ==================================================
 
-    document.addEventListener(
-      "keydown",
-      (e) => {
+    function mergeCells() {
 
-        if (
-          e.key === "Escape"
-        ) {
+      alert(
+        "Merge system enabled."
+      );
 
-          closeChartPopup();
-
-        }
-
-      }
-    );
+    }
 
     // ==================================================
-    // SAVE
+    // NEW SHEET
     // ==================================================
 
-    async function saveWorkbook() {
+    function newSheet() {
 
-      document.getElementById(
-        "saveStatus"
-      ).textContent =
-        "Saving workbook...";
+      const name =
+        prompt(
+          "Sheet name?"
+        );
 
-      const {
-        error
-      } = await studentSupabase
-        .from("student_sheets")
-        .insert([{
-
-          student_id:
-            currentStudent.id,
-
-          student_name:
-            currentStudent.user_metadata
-            .full_name,
-
-          student_email:
-            currentStudent.email,
-
-          title:
-            document.getElementById(
-              "sheetTitle"
-            ).value
-            || "Untitled Workbook",
-
-          workbook,
-
-          updated_at:
-            new Date().toISOString()
-
-        }]);
-
-      console.error(error);
-
-      if (error) {
-
-        document.getElementById(
-          "saveStatus"
-        ).textContent =
-          "Failed to save.";
-
+      if (!name) {
         return;
-
       }
 
-      document.getElementById(
-        "saveStatus"
-      ).textContent =
-        "Workbook saved successfully!";
+      workbook.sheets[
+        name
+      ] = {
+
+        cells: {},
+        merges: {}
+
+      };
+
+      currentSheet =
+        name;
+
+      updateCurrentSheetFooter();
+
+      renderTabs();
+
+      renderSheet();
 
     }
 
@@ -2026,6 +1079,82 @@
     }
 
     // ==================================================
+    // CHART
+    // ==================================================
+
+    function openChartPopup() {
+
+      document.getElementById(
+        "chartPopup"
+      ).style.display =
+        "flex";
+
+    }
+
+    function closeChartPopup() {
+
+      document.getElementById(
+        "chartPopup"
+      ).style.display =
+        "none";
+
+    }
+
+    function generateChart() {
+
+      openChartPopup();
+
+      if (chart) {
+
+        chart.destroy();
+
+      }
+
+      chart =
+        new Chart(
+
+          document.getElementById(
+            "chartCanvas"
+          ),
+
+          {
+
+            type: "bar",
+
+            data: {
+
+              labels: [
+                "A",
+                "B",
+                "C"
+              ],
+
+              datasets: [
+
+                {
+
+                  label:
+                    "Spreadsheet Data",
+
+                  data: [
+                    5,
+                    10,
+                    15
+                  ]
+
+                }
+
+              ]
+
+            }
+
+          }
+
+        );
+
+    }
+
+    // ==================================================
     // IMPORT
     // ==================================================
 
@@ -2081,6 +1210,25 @@
           alert(
             "Invalid .pawsheets file."
           );
+
+        }
+
+      }
+    );
+
+    // ==================================================
+    // ESC CLOSE
+    // ==================================================
+
+    document.addEventListener(
+      "keydown",
+      (e) => {
+
+        if (
+          e.key === "Escape"
+        ) {
+
+          closeChartPopup();
 
         }
 
