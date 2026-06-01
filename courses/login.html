@@ -153,13 +153,6 @@
             />
           </div>
 
-          <div class="flex justify-center">
-            <div
-              class="cf-turnstile"
-              data-sitekey="0x4AAAAAADNnFr82houxfuum"
-            ></div>
-          </div>
-
           <button
             type="submit"
             class="gradient-button w-full text-gray-900 py-4 rounded-2xl font-black text-lg hover:scale-[1.02] transition duration-300"
@@ -244,13 +237,6 @@
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const turnstileResponse = document.querySelector('[name="cf-turnstile-response"]')?.value;
-
-      if (!turnstileResponse) {
-        message.innerHTML = 'Please complete the security verification.';
-        message.className = 'mt-6 text-center font-semibold text-red-500';
-        return;
-      }
 
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
