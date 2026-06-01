@@ -17,7 +17,7 @@
     * { font-family: 'Inter', sans-serif; }
 
     body {
-      overflow: hidden;
+      overflow-x: hidden;
       background: #fff7f4;
     }
 
@@ -228,7 +228,11 @@
     }
 
     function doRedirect() {
-      window.location.replace('/courses/dashboard.html');
+      try {
+        window.location.replace('/courses/dashboard.html');
+      } catch(e) {
+        window.location.href = '/courses/dashboard.html';
+      }
     }
 
     async function ensurePlumCoursesService(userId) {
@@ -270,7 +274,11 @@
         return;
       }
 
-      if (!turnstileToken) {
+      // Try to get the Turnstile token from the widget directly as a fallback
+      const widgetToken = document.querySelector('[name="cf-turnstile-response"]')?.value;
+      const token = turnstileToken || widgetToken;
+
+      if (!token) {
         setMessage('Please complete the security check first.', 'red');
         return;
       }
@@ -291,7 +299,7 @@
       await ensurePlumCoursesService(data.user.id);
 
       setMessage('Signed in! Taking you to your dashboard…', 'green');
-      setTimeout(doRedirect, 1000);
+      doRedirect();
     });
 
     // Allow Enter key on password field to trigger sign in
