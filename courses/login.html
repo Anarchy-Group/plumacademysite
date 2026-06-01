@@ -14,9 +14,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
   <style>
-    * {
-      font-family: 'Inter', sans-serif;
-    }
+    * { font-family: 'Inter', sans-serif; }
 
     body {
       overflow: hidden;
@@ -47,6 +45,12 @@
     .gradient-button {
       background: linear-gradient(135deg, #ff477e 0%, #ff7a45 100%);
       box-shadow: 0 0 30px rgba(255, 105, 97, 0.35);
+    }
+
+    .gradient-button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
     }
 
     .glass-card {
@@ -110,7 +114,7 @@
       <!-- LOGIN CARD -->
       <div class="glass-card rounded-[40px] p-8 sm:p-10 shadow-2xl w-full max-w-xl mx-auto">
 
-        <div class="text-center mb-10">          
+        <div class="text-center mb-10">
           <div class="logo">🍑 Plum Courses</div>
           <br><br>
 
@@ -126,10 +130,7 @@
         <form id="loginForm" class="space-y-6">
 
           <div>
-            <label class="block text-gray-700 font-bold mb-3">
-              Email Address
-            </label>
-
+            <label class="block text-gray-700 font-bold mb-3">Email Address</label>
             <input
               id="email"
               type="email"
@@ -140,10 +141,7 @@
           </div>
 
           <div>
-            <label class="block text-gray-700 font-bold mb-3">
-              Password
-            </label>
-
+            <label class="block text-gray-700 font-bold mb-3">Password</label>
             <input
               id="password"
               type="password"
@@ -153,9 +151,14 @@
             />
           </div>
 
+          <div class="flex justify-center">
+            <div class="cf-turnstile" data-sitekey="0x4AAAAAADNnFr82houxfuum"></div>
+          </div>
+
           <button
             type="submit"
-            class="gradient-button w-full text-gray-900 py-4 rounded-2xl font-black text-lg hover:scale-[1.02] transition duration-300"
+            id="signInBtn"
+            class="gradient-button w-full text-white py-4 rounded-2xl font-black text-lg hover:scale-[1.02] transition duration-300"
           >
             Sign In
           </button>
@@ -188,17 +191,43 @@
     const SUPABASE_URL = 'https://jihpgbsghatuwwkacsur.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppaHBnYnNnaGF0dXd3a2Fjc3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxMzkxNzcsImV4cCI6MjA5MzcxNTE3N30.qH7iso7t2zoOLi0C68DiUKZecyIDhlxVcJAcNhYLHTk';
 
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    const loginForm = document.getElementById('loginForm');
+    const loginForm    = document.getElementById('loginForm');
     const signupButton = document.getElementById('signupButton');
-    const message = document.getElementById('message');
+    const signInBtn    = document.getElementById('signInBtn');
+    const message      = document.getElementById('message');
 
-    // After a successful login, check if Plum Courses exists in user_services.
-    // If not, insert it.
+    // If already logged in, skip straight to the dashboard
+    sb.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        setMessage('Already signed in — redirecting…', 'gray');
+        doRedirect();
+      }
+    });
+
+    function setMessage(text, color = 'gray') {
+      const map = {
+        gray:  'mt-6 text-center font-semibold text-gray-600',
+        red:   'mt-6 text-center font-semibold text-red-500',
+        green: 'mt-6 text-center font-semibold text-green-600',
+      };
+      message.textContent = text;
+      message.className = map[color] ?? map.gray;
+    }
+
+    function setLoading(loading) {
+      signInBtn.disabled = loading;
+      signInBtn.textContent = loading ? 'Signing in…' : 'Sign In';
+    }
+
+    function doRedirect() {
+      // replace() prevents the back button returning to the login page
+      window.location.replace('/courses/dashboard.html');
+    }
+
     async function ensurePlumCoursesService(userId) {
-      // Check if the row already exists for this user
-      const { data: existing, error: fetchError } = await supabaseClient
+      const { data: existing, error: fetchError } = await sb
         .from('user_services')
         .select('id')
         .eq('user_id', userId)
@@ -206,18 +235,13 @@
         .maybeSingle();
 
       if (fetchError) {
-        console.error('Error checking user_services:', fetchError.message);
+        console.error('user_services check failed:', fetchError.message);
         return;
       }
 
-      // Already registered — nothing to do
-      if (existing) {
-        console.log('Plum Courses already in user_services, skipping insert.');
-        return;
-      }
+      if (existing) return;
 
-      // Not found — insert a new row matching the table structure
-      const { error: insertError } = await supabaseClient
+      const { error: insertError } = await sb
         .from('user_services')
         .insert({
           user_id: userId,
@@ -228,81 +252,77 @@
         });
 
       if (insertError) {
-        console.error('Error inserting into user_services:', insertError.message);
-      } else {
-        console.log('Plum Courses added to user_services.');
+        console.error('user_services insert failed:', insertError.message);
       }
     }
 
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
+      // Turnstile check
+      const turnstileToken = document.querySelector('[name="cf-turnstile-response"]')?.value;
+      if (!turnstileToken) {
+        setMessage('Please complete the security check first.', 'red');
+        return;
+      }
 
-      const email = document.getElementById('email').value;
+      const email    = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
 
-      message.innerHTML = 'Signing in...';
-      message.className = 'mt-6 text-center font-semibold text-gray-600';
+      setLoading(true);
+      setMessage('Signing in…');
 
-      const { data, error } = await supabaseClient.auth.signInWithPassword({
-        email,
-        password,
-      });
+      const { data, error } = await sb.auth.signInWithPassword({ email, password });
 
       if (error) {
-        message.innerHTML = error.message;
-        message.className = 'mt-6 text-center font-semibold text-red-500';
+        setMessage(error.message, 'red');
+        setLoading(false);
         if (window.turnstile) turnstile.reset();
         return;
       }
 
-      // Ensure Plum Courses is registered for this user
       await ensurePlumCoursesService(data.user.id);
 
-      if (window.turnstile) turnstile.reset();
-
-      message.innerHTML = 'Successfully signed into your Plum Identity account!';
-      message.className = 'mt-6 text-center font-semibold text-green-600';
-
-      setTimeout(() => {
-        window.location.href = '/courses/dashboard.html';
-      }, 1200);
+      setMessage('Signed in! Taking you to your dashboard…', 'green');
+      setTimeout(doRedirect, 1000);
     });
 
     signupButton.addEventListener('click', async () => {
-      const email = document.getElementById('email').value;
+      const email    = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
 
       if (!email || !password) {
-        message.innerHTML = 'Please enter an email and password first.';
-        message.className = 'mt-6 text-center font-semibold text-red-500';
+        setMessage('Please enter an email and password first.', 'red');
         return;
       }
 
-      message.innerHTML = 'Creating account...';
-      message.className = 'mt-6 text-center font-semibold text-gray-600';
+      signupButton.disabled = true;
+      signupButton.textContent = 'Creating account…';
+      setMessage('Creating your account…');
 
-      const { data, error } = await supabaseClient.auth.signUp({
-        email,
-        password,
-      });
+      const { data, error } = await sb.auth.signUp({ email, password });
+
+      signupButton.disabled = false;
+      signupButton.textContent = 'Create Plum Identity Account';
 
       if (error) {
-        message.innerHTML = error.message;
-        message.className = 'mt-6 text-center font-semibold text-red-500';
+        setMessage(error.message, 'red');
         return;
       }
 
-      // If sign-up returns a session immediately (email confirmation disabled),
-      // register Plum Courses right away
       if (data.user) {
         await ensurePlumCoursesService(data.user.id);
       }
 
       if (window.turnstile) turnstile.reset();
 
-      message.innerHTML = 'Magic Plum account created successfully! Please check your email to confirm.';
-      message.className = 'mt-6 text-center font-semibold text-green-600';
+      // If email confirmation is on, Supabase returns a user but no session
+      if (data.session) {
+        setMessage('Account created! Taking you to your dashboard…', 'green');
+        setTimeout(doRedirect, 1000);
+      } else {
+        setMessage('Account created! Please check your email to confirm, then sign in.', 'green');
+      }
     });
   </script>
 
