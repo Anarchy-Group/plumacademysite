@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plum Courses — Dashboard</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    * { font-family: 'Inter', sans-serif; }
+
+    body {
+      background: #fff7f4;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    .main-bg {
+      background:
+        radial-gradient(circle at top left, rgba(255, 71, 126, 0.12), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(255, 132, 64, 0.12), transparent 35%),
+        linear-gradient(135deg, #fff5f2 0%, #fff8f6 60%, #ffffff 100%);
+      min-height: 100vh;
+    }
+
+    .gradient-text {
+      background: linear-gradient(90deg, #ff477e 0%, #ff7a45 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .logo {
+      font-size: 1.4rem;
+      font-weight: 800;
+      background: linear-gradient(90deg,#ff477e,#ff7a45);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .gradient-button {
+      background: linear-gradient(135deg, #ff477e 0%, #ff7a45 100%);
+      box-shadow: 0 0 24px rgba(255, 105, 97, 0.3);
+    }
+
+    .glass-card {
+      background: rgba(255,255,255,0.82);
+      border: 1px solid rgba(255,255,255,0.9);
+      backdrop-filter: blur(12px);
+    }
+
+    .course-card {
+      background: rgba(255,255,255,0.7);
+      border: 1px solid rgba(255,120,120,0.1);
+      transition: all 0.25s ease;
+    }
+
+    .course-card:hover {
+      background: rgba(255,240,235,0.9);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255,100,80,0.12);
+    }
+
+    .service-pill {
+      background: rgba(255,255,255,0.85);
+      border: 1px solid rgba(255,120,120,0.12);
+      transition: all 0.2s ease;
+    }
+
+    .service-pill:hover {
+      background: #fff0eb;
+      border-color: rgba(255,122,69,0.3);
+    }
+
+    .avatar-circle {
+      background: linear-gradient(135deg, #ff477e 0%, #ff7a45 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .stat-card {
+      background: rgba(255,255,255,0.7);
+      border: 1px solid rgba(255,120,120,0.08);
+    }
+
+    .progress-bar-bg {
+      background: rgba(255,120,120,0.12);
+      border-radius: 999px;
+      height: 8px;
+    }
+
+    .progress-bar-fill {
+      background: linear-gradient(90deg, #ff477e, #ff7a45);
+      border-radius: 999px;
+      height: 8px;
+      transition: width 0.6s ease;
+    }
+
+    /* Loading skeleton */
+    .skeleton {
+      background: linear-gradient(90deg, rgba(255,200,180,0.3) 25%, rgba(255,230,220,0.5) 50%, rgba(255,200,180,0.3) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: 12px;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    #loadingState { display: block; }
+    #dashContent { display: none; }
+    #errorState { display: none; }
+  </style>
+</head>
+
+<body>
+<div class="main-bg">
+
+  <!-- HEADER -->
+  <header class="w-full border-b border-orange-100 bg-white/80 backdrop-blur-xl sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4">
+
+      <div class="logo">🍑 Plum Courses</div>
+
+      <nav class="hidden lg:flex items-center gap-8 text-gray-600 font-semibold text-sm">
+        <a href="#" class="text-gray-900 border-b-2 border-orange-400 pb-0.5 transition">Dashboard</a>
+        <a href="#" class="hover:text-gray-900 transition">My Courses</a>
+        <a href="#" class="hover:text-gray-900 transition">Skills</a>
+        <a href="#" class="hover:text-gray-900 transition">Resources</a>
+        <a href="#" class="hover:text-gray-900 transition">Community</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <!-- Avatar shown once loaded -->
+        <div id="headerAvatar" class="avatar-circle w-9 h-9 rounded-full text-sm hidden"></div>
+        <button id="signOutBtn" class="text-sm font-bold text-gray-500 hover:text-gray-800 transition hidden">Sign out</button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- LOADING STATE -->
+  <div id="loadingState" class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+    <div class="skeleton h-10 w-64 mb-3"></div>
+    <div class="skeleton h-5 w-48 mb-12"></div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-5 mb-10">
+      <div class="skeleton h-24 rounded-3xl"></div>
+      <div class="skeleton h-24 rounded-3xl"></div>
+      <div class="skeleton h-24 rounded-3xl"></div>
+      <div class="skeleton h-24 rounded-3xl"></div>
+    </div>
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="skeleton h-64 rounded-3xl"></div>
+      <div class="skeleton h-64 rounded-3xl"></div>
+    </div>
+  </div>
+
+  <!-- ERROR STATE -->
+  <div id="errorState" class="max-w-7xl mx-auto px-4 sm:px-6 py-24 text-center">
+    <div class="text-6xl mb-6">🔒</div>
+    <h2 class="text-3xl font-black text-gray-900 mb-4">You're not signed in</h2>
+    <p class="text-gray-500 mb-8">Please sign in to access your Plum Courses dashboard.</p>
+    <a href="/courses/login.html" class="gradient-button inline-block text-white font-bold px-8 py-4 rounded-2xl hover:scale-105 transition duration-300">
+      Go to Login
+    </a>
+  </div>
+
+  <!-- DASHBOARD CONTENT -->
+  <div id="dashContent" class="max-w-7xl mx-auto px-4 sm:px-6 py-10 pb-16">
+
+    <!-- WELCOME -->
+    <div class="mb-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div>
+        <h1 class="text-4xl sm:text-5xl font-black text-gray-900 leading-tight">
+          Welcome back, <span class="gradient-text" id="displayNameHeading">there</span> 👋
+        </h1>
+        <p class="text-gray-500 mt-2 text-lg" id="userEmailSub"></p>
+      </div>
+      <a href="#" class="gradient-button text-white font-bold px-6 py-3 rounded-2xl text-sm hover:scale-105 transition duration-300 self-start sm:self-auto whitespace-nowrap">
+        + Enrol in a Course
+      </a>
+    </div>
+
+    <!-- STATS ROW -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-5 mb-10">
+
+      <div class="stat-card rounded-3xl p-6">
+        <p class="text-gray-500 text-sm font-semibold mb-1">Courses Active</p>
+        <h3 class="text-4xl font-black text-gray-900">4</h3>
+      </div>
+
+      <div class="stat-card rounded-3xl p-6">
+        <p class="text-gray-500 text-sm font-semibold mb-1">Lessons Done</p>
+        <h3 class="text-4xl font-black text-gray-900">38</h3>
+      </div>
+
+      <div class="stat-card rounded-3xl p-6">
+        <p class="text-gray-500 text-sm font-semibold mb-1">Hours Learned</p>
+        <h3 class="text-4xl font-black text-gray-900">12.5</h3>
+      </div>
+
+      <div class="stat-card rounded-3xl p-6">
+        <p class="text-gray-500 text-sm font-semibold mb-1">Avg. Rating</p>
+        <h3 class="text-4xl font-black gradient-text">4.9★</h3>
+      </div>
+
+    </div>
+
+    <!-- MAIN GRID -->
+    <div class="grid lg:grid-cols-3 gap-8">
+
+      <!-- MY COURSES (span 2) -->
+      <div class="lg:col-span-2 space-y-5">
+
+        <div class="glass-card rounded-[32px] p-7">
+
+          <div class="flex items-center justify-between mb-7">
+            <h2 class="text-2xl font-black text-gray-900">📚 My Courses</h2>
+            <a href="#" class="text-sm font-bold text-orange-500 hover:text-orange-600 transition">View all →</a>
+          </div>
+
+          <div class="space-y-4">
+
+            <div class="course-card rounded-3xl p-5">
+              <div class="flex items-start justify-between gap-4 mb-3">
+                <div>
+                  <h4 class="text-lg font-black text-gray-900">Content Creator Academy</h4>
+                  <p class="text-gray-500 text-sm">Editing, branding & audience growth</p>
+                </div>
+                <span class="bg-orange-100 text-orange-600 text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">In progress</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="progress-bar-bg flex-1">
+                  <div class="progress-bar-fill" style="width: 64%"></div>
+                </div>
+                <span class="text-xs font-bold text-gray-500">64%</span>
+              </div>
+            </div>
+
+            <div class="course-card rounded-3xl p-5">
+              <div class="flex items-start justify-between gap-4 mb-3">
+                <div>
+                  <h4 class="text-lg font-black text-gray-900">Photography Essentials</h4>
+                  <p class="text-gray-500 text-sm">Camera skills, lighting & composition</p>
+                </div>
+                <span class="bg-orange-100 text-orange-600 text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">In progress</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="progress-bar-bg flex-1">
+                  <div class="progress-bar-fill" style="width: 32%"></div>
+                </div>
+                <span class="text-xs font-bold text-gray-500">32%</span>
+              </div>
+            </div>
+
+            <div class="course-card rounded-3xl p-5">
+              <div class="flex items-start justify-between gap-4 mb-3">
+                <div>
+                  <h4 class="text-lg font-black text-gray-900">Web Design Fundamentals</h4>
+                  <p class="text-gray-500 text-sm">Build modern responsive websites</p>
+                </div>
+                <span class="bg-green-100 text-green-600 text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">Completed ✓</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="progress-bar-bg flex-1">
+                  <div class="progress-bar-fill" style="width: 100%"></div>
+                </div>
+                <span class="text-xs font-bold text-gray-500">100%</span>
+              </div>
+            </div>
+
+            <div class="course-card rounded-3xl p-5">
+              <div class="flex items-start justify-between gap-4 mb-3">
+                <div>
+                  <h4 class="text-lg font-black text-gray-900">Digital Media Skills</h4>
+                  <p class="text-gray-500 text-sm">Online creativity & social media growth</p>
+                </div>
+                <span class="bg-gray-100 text-gray-500 text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">Not started</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="progress-bar-bg flex-1">
+                  <div class="progress-bar-fill" style="width: 0%"></div>
+                </div>
+                <span class="text-xs font-bold text-gray-500">0%</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div class="space-y-6">
+
+        <!-- PROFILE CARD -->
+        <div class="glass-card rounded-[32px] p-7">
+
+          <h2 class="text-xl font-black text-gray-900 mb-6">👤 My Profile</h2>
+
+          <div class="flex items-center gap-4 mb-6">
+            <div class="avatar-circle w-14 h-14 rounded-full text-xl" id="profileAvatar"></div>
+            <div>
+              <p class="font-black text-gray-900 text-lg leading-tight" id="profileDisplayName">—</p>
+              <p class="text-gray-500 text-sm" id="profileEmail">—</p>
+            </div>
+          </div>
+
+          <div class="space-y-3">
+
+            <div class="flex justify-between items-center py-3 border-b border-orange-50">
+              <span class="text-gray-500 text-sm font-semibold">Display Name</span>
+              <span class="text-gray-900 font-bold text-sm" id="profileDisplayNameField">—</span>
+            </div>
+
+            <div class="flex justify-between items-center py-3 border-b border-orange-50">
+              <span class="text-gray-500 text-sm font-semibold">MFA Enabled</span>
+              <span class="text-sm font-bold" id="profileMFA">—</span>
+            </div>
+
+            <div class="flex justify-between items-center py-3">
+              <span class="text-gray-500 text-sm font-semibold">Member Since</span>
+              <span class="text-gray-900 font-bold text-sm" id="profileSince">—</span>
+            </div>
+          </div>
+
+          <a href="#" class="mt-6 block w-full text-center bg-white border border-orange-100 text-gray-900 py-3 rounded-2xl font-bold text-sm hover:bg-orange-50 transition duration-300">
+            Edit Profile
+          </a>
+        </div>
+
+        <!-- PLUM SERVICES -->
+        <div class="glass-card rounded-[32px] p-7">
+
+          <h2 class="text-xl font-black text-gray-900 mb-2">🍑 My Plum Services</h2>
+          <p class="text-gray-500 text-sm mb-5">Other services linked to your account</p>
+
+          <div id="servicesList" class="space-y-3">
+            <div class="skeleton h-12 rounded-2xl"></div>
+            <div class="skeleton h-12 rounded-2xl"></div>
+          </div>
+
+          <p id="servicesEmpty" class="text-gray-400 text-sm text-center py-4 hidden">No other services found.</p>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const SUPABASE_URL = 'https://jihpgbsghatuwwkacsur.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppaHBnYnNnaGF0dXd3a2Fjc3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxMzkxNzcsImV4cCI6MjA5MzcxNTE3N30.qH7iso7t2zoOLi0C68DiUKZecyIDhlxVcJAcNhYLHTk';
+
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  function getInitials(name, email) {
+    if (name && name.trim()) {
+      const parts = name.trim().split(' ');
+      return parts.length >= 2
+        ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+        : parts[0].slice(0, 2).toUpperCase();
+    }
+    return email ? email.slice(0, 2).toUpperCase() : '??';
+  }
+
+  function formatDate(iso) {
+    if (!iso) return '—';
+    return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  function show(id) { document.getElementById(id).style.display = 'block'; }
+  function hide(id) { document.getElementById(id).style.display = 'none'; }
+
+  async function loadDashboard() {
+    const { data: { session } } = await sb.auth.getSession();
+
+    hide('loadingState');
+
+    if (!session) {
+      show('errorState');
+      return;
+    }
+
+    const user = session.user;
+
+    // Show dashboard shell
+    document.getElementById('dashContent').style.display = 'block';
+
+    // Show sign out button & header avatar
+    const headerAvatar = document.getElementById('headerAvatar');
+    headerAvatar.classList.remove('hidden');
+    document.getElementById('signOutBtn').classList.remove('hidden');
+
+    // Fetch user_profiles row
+    const { data: profile } = await sb
+      .from('user_profiles')
+      .select('display_name, mfa_enabled, created_at')
+      .eq('id', user.id)
+      .maybeSingle();
+
+    const displayName = profile?.display_name || user.email.split('@')[0];
+    const initials = getInitials(profile?.display_name, user.email);
+
+    // Populate header avatar
+    headerAvatar.textContent = initials;
+
+    // Populate welcome heading
+    document.getElementById('displayNameHeading').textContent = displayName;
+    document.getElementById('userEmailSub').textContent = user.email;
+
+    // Populate profile card
+    document.getElementById('profileAvatar').textContent = initials;
+    document.getElementById('profileDisplayName').textContent = displayName;
+    document.getElementById('profileEmail').textContent = user.email;
+    document.getElementById('profileDisplayNameField').textContent = profile?.display_name || '—';
+
+    const mfaEl = document.getElementById('profileMFA');
+    if (profile?.mfa_enabled) {
+      mfaEl.textContent = 'Enabled ✓';
+      mfaEl.className = 'text-sm font-bold text-green-600';
+    } else {
+      mfaEl.textContent = 'Disabled';
+      mfaEl.className = 'text-sm font-bold text-gray-400';
+    }
+
+    document.getElementById('profileSince').textContent =
+      formatDate(profile?.created_at || user.created_at);
+
+    // Fetch user_services — show everything EXCEPT Plum Courses (they're already on it)
+    const { data: services } = await sb
+      .from('user_services')
+      .select('id, service_name, service_icon, service_url, enabled')
+      .eq('user_id', user.id)
+      .neq('service_name', 'Plum Courses')
+      .order('created_at', { ascending: true });
+
+    const servicesList = document.getElementById('servicesList');
+    const servicesEmpty = document.getElementById('servicesEmpty');
+    servicesList.innerHTML = '';
+
+    if (!services || services.length === 0) {
+      servicesEmpty.classList.remove('hidden');
+    } else {
+      services.forEach(svc => {
+        const el = document.createElement('a');
+        el.href = svc.service_url || '#';
+        el.target = '_blank';
+        el.rel = 'noopener noreferrer';
+        el.className = 'service-pill flex items-center gap-3 rounded-2xl px-4 py-3 block';
+        el.innerHTML = `
+          <span class="text-xl flex-shrink-0">${svc.service_icon || '🔗'}</span>
+          <div class="flex-1 min-w-0">
+            <p class="font-bold text-gray-900 text-sm leading-tight truncate">${svc.service_name}</p>
+            <p class="text-gray-400 text-xs truncate">${svc.service_url || ''}</p>
+          </div>
+          <span class="text-xs font-bold flex-shrink-0 ${svc.enabled ? 'text-green-500' : 'text-gray-300'}">${svc.enabled ? 'Active' : 'Inactive'}</span>
+        `;
+        servicesList.appendChild(el);
+      });
+    }
+
+    // Sign out
+    document.getElementById('signOutBtn').addEventListener('click', async () => {
+      await sb.auth.signOut();
+      window.location.href = '/login.html';
+    });
+  }
+
+  loadDashboard();
+</script>
+</body>
+</html>
