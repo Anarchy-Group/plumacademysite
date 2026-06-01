@@ -95,19 +95,16 @@
         </p>
 
         <div class="grid grid-cols-2 gap-6 max-w-xl">
-
           <div class="glass-card rounded-[28px] p-6 shadow-xl">
             <div class="text-4xl mb-4">📚</div>
             <h3 class="text-2xl font-black text-gray-900 mb-2">Courses</h3>
             <p class="text-gray-600">Continue learning across all your enrolled courses.</p>
           </div>
-
           <div class="glass-card rounded-[28px] p-6 shadow-xl">
             <div class="text-4xl mb-4">🚀</div>
             <h3 class="text-2xl font-black text-gray-900 mb-2">Progress</h3>
             <p class="text-gray-600">Track skill growth and learning achievements.</p>
           </div>
-
         </div>
       </div>
 
@@ -117,17 +114,14 @@
         <div class="text-center mb-10">
           <div class="logo">🍑 Plum Courses</div>
           <br><br>
-
-          <h2 class="text-4xl sm:text-5xl font-black text-gray-900 mb-4">
-            Plum Identity Login
-          </h2>
-
+          <h2 class="text-4xl sm:text-5xl font-black text-gray-900 mb-4">Plum Identity Login</h2>
           <p class="text-gray-600 text-lg leading-relaxed max-w-md mx-auto">
             Sign in with your Plum Identity account to access Plum Courses.
           </p>
         </div>
 
-        <form id="loginForm" class="space-y-6">
+        <!-- NO <form> tag — buttons handle everything via JS only -->
+        <div class="space-y-6">
 
           <div>
             <label class="block text-gray-700 font-bold mb-3">Email Address</label>
@@ -136,7 +130,6 @@
               type="email"
               placeholder="you@example.com"
               class="input-style w-full rounded-2xl px-5 py-4 text-gray-800 font-medium"
-              required
             />
           </div>
 
@@ -147,17 +140,21 @@
               type="password"
               placeholder="Enter your password"
               class="input-style w-full rounded-2xl px-5 py-4 text-gray-800 font-medium"
-              required
             />
           </div>
 
           <div class="flex justify-center">
-            <div class="cf-turnstile" data-sitekey="0x4AAAAAADNnFr82houxfuum"></div>
+            <div
+              class="cf-turnstile"
+              data-sitekey="0x4AAAAAADNnFr82houxfuum"
+              data-callback="onTurnstileSuccess"
+              data-expired-callback="onTurnstileExpired"
+            ></div>
           </div>
 
           <button
-            type="submit"
             id="signInBtn"
+            type="button"
             class="gradient-button w-full text-white py-4 rounded-2xl font-black text-lg hover:scale-[1.02] transition duration-300"
           >
             Sign In
@@ -171,20 +168,17 @@
             Create Plum Identity Account
           </button>
 
-        </form>
+        </div>
 
         <div id="message" class="mt-6 text-center font-semibold"></div>
 
         <div class="mt-10 pt-8 border-t border-orange-100 text-center">
-          <p class="text-gray-500">
-            By continuing, you agree to the Magic Plum Terms & Privacy Policy.
-          </p>
+          <p class="text-gray-500">By continuing, you agree to the Magic Plum Terms & Privacy Policy.</p>
         </div>
 
       </div>
 
     </div>
-
   </div>
 
   <script>
@@ -193,12 +187,24 @@
 
     const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    const loginForm    = document.getElementById('loginForm');
-    const signupButton = document.getElementById('signupButton');
     const signInBtn    = document.getElementById('signInBtn');
+    const signupButton = document.getElementById('signupButton');
     const message      = document.getElementById('message');
 
-    // If already logged in, skip straight to the dashboard
+    // Track whether Turnstile has been completed
+    let turnstileToken = null;
+
+    // Called by Turnstile widget when the user completes the challenge
+    function onTurnstileSuccess(token) {
+      turnstileToken = token;
+    }
+
+    // Called when the Turnstile token expires
+    function onTurnstileExpired() {
+      turnstileToken = null;
+    }
+
+    // If already logged in, skip straight to dashboard
     sb.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         setMessage('Already signed in — redirecting…', 'gray');
@@ -222,7 +228,6 @@
     }
 
     function doRedirect() {
-      // replace() prevents the back button returning to the login page
       window.location.replace('/courses/dashboard.html');
     }
 
@@ -256,18 +261,19 @@
       }
     }
 
-    loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
+    signInBtn.addEventListener('click', async () => {
+      const email    = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
 
-      // Turnstile check
-      const turnstileToken = document.querySelector('[name="cf-turnstile-response"]')?.value;
+      if (!email || !password) {
+        setMessage('Please enter your email and password.', 'red');
+        return;
+      }
+
       if (!turnstileToken) {
         setMessage('Please complete the security check first.', 'red');
         return;
       }
-
-      const email    = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
 
       setLoading(true);
       setMessage('Signing in…');
@@ -277,6 +283,7 @@
       if (error) {
         setMessage(error.message, 'red');
         setLoading(false);
+        turnstileToken = null;
         if (window.turnstile) turnstile.reset();
         return;
       }
@@ -285,6 +292,11 @@
 
       setMessage('Signed in! Taking you to your dashboard…', 'green');
       setTimeout(doRedirect, 1000);
+    });
+
+    // Allow Enter key on password field to trigger sign in
+    document.getElementById('password').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') signInBtn.click();
     });
 
     signupButton.addEventListener('click', async () => {
@@ -314,9 +326,9 @@
         await ensurePlumCoursesService(data.user.id);
       }
 
+      turnstileToken = null;
       if (window.turnstile) turnstile.reset();
 
-      // If email confirmation is on, Supabase returns a user but no session
       if (data.session) {
         setMessage('Account created! Taking you to your dashboard…', 'green');
         setTimeout(doRedirect, 1000);
