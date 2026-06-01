@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Magic Plum Account Login</title>
+  <title>Plum Identity Account Login</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -78,12 +78,12 @@
       <div class="hidden lg:block">
 
         <div class="inline-flex items-center gap-2 bg-white px-5 py-2 rounded-full border border-orange-100 shadow-lg text-sm font-bold text-gray-700 mb-8">
-          🍑 Magic Plum Account System
+          🍑 Plum Identity Account System
         </div>
 
         <h1 class="text-6xl font-black text-gray-900 leading-tight mb-8">
           Welcome back to your
-          <span class="gradient-text">Magic Plum Account</span>
+          <span class="gradient-text">Plum Identity Account</span>
         </h1>
 
         <p class="text-gray-600 text-xl leading-relaxed max-w-2xl mb-12">
@@ -115,11 +115,11 @@
           <br><br>
 
           <h2 class="text-4xl sm:text-5xl font-black text-gray-900 mb-4">
-            Magic Plum Login
+            Plum Identity Login
           </h2>
 
           <p class="text-gray-600 text-lg leading-relaxed max-w-md mx-auto">
-            Sign in with your Magic Plum account to access Plum Courses.
+            Sign in with your Plum Identity account to access Plum Courses.
           </p>
         </div>
 
@@ -172,7 +172,7 @@
             id="signupButton"
             class="w-full bg-white border border-orange-100 text-gray-900 py-4 rounded-2xl font-black text-lg hover:bg-orange-50 transition duration-300"
           >
-            Create Magic Plum Account
+            Create Plum Identity Account
           </button>
 
         </form>
@@ -192,7 +192,6 @@
   </div>
 
   <script>
-    // Replace these with your Supabase credentials
     const SUPABASE_URL = 'https://jihpgbsghatuwwkacsur.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppaHBnYnNnaGF0dXd3a2Fjc3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxMzkxNzcsImV4cCI6MjA5MzcxNTE3N30.qH7iso7t2zoOLi0C68DiUKZecyIDhlxVcJAcNhYLHTk';
 
@@ -202,19 +201,51 @@
     const signupButton = document.getElementById('signupButton');
     const message = document.getElementById('message');
 
+    // After a successful login, check if Plum Courses exists in user_services.
+    // If not, insert it.
+    async function ensurePlumCoursesService(userId) {
+      // Check if the row already exists for this user
+      const { data: existing, error: fetchError } = await supabaseClient
+        .from('user_services')
+        .select('id')
+        .eq('user_id', userId)
+        .eq('service_name', 'Plum Courses')
+        .maybeSingle();
+
+      if (fetchError) {
+        console.error('Error checking user_services:', fetchError.message);
+        return;
+      }
+
+      // Already registered — nothing to do
+      if (existing) {
+        console.log('Plum Courses already in user_services, skipping insert.');
+        return;
+      }
+
+      // Not found — insert a new row matching the table structure
+      const { error: insertError } = await supabaseClient
+        .from('user_services')
+        .insert({
+          user_id: userId,
+          service_name: 'Plum Courses',
+          service_icon: '🍑',
+          service_url: 'https://academy.magicplum.co.uk/courses',
+          enabled: true,
+        });
+
+      if (insertError) {
+        console.error('Error inserting into user_services:', insertError.message);
+      } else {
+        console.log('Plum Courses added to user_services.');
+      }
+    }
+
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const turnstileResponse = document.querySelector('[name="cf-turnstile-response"]')?.value;
-      
-      if (!turnstileResponse) {
-        message.innerHTML = 'Please complete the security verification.';
-        message.className = 'mt-6 text-center font-semibold text-red-500';
-        return;
-      }
 
-      const turnstileResponse = document.querySelector('[name="cf-turnstile-response"]')?.value;
-      
       if (!turnstileResponse) {
         message.innerHTML = 'Please complete the security verification.';
         message.className = 'mt-6 text-center font-semibold text-red-500';
@@ -235,17 +266,18 @@
       if (error) {
         message.innerHTML = error.message;
         message.className = 'mt-6 text-center font-semibold text-red-500';
+        if (window.turnstile) turnstile.reset();
         return;
       }
 
-      if (window.turnstile) {
-        turnstile.reset();
-      }
+      // Ensure Plum Courses is registered for this user
+      await ensurePlumCoursesService(data.user.id);
+
+      if (window.turnstile) turnstile.reset();
 
       message.innerHTML = 'Successfully signed into your Magic Plum account!';
       message.className = 'mt-6 text-center font-semibold text-green-600';
 
-      // Redirect after login
       setTimeout(() => {
         window.location.href = '/dashboard.html';
       }, 1200);
@@ -275,11 +307,15 @@
         return;
       }
 
-      if (window.turnstile) {
-        turnstile.reset();
+      // If sign-up returns a session immediately (email confirmation disabled),
+      // register Plum Courses right away
+      if (data.user) {
+        await ensurePlumCoursesService(data.user.id);
       }
 
-      message.innerHTML = 'Magic Plum account created successfully!';
+      if (window.turnstile) turnstile.reset();
+
+      message.innerHTML = 'Magic Plum account created successfully! Please check your email to confirm.';
       message.className = 'mt-6 text-center font-semibold text-green-600';
     });
   </script>
