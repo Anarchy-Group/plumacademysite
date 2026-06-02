@@ -171,7 +171,7 @@
     <div class="text-6xl mb-6">🔒</div>
     <h2 class="text-3xl font-black text-gray-900 mb-4">You're not signed in</h2>
     <p class="text-gray-500 mb-8">Please sign in to access your Plum Courses dashboard.</p>
-    <a href="/courses/login.html" class="gradient-button inline-block text-white font-bold px-8 py-4 rounded-2xl hover:scale-105 transition duration-300">
+    <a href="/login.html" class="gradient-button inline-block text-white font-bold px-8 py-4 rounded-2xl hover:scale-105 transition duration-300">
       Go to Login
     </a>
   </div>
@@ -197,22 +197,22 @@
 
       <div class="stat-card rounded-3xl p-6">
         <p class="text-gray-500 text-sm font-semibold mb-1">Courses Active</p>
-        <h3 class="text-4xl font-black text-gray-900">4</h3>
+        <h3 class="text-4xl font-black text-gray-900" id="statActive">—</h3>
       </div>
 
       <div class="stat-card rounded-3xl p-6">
-        <p class="text-gray-500 text-sm font-semibold mb-1">Lessons Done</p>
-        <h3 class="text-4xl font-black text-gray-900">38</h3>
+        <p class="text-gray-500 text-sm font-semibold mb-1">Completed</p>
+        <h3 class="text-4xl font-black text-gray-900" id="statCompleted">—</h3>
       </div>
 
       <div class="stat-card rounded-3xl p-6">
         <p class="text-gray-500 text-sm font-semibold mb-1">Hours Learned</p>
-        <h3 class="text-4xl font-black text-gray-900">12.5</h3>
+        <h3 class="text-4xl font-black text-gray-900" id="statHours">—</h3>
       </div>
 
       <div class="stat-card rounded-3xl p-6">
-        <p class="text-gray-500 text-sm font-semibold mb-1">Avg. Rating</p>
-        <h3 class="text-4xl font-black gradient-text">4.9★</h3>
+        <p class="text-gray-500 text-sm font-semibold mb-1">Achievements</p>
+        <h3 class="text-4xl font-black gradient-text" id="statAchievements">—</h3>
       </div>
 
     </div>
@@ -230,73 +230,15 @@
             <a href="#" class="text-sm font-bold text-orange-500 hover:text-orange-600 transition">View all →</a>
           </div>
 
-          <div class="space-y-4">
-
-            <div class="course-card rounded-3xl p-5">
-              <div class="flex items-start justify-between gap-4 mb-3">
-                <div>
-                  <h4 class="text-lg font-black text-gray-900">Content Creator Academy</h4>
-                  <p class="text-gray-500 text-sm">Editing, branding & audience growth</p>
-                </div>
-                <span class="bg-orange-100 text-orange-600 text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">In progress</span>
-              </div>
-              <div class="flex items-center gap-3">
-                <div class="progress-bar-bg flex-1">
-                  <div class="progress-bar-fill" style="width: 64%"></div>
-                </div>
-                <span class="text-xs font-bold text-gray-500">64%</span>
-              </div>
-            </div>
-
-            <div class="course-card rounded-3xl p-5">
-              <div class="flex items-start justify-between gap-4 mb-3">
-                <div>
-                  <h4 class="text-lg font-black text-gray-900">Photography Essentials</h4>
-                  <p class="text-gray-500 text-sm">Camera skills, lighting & composition</p>
-                </div>
-                <span class="bg-orange-100 text-orange-600 text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">In progress</span>
-              </div>
-              <div class="flex items-center gap-3">
-                <div class="progress-bar-bg flex-1">
-                  <div class="progress-bar-fill" style="width: 32%"></div>
-                </div>
-                <span class="text-xs font-bold text-gray-500">32%</span>
-              </div>
-            </div>
-
-            <div class="course-card rounded-3xl p-5">
-              <div class="flex items-start justify-between gap-4 mb-3">
-                <div>
-                  <h4 class="text-lg font-black text-gray-900">Web Design Fundamentals</h4>
-                  <p class="text-gray-500 text-sm">Build modern responsive websites</p>
-                </div>
-                <span class="bg-green-100 text-green-600 text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">Completed ✓</span>
-              </div>
-              <div class="flex items-center gap-3">
-                <div class="progress-bar-bg flex-1">
-                  <div class="progress-bar-fill" style="width: 100%"></div>
-                </div>
-                <span class="text-xs font-bold text-gray-500">100%</span>
-              </div>
-            </div>
-
-            <div class="course-card rounded-3xl p-5">
-              <div class="flex items-start justify-between gap-4 mb-3">
-                <div>
-                  <h4 class="text-lg font-black text-gray-900">Digital Media Skills</h4>
-                  <p class="text-gray-500 text-sm">Online creativity & social media growth</p>
-                </div>
-                <span class="bg-gray-100 text-gray-500 text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">Not started</span>
-              </div>
-              <div class="flex items-center gap-3">
-                <div class="progress-bar-bg flex-1">
-                  <div class="progress-bar-fill" style="width: 0%"></div>
-                </div>
-                <span class="text-xs font-bold text-gray-500">0%</span>
-              </div>
-            </div>
-
+          <div id="coursesList" class="space-y-4">
+            <div class="skeleton h-20 rounded-3xl"></div>
+            <div class="skeleton h-20 rounded-3xl"></div>
+            <div class="skeleton h-20 rounded-3xl"></div>
           </div>
+
+          <p id="coursesEmpty" class="text-gray-400 text-sm text-center py-8 hidden">
+            You haven't enrolled in any courses yet.
+          </p>
         </div>
 
       </div>
@@ -397,32 +339,40 @@
 
     const user = session.user;
 
-    // Show dashboard shell
     document.getElementById('dashContent').style.display = 'block';
 
-    // Show sign out button & header avatar
     const headerAvatar = document.getElementById('headerAvatar');
     headerAvatar.classList.remove('hidden');
     document.getElementById('signOutBtn').classList.remove('hidden');
 
-    // Fetch user_profiles row
-    const { data: profile } = await sb
-      .from('user_profiles')
-      .select('display_name, mfa_enabled, created_at')
-      .eq('id', user.id)
-      .maybeSingle();
+    // Fetch profile, courses and services in parallel
+    const [
+      { data: profile },
+      { data: courses },
+      { data: services }
+    ] = await Promise.all([
+      sb.from('user_profiles')
+        .select('display_name, mfa_enabled, created_at')
+        .eq('id', user.id)
+        .maybeSingle(),
+      sb.from('user_courses')
+        .select('id, course_name, course_slug, progress_pct, hours_learned, status, achievements, enrolled_at, last_accessed_at')
+        .eq('user_id', user.id)
+        .order('last_accessed_at', { ascending: false, nullsFirst: false }),
+      sb.from('user_services')
+        .select('id, service_name, service_icon, service_url, enabled')
+        .eq('user_id', user.id)
+        .neq('service_name', 'Plum Courses')
+        .order('created_at', { ascending: true })
+    ]);
 
+    // --- Profile ---
     const displayName = profile?.display_name || user.email.split('@')[0];
     const initials = getInitials(profile?.display_name, user.email);
 
-    // Populate header avatar
     headerAvatar.textContent = initials;
-
-    // Populate welcome heading
     document.getElementById('displayNameHeading').textContent = displayName;
     document.getElementById('userEmailSub').textContent = user.email;
-
-    // Populate profile card
     document.getElementById('profileAvatar').textContent = initials;
     document.getElementById('profileDisplayName').textContent = displayName;
     document.getElementById('profileEmail').textContent = user.email;
@@ -436,18 +386,66 @@
       mfaEl.textContent = 'Disabled';
       mfaEl.className = 'text-sm font-bold text-gray-400';
     }
-
     document.getElementById('profileSince').textContent =
       formatDate(profile?.created_at || user.created_at);
 
-    // Fetch user_services — show everything EXCEPT Plum Courses (they're already on it)
-    const { data: services } = await sb
-      .from('user_services')
-      .select('id, service_name, service_icon, service_url, enabled')
-      .eq('user_id', user.id)
-      .neq('service_name', 'Plum Courses')
-      .order('created_at', { ascending: true });
+    // --- Stats from courses ---
+    const activeCourses   = (courses || []).filter(c => c.status === 'in_progress').length;
+    const completedCourses = (courses || []).filter(c => c.status === 'completed').length;
+    const totalHours      = (courses || []).reduce((sum, c) => sum + (parseFloat(c.hours_learned) || 0), 0);
+    const totalAchievements = (courses || []).reduce((sum, c) => sum + (c.achievements?.length || 0), 0);
 
+    document.getElementById('statActive').textContent       = activeCourses;
+    document.getElementById('statCompleted').textContent    = completedCourses;
+    document.getElementById('statHours').textContent        = totalHours % 1 === 0 ? totalHours : totalHours.toFixed(1);
+    document.getElementById('statAchievements').textContent = totalAchievements;
+
+    // --- Course cards ---
+    const coursesList  = document.getElementById('coursesList');
+    const coursesEmpty = document.getElementById('coursesEmpty');
+    coursesList.innerHTML = '';
+
+    if (!courses || courses.length === 0) {
+      coursesEmpty.classList.remove('hidden');
+    } else {
+      courses.forEach(course => {
+        const statusMap = {
+          completed:   { label: 'Completed ✓', cls: 'bg-green-100 text-green-600' },
+          in_progress: { label: 'In progress',  cls: 'bg-orange-100 text-orange-600' },
+          not_started: { label: 'Not started',  cls: 'bg-gray-100 text-gray-500' },
+        };
+        const { label, cls } = statusMap[course.status] || statusMap.not_started;
+        const pct = course.progress_pct ?? 0;
+
+        // Achievements pill (only show if any)
+        const achievementHtml = course.achievements?.length
+          ? `<p class="text-gray-400 text-xs mt-1">🏆 ${course.achievements.join(' · ')}</p>`
+          : '';
+
+        const card = document.createElement('div');
+        card.className = 'course-card rounded-3xl p-5';
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-4 mb-3">
+            <div class="min-w-0">
+              <h4 class="text-lg font-black text-gray-900 truncate">${course.course_name}</h4>
+              <p class="text-gray-400 text-xs mt-0.5">Enrolled ${formatDate(course.enrolled_at)}</p>
+              ${achievementHtml}
+            </div>
+            <span class="${cls} text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap flex-shrink-0">${label}</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="progress-bar-bg flex-1">
+              <div class="progress-bar-fill" style="width: ${pct}%"></div>
+            </div>
+            <span class="text-xs font-bold text-gray-500 w-8 text-right">${pct}%</span>
+          </div>
+          ${course.hours_learned > 0 ? `<p class="text-gray-400 text-xs mt-2">${parseFloat(course.hours_learned).toFixed(1)} hrs learned</p>` : ''}
+        `;
+        coursesList.appendChild(card);
+      });
+    }
+
+    // --- Services ---
     const servicesList = document.getElementById('servicesList');
     const servicesEmpty = document.getElementById('servicesEmpty');
     servicesList.innerHTML = '';
@@ -476,7 +474,7 @@
     // Sign out
     document.getElementById('signOutBtn').addEventListener('click', async () => {
       await sb.auth.signOut();
-      window.location.href = '/login.html';
+      window.location.replace('/courses/login.html');
     });
   }
 
