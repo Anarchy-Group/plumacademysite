@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plum Courses — My Courses</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    * { font-family: 'Inter', sans-serif; }
+
+    body {
+      background: #fff7f4;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    .main-bg {
+      background:
+        radial-gradient(circle at top left, rgba(255, 71, 126, 0.12), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(255, 132, 64, 0.12), transparent 35%),
+        linear-gradient(135deg, #fff5f2 0%, #fff8f6 60%, #ffffff 100%);
+      min-height: 100vh;
+    }
+
+    .gradient-text {
+      background: linear-gradient(90deg, #ff477e 0%, #ff7a45 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .logo {
+      font-size: 1.4rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #ff477e, #ff7a45);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .gradient-button {
+      background: linear-gradient(135deg, #ff477e 0%, #ff7a45 100%);
+      box-shadow: 0 0 24px rgba(255, 105, 97, 0.3);
+    }
+
+    .glass-card {
+      background: rgba(255,255,255,0.82);
+      border: 1px solid rgba(255,255,255,0.9);
+      backdrop-filter: blur(12px);
+    }
+
+    .avatar-circle {
+      background: linear-gradient(135deg, #ff477e 0%, #ff7a45 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .course-card {
+      background: rgba(255,255,255,0.75);
+      border: 1px solid rgba(255,120,120,0.1);
+      transition: all 0.25s ease;
+    }
+
+    .course-card:hover {
+      background: rgba(255,240,235,0.95);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(255,100,80,0.13);
+    }
+
+    .progress-bar-bg {
+      background: rgba(255,120,120,0.12);
+      border-radius: 999px;
+      height: 10px;
+    }
+
+    .progress-bar-fill {
+      background: linear-gradient(90deg, #ff477e, #ff7a45);
+      border-radius: 999px;
+      height: 10px;
+      transition: width 0.8s ease;
+    }
+
+    .filter-btn {
+      background: rgba(255,255,255,0.8);
+      border: 1px solid rgba(255,120,120,0.15);
+      transition: all 0.2s ease;
+    }
+
+    .filter-btn:hover {
+      background: #fff0eb;
+      border-color: rgba(255,122,69,0.35);
+    }
+
+    .filter-btn.active {
+      background: linear-gradient(135deg, #ff477e 0%, #ff7a45 100%);
+      border-color: transparent;
+      color: white;
+      box-shadow: 0 0 16px rgba(255,105,97,0.3);
+    }
+
+    .stat-pill {
+      background: rgba(255,255,255,0.7);
+      border: 1px solid rgba(255,120,120,0.08);
+    }
+
+    .skeleton {
+      background: linear-gradient(90deg, rgba(255,200,180,0.3) 25%, rgba(255,230,220,0.5) 50%, rgba(255,200,180,0.3) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: 16px;
+    }
+
+    @keyframes shimmer {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .achievement-tag {
+      background: rgba(255,120,80,0.08);
+      border: 1px solid rgba(255,120,80,0.15);
+      color: #d05535;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    #errorState  { display: none; }
+    #pageContent { display: none; }
+  </style>
+</head>
+
+<body>
+<div class="main-bg">
+
+  <!-- HEADER -->
+  <header class="w-full border-b border-orange-100 bg-white/80 backdrop-blur-xl sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4">
+
+      <div class="logo">🍑 Plum Courses</div>
+
+      <nav class="hidden lg:flex items-center gap-8 text-gray-600 font-semibold text-sm">
+        <a href="/courses/dashboard" class="hover:text-gray-900 transition">Dashboard</a>
+        <a href="/courses/dashboard/courses" class="text-gray-900 border-b-2 border-orange-400 pb-0.5">My Courses</a>
+        <a href="#" class="hover:text-gray-900 transition">Skills</a>
+        <a href="#" class="hover:text-gray-900 transition">Resources</a>
+        <a href="#" class="hover:text-gray-900 transition">Community</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <div id="headerAvatar" class="avatar-circle w-9 h-9 rounded-full text-sm hidden"></div>
+        <button id="signOutBtn" class="text-sm font-bold text-gray-500 hover:text-gray-800 transition hidden">Sign out</button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ERROR STATE -->
+  <div id="errorState" class="max-w-7xl mx-auto px-4 sm:px-6 py-24 text-center">
+    <div class="text-6xl mb-6">🔒</div>
+    <h2 class="text-3xl font-black text-gray-900 mb-4">You're not signed in</h2>
+    <p class="text-gray-500 mb-8">Please sign in to view your courses.</p>
+    <a href="/courses/login.html" class="gradient-button inline-block text-white font-bold px-8 py-4 rounded-2xl hover:scale-105 transition duration-300">
+      Go to Login
+    </a>
+  </div>
+
+  <!-- PAGE CONTENT -->
+  <div id="pageContent" class="max-w-7xl mx-auto px-4 sm:px-6 py-10 pb-20">
+
+    <!-- HEADING -->
+    <div class="mb-10 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+      <div>
+        <h1 class="text-4xl sm:text-5xl font-black text-gray-900 leading-tight">
+          My <span class="gradient-text">Courses</span>
+        </h1>
+        <p class="text-gray-500 mt-2 text-lg" id="courseSubtitle">Loading your courses…</p>
+      </div>
+      <a href="#" class="gradient-button text-white font-bold px-6 py-3 rounded-2xl text-sm hover:scale-105 transition duration-300 self-start sm:self-auto whitespace-nowrap">
+        + Enrol in a Course
+      </a>
+    </div>
+
+    <!-- SUMMARY STATS -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10" id="statsRow">
+      <div class="skeleton h-20 rounded-3xl"></div>
+      <div class="skeleton h-20 rounded-3xl"></div>
+      <div class="skeleton h-20 rounded-3xl"></div>
+      <div class="skeleton h-20 rounded-3xl"></div>
+    </div>
+
+    <!-- FILTER TABS -->
+    <div class="flex items-center gap-3 mb-8 flex-wrap">
+      <button class="filter-btn active px-5 py-2 rounded-2xl font-bold text-sm" data-filter="all">All</button>
+      <button class="filter-btn px-5 py-2 rounded-2xl font-bold text-sm text-gray-700" data-filter="in_progress">In Progress</button>
+      <button class="filter-btn px-5 py-2 rounded-2xl font-bold text-sm text-gray-700" data-filter="completed">Completed</button>
+      <button class="filter-btn px-5 py-2 rounded-2xl font-bold text-sm text-gray-700" data-filter="not_started">Not Started</button>
+    </div>
+
+    <!-- COURSES GRID -->
+    <div id="coursesGrid" class="grid sm:grid-cols-2 xl:grid-cols-3 gap-6">
+      <!-- skeleton cards -->
+      <div class="skeleton h-56 rounded-[28px]"></div>
+      <div class="skeleton h-56 rounded-[28px]"></div>
+      <div class="skeleton h-56 rounded-[28px]"></div>
+      <div class="skeleton h-56 rounded-[28px]"></div>
+      <div class="skeleton h-56 rounded-[28px]"></div>
+      <div class="skeleton h-56 rounded-[28px]"></div>
+    </div>
+
+    <!-- EMPTY STATE -->
+    <div id="emptyState" class="hidden text-center py-24">
+      <div class="text-6xl mb-6">📚</div>
+      <h3 class="text-2xl font-black text-gray-900 mb-3">No courses here yet</h3>
+      <p class="text-gray-500 mb-8">Try a different filter, or enrol in your first course.</p>
+      <a href="#" class="gradient-button inline-block text-white font-bold px-8 py-4 rounded-2xl hover:scale-105 transition duration-300">
+        Browse Courses
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const SUPABASE_URL     = 'https://jihpgbsghatuwwkacsur.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppaHBnYnNnaGF0dXd3a2Fjc3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxMzkxNzcsImV4cCI6MjA5MzcxNTE3N30.qH7iso7t2zoOLi0C68DiUKZecyIDhlxVcJAcNhYLHTk';
+
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  let allCourses = [];
+  let activeFilter = 'all';
+
+  function formatDate(iso) {
+    if (!iso) return '—';
+    return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  function getInitials(name, email) {
+    if (name?.trim()) {
+      const parts = name.trim().split(' ');
+      return parts.length >= 2
+        ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+        : parts[0].slice(0, 2).toUpperCase();
+    }
+    return email ? email.slice(0, 2).toUpperCase() : '??';
+  }
+
+  const statusConfig = {
+    completed:   { label: 'Completed ✓', badgeCls: 'bg-green-100 text-green-700',  ringCls: 'border-green-200' },
+    in_progress: { label: 'In Progress',  badgeCls: 'bg-orange-100 text-orange-600', ringCls: 'border-orange-200' },
+    not_started: { label: 'Not Started',  badgeCls: 'bg-gray-100 text-gray-500',    ringCls: 'border-gray-200' },
+  };
+
+  function buildCard(course) {
+    const cfg = statusConfig[course.status] || statusConfig.not_started;
+    const pct = course.progress_pct ?? 0;
+    const hours = parseFloat(course.hours_learned || 0);
+
+    // Circular progress SVG
+    const r = 20, circ = 2 * Math.PI * r;
+    const dash = ((pct / 100) * circ).toFixed(1);
+
+    const achievementHtml = (course.achievements?.length)
+      ? `<div class="flex flex-wrap gap-1 mt-3">
+           ${course.achievements.map(a => `<span class="achievement-tag">🏆 ${a}</span>`).join('')}
+         </div>`
+      : '';
+
+    const lastAccessed = course.last_accessed_at
+      ? `<span>Last accessed ${formatDate(course.last_accessed_at)}</span>`
+      : `<span>Enrolled ${formatDate(course.enrolled_at)}</span>`;
+
+    return `
+      <div class="course-card rounded-[28px] p-6 flex flex-col gap-4" data-status="${course.status}">
+
+        <!-- Top row: title + badge -->
+        <div class="flex items-start justify-between gap-3">
+          <div class="flex-1 min-w-0">
+            <h3 class="text-xl font-black text-gray-900 leading-snug">${course.course_name}</h3>
+            <p class="text-gray-400 text-xs mt-1">${lastAccessed}</p>
+          </div>
+          <span class="${cfg.badgeCls} text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap flex-shrink-0 mt-0.5">
+            ${cfg.label}
+          </span>
+        </div>
+
+        <!-- Progress section -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-sm font-bold text-gray-700">Progress</span>
+            <span class="text-sm font-black gradient-text">${pct}%</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" style="width: ${pct}%"></div>
+          </div>
+        </div>
+
+        <!-- Stats row -->
+        <div class="flex items-center gap-4 text-xs font-semibold text-gray-500">
+          <span class="flex items-center gap-1">
+            ⏱ ${hours > 0 ? hours.toFixed(1) + ' hrs' : '0 hrs'}
+          </span>
+          ${course.achievements?.length
+            ? `<span class="flex items-center gap-1">🏆 ${course.achievements.length} achievement${course.achievements.length !== 1 ? 's' : ''}</span>`
+            : ''}
+        </div>
+
+        ${achievementHtml}
+
+        <!-- CTA -->
+        <a href="#" class="mt-auto block w-full text-center ${pct === 100
+          ? 'bg-green-50 border border-green-200 text-green-700'
+          : 'gradient-button text-white'
+        } font-bold py-3 rounded-2xl text-sm hover:scale-[1.02] transition duration-300">
+          ${pct === 100 ? 'View Certificate' : pct > 0 ? 'Continue Learning' : 'Start Course'}
+        </a>
+
+      </div>
+    `;
+  }
+
+  function renderCourses() {
+    const grid       = document.getElementById('coursesGrid');
+    const emptyState = document.getElementById('emptyState');
+
+    const filtered = activeFilter === 'all'
+      ? allCourses
+      : allCourses.filter(c => c.status === activeFilter);
+
+    if (filtered.length === 0) {
+      grid.innerHTML = '';
+      emptyState.classList.remove('hidden');
+    } else {
+      emptyState.classList.add('hidden');
+      grid.innerHTML = filtered.map(buildCard).join('');
+    }
+  }
+
+  function renderStats(courses) {
+    const total     = courses.length;
+    const active    = courses.filter(c => c.status === 'in_progress').length;
+    const completed = courses.filter(c => c.status === 'completed').length;
+    const hours     = courses.reduce((s, c) => s + (parseFloat(c.hours_learned) || 0), 0);
+
+    const statsRow = document.getElementById('statsRow');
+    statsRow.innerHTML = `
+      <div class="stat-pill rounded-3xl p-5">
+        <p class="text-gray-500 text-xs font-semibold mb-1">Total Enrolled</p>
+        <h3 class="text-3xl font-black text-gray-900">${total}</h3>
+      </div>
+      <div class="stat-pill rounded-3xl p-5">
+        <p class="text-gray-500 text-xs font-semibold mb-1">In Progress</p>
+        <h3 class="text-3xl font-black text-gray-900">${active}</h3>
+      </div>
+      <div class="stat-pill rounded-3xl p-5">
+        <p class="text-gray-500 text-xs font-semibold mb-1">Completed</p>
+        <h3 class="text-3xl font-black text-gray-900">${completed}</h3>
+      </div>
+      <div class="stat-pill rounded-3xl p-5">
+        <p class="text-gray-500 text-xs font-semibold mb-1">Hours Learned</p>
+        <h3 class="text-3xl font-black gradient-text">${hours % 1 === 0 ? hours : hours.toFixed(1)}</h3>
+      </div>
+    `;
+  }
+
+  // Filter button behaviour
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => {
+        b.classList.remove('active');
+        b.classList.add('text-gray-700');
+      });
+      btn.classList.add('active');
+      btn.classList.remove('text-gray-700');
+      activeFilter = btn.dataset.filter;
+      renderCourses();
+    });
+  });
+
+  async function loadPage() {
+    const { data: { session } } = await sb.auth.getSession();
+
+    if (!session) {
+      document.getElementById('errorState').style.display = 'block';
+      return;
+    }
+
+    const user = session.user;
+
+    // Show page shell + header controls
+    document.getElementById('pageContent').style.display = 'block';
+    const headerAvatar = document.getElementById('headerAvatar');
+    headerAvatar.classList.remove('hidden');
+    document.getElementById('signOutBtn').classList.remove('hidden');
+
+    // Set avatar initials from profile
+    const { data: profile } = await sb
+      .from('user_profiles')
+      .select('display_name')
+      .eq('id', user.id)
+      .maybeSingle();
+
+    headerAvatar.textContent = getInitials(profile?.display_name, user.email);
+
+    // Fetch ONLY from user_courses — no other tables
+    const { data: courses, error } = await sb
+      .from('user_courses')
+      .select('id, course_name, course_slug, progress_pct, hours_learned, status, achievements, enrolled_at, last_accessed_at')
+      .eq('user_id', user.id)
+      .order('last_accessed_at', { ascending: false, nullsFirst: false });
+
+    if (error) {
+      console.error('Failed to load courses:', error.message);
+      document.getElementById('coursesGrid').innerHTML = `
+        <div class="sm:col-span-2 xl:col-span-3 text-center py-12 text-red-400 font-semibold">
+          Failed to load courses. Please refresh and try again.
+        </div>`;
+      return;
+    }
+
+    allCourses = courses || [];
+
+    // Update subtitle
+    document.getElementById('courseSubtitle').textContent =
+      allCourses.length === 0
+        ? 'No courses enrolled yet'
+        : `${allCourses.length} course${allCourses.length !== 1 ? 's' : ''} enrolled`;
+
+    renderStats(allCourses);
+    renderCourses();
+
+    // Sign out
+    document.getElementById('signOutBtn').addEventListener('click', async () => {
+      await sb.auth.signOut();
+      window.location.replace('/courses/login.html');
+    });
+  }
+
+  loadPage();
+</script>
+</body>
+</html>
